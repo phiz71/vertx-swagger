@@ -1,0 +1,57 @@
+package {{package}};
+
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import java.util.List;
+import java.util.Map;
+
+public class {{classname}}Verticle extends AbstractVerticle {
+    final static Logger LOGGER = LoggerFactory.getLogger({{classname}}Verticle.class); 
+    
+    {{#operations}}{{#operation}}{{#vendorExtensions}}final static String {{x-serviceId-varName}} = "{{x-serviceId}}";
+    {{/vendorExtensions}}{{/operation}}{{/operations}}
+    
+    //TODO : create Implementation
+    {{classname}} service = new {{classname}}Impl();
+
+    @Override
+    public void start() throws Exception {
+        {{#operations}}{{#operation}}
+        //Consumer for {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
+        vertx.eventBus().<JsonObject> consumer({{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}).handler(message -> {
+            try {
+                {{#hasParams}}{{#allParams}}
+                {{#isListContainer}}
+                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonArray("{{paramName}}").encode(), 
+                        Json.mapper.getTypeFactory().constructCollectionType(List.class, {{{baseType}}}.class));
+                {{/isListContainer}}
+                {{^isListContainer}}
+                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonObject("{{paramName}}").encode(), {{{dataType}}}.class);
+                {{/isListContainer}}
+                {{/allParams}}{{/hasParams}}
+                
+                //TODO: call implementation
+                {{#returnType}}
+                {{{returnType}}} result = service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
+                message.reply(new JsonObject(Json.encode(result)));
+                {{/returnType}}
+                {{^returnType}}
+                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
+                message.reply(null);
+                {{/returnType}}
+                
+            } catch (Exception e) {
+                //TODO : replace magic number (101)
+                message.fail(101, e.getLocalizedMessage());
+            }
+        });
+        {{/operation}}{{/operations}}
+    }
+}

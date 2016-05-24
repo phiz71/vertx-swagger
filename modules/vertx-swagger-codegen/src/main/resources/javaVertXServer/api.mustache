@@ -1,0 +1,17 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import java.util.List;
+import java.util.Map;
+
+public interface {{classname}}  {
+{{#operations}}
+{{#operation}}
+    //{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
+    public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+    
+{{/operation}}
+{{/operations}}
+}
