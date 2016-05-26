@@ -8,7 +8,7 @@ It contains 2 modules:
 # todo :
 ## vertx-swagger-router :
  - manage the authorization part of swagger definition
- - look to use more data from swagger definition if possible (responses, info)
+ - use more data from swagger definition if possible (responses, info)
   
 ## vertx-swagger-codegen :
  - add the possibility to validate the request according the swagger definition
