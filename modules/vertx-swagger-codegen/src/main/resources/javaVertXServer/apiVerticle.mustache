@@ -2,6 +2,7 @@ package {{package}};
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -38,9 +39,11 @@ public class {{classname}}Verticle extends AbstractVerticle {
                 {{/allParams}}{{/hasParams}}
                 
                 //TODO: call implementation
+                
                 {{#returnType}}
                 {{{returnType}}} result = service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
-                message.reply(new JsonObject(Json.encode(result)));
+                {{#isListContainer}}message.reply(new JsonArray(Json.encode(result)));{{/isListContainer}}
+                {{^isListContainer}}message.reply(new JsonObject(Json.encode(result)));{{/isListContainer}}
                 {{/returnType}}
                 {{^returnType}}
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
