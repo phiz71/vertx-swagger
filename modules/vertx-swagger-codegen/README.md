@@ -10,10 +10,15 @@ Once you've clone the repository, you can run :
 mvn package
 ```
 
-In your generator project, a single jar file will be produced `target/vertx-swagger-codegen-1.0.0-SNAPSHOT.jar`.  You can now use that with codegen:
+In your generator project, a single jar file will be produced `target/vertx-swagger-codegen-1.0.0-SNAPSHOT.jar`.  You can now use that with swagger codegen:
 
 ```
-java -cp /path/to/swagger-codegen-distribution:/path/to/vertx-swagger-codegen-1.0.0-SNAPSHOT.jar io.swagger.codegen.SwaggerCodegen -l java-vertx -o ./test -i path/toSwagger/definition --group-id your.group.id --artifact-id my.api.vertx
+java -cp /path/to/swagger-codegen-cli.jar:/path/to/vertx-swagger-codegen-1.0.0-SNAPSHOT.jar io.swagger.codegen.SwaggerCodegen generate \
+  -l java-vertx \
+  -o path/to/destination/folder \
+  -i path/to/swagger/definition \
+  --group-id your.group.id \
+  --artifact-id your.artifact.id
 ```
 
 Congratulations, you've just created a maven project...
