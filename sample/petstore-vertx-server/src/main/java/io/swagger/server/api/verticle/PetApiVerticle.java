@@ -2,6 +2,7 @@ package io.swagger.server.api.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -40,6 +41,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.addPet(body);
                 message.reply(null);
                 
@@ -59,6 +61,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.deletePet(petId, apiKey);
                 message.reply(null);
                 
@@ -77,8 +80,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 List<Pet> result = service.findPetsByStatus(status);
-                message.reply(new JsonObject(Json.encode(result)));
+                message.reply(new JsonArray(Json.encode(result)));
+                
                 
             } catch (Exception e) {
                 //TODO : replace magic number (101)
@@ -95,8 +100,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 List<Pet> result = service.findPetsByTags(tags);
-                message.reply(new JsonObject(Json.encode(result)));
+                message.reply(new JsonArray(Json.encode(result)));
+                
                 
             } catch (Exception e) {
                 //TODO : replace magic number (101)
@@ -112,7 +119,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 Pet result = service.getPetById(petId);
+                
                 message.reply(new JsonObject(Json.encode(result)));
                 
             } catch (Exception e) {
@@ -129,6 +138,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.updatePet(body);
                 message.reply(null);
                 
@@ -150,6 +160,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.updatePetWithForm(petId, name, status);
                 message.reply(null);
                 
@@ -171,7 +182,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 ModelApiResponse result = service.uploadFile(petId, additionalMetadata, file);
+                
                 message.reply(new JsonObject(Json.encode(result)));
                 
             } catch (Exception e) {

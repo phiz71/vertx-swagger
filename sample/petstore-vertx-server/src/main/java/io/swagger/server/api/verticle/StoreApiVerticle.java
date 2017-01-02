@@ -2,6 +2,7 @@ package io.swagger.server.api.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -34,6 +35,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.deleteOrder(orderId);
                 message.reply(null);
                 
@@ -49,7 +51,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 Map<String, Integer> result = service.getInventory();
+                
                 message.reply(new JsonObject(Json.encode(result)));
                 
             } catch (Exception e) {
@@ -66,7 +70,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 Order result = service.getOrderById(orderId);
+                
                 message.reply(new JsonObject(Json.encode(result)));
                 
             } catch (Exception e) {
@@ -83,7 +89,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 Order result = service.placeOrder(body);
+                
                 message.reply(new JsonObject(Json.encode(result)));
                 
             } catch (Exception e) {
