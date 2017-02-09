@@ -29,7 +29,7 @@ public class SwaggerRouter {
 
     private static Logger VERTX_LOGGER = LoggerFactory.getLogger(SwaggerRouter.class);
 
-    private static Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*)\\}");
+    private static Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
     private static Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<HttpMethod, RouteBuilder>(HttpMethod.class) {
         {
             put(HttpMethod.POST, Router::post);
@@ -48,7 +48,7 @@ public class SwaggerRouter {
             put("query", new QueryParameterExtractor());
             put("header", new HeaderParameterExtractor());
             put("formData", new FormParameterExtractor());
-            put("body", new BodyParameterExtractor());  
+            put("body", new BodyParameterExtractor());
         }
     };
 
@@ -89,7 +89,7 @@ public class SwaggerRouter {
                 VERTX_LOGGER.debug("sending Bad Request", e);
                 badRequestEnd(context.response());
             }
-            
+
         });
 
     }
