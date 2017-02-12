@@ -43,7 +43,7 @@ public class BuildRouterTest {
     private static HttpClient httpClient;
 
     @BeforeClass
-    public static void beforClass(TestContext context) {
+    public static void beforeClass(TestContext context) {
         Async before = context.async();
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
