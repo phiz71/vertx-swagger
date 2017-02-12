@@ -29,7 +29,7 @@ public class SwaggerRouter {
 
     private static Logger VERTX_LOGGER = LoggerFactory.getLogger(SwaggerRouter.class);
 
-    private static Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*)\\}");
+    private static Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
     private static Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<HttpMethod, RouteBuilder>(HttpMethod.class) {
         {
             put(HttpMethod.POST, Router::post);
