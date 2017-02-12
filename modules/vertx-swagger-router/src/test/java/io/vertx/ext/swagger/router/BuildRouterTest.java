@@ -77,14 +77,14 @@ public class BuildRouterTest {
 
         // init consumers
         eventBus.<JsonObject> consumer("GET_store_inventory").handler(message -> {
-            message.reply(new JsonObject().put("sold", 2L));
+            message.reply(new JsonObject().put("sold", 2L).encode());
         });
         eventBus.<JsonObject> consumer("test.dummy").handler(message -> {
             context.fail("should not be called");
         });
         eventBus.<JsonObject> consumer("GET_pet_petId").handler(message -> {
             String petId = message.body().getString("petId");
-            message.reply(new JsonObject().put("petId_received", petId));
+            message.reply(new JsonObject().put("petId_received", petId).encode());
         });
         eventBus.<JsonObject> consumer("POST_pet_petId").handler(message -> {
             String petId = message.body().getString("petId");
@@ -94,6 +94,7 @@ public class BuildRouterTest {
                     .put("petId_received", petId)
                     .put("name_received", name)
                     .put("status_received", status)
+                    .encode()
                     );
         });
         eventBus.<JsonObject> consumer("DELETE_pet_petId").handler(message -> {
@@ -102,6 +103,7 @@ public class BuildRouterTest {
             message.reply(new JsonObject()
                     .put("petId_received", petId)
                     .put("header_received", apiKey)
+                    .encode()
                     );
         });
         eventBus.<JsonObject> consumer("POST_pet_petId_uploadImage").handler(message -> {
@@ -114,7 +116,7 @@ public class BuildRouterTest {
                     result.put("fileContent_received", readFile.result().toString());
                     result.put("petId_received", petId);
                     result.put("additionalMetadata_received", additionalMetadata);
-                    message.reply(result);
+                    message.reply(result.encode());
                 } else {
                     context.fail(readFile.cause());
                 }
@@ -122,7 +124,7 @@ public class BuildRouterTest {
         });
         eventBus.<JsonObject> consumer("GET_user_login").handler(message -> {
             String username = message.body().getString("username");
-            message.reply(new JsonObject().put("username_received", username));
+            message.reply(new JsonObject().put("username_received", username).encode());
         });
         eventBus.<JsonObject> consumer("GET_pet_findByStatus").handler(message -> {
             JsonArray status = message.body().getJsonArray("status");
@@ -138,7 +140,7 @@ public class BuildRouterTest {
                 	result.add(new JsonObject(Json.encode(bird)));
                 }
             }
-            message.reply(result);
+            message.reply(result.encode());
         });
         eventBus.<JsonObject> consumer("POST_user_createWithArray").handler(message -> {
             try {
@@ -147,7 +149,7 @@ public class BuildRouterTest {
                 for (int i = 0; i < users.size(); i++) {
                     result.put("user " + (i + 1), users.get(i).toString());
                 }
-                message.reply(result);
+                message.reply(result.encode());
             } catch (Exception e) {
                 message.fail(500, e.getLocalizedMessage());
             }
