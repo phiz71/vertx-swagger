@@ -53,10 +53,14 @@ public class SwaggerRouter {
     };
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus) {
+        return swaggerRouter(baseRouter, swagger, eventBus, new DefaultServiceIdResolver());
+    }
+
+    public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver) {
         baseRouter.route().handler(BodyHandler.create());
         swagger.getPaths().forEach((path, pathDescription) -> pathDescription.getOperationMap().forEach((method, operation) -> {
             Route route = ROUTE_BUILDERS.get(method).buildRoute(baseRouter, convertParametersToVertx(path));
-            String serviceId = computeServiceId(method, path);
+            String serviceId = serviceIdResolver.resolve(method, path, operation);
             configureRoute(route, serviceId, operation, eventBus);
         }));
 
@@ -97,10 +101,6 @@ public class SwaggerRouter {
     private static String convertParametersToVertx(String path) {
         Matcher pathMatcher = PATH_PARAMETERS.matcher(path);
         return pathMatcher.replaceAll(":$1");
-    }
-
-    private static String computeServiceId(HttpMethod httpMethod, String pathname) {
-        return httpMethod.name() + pathname.replaceAll("-", "_").replaceAll("/", "_").replaceAll("[{}]", "");
     }
 
     private static void internalServerErrorEnd(HttpServerResponse response) {
