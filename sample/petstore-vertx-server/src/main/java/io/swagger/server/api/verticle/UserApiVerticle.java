@@ -2,6 +2,7 @@ package io.swagger.server.api.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -38,6 +39,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.createUser(body);
                 message.reply(null);
                 
@@ -56,6 +58,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.createUsersWithArrayInput(body);
                 message.reply(null);
                 
@@ -74,6 +77,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.createUsersWithListInput(body);
                 message.reply(null);
                 
@@ -91,6 +95,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.deleteUser(username);
                 message.reply(null);
                 
@@ -108,7 +113,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 User result = service.getUserByName(username);
+                
                 message.reply(new JsonObject(Json.encode(result)));
                 
             } catch (Exception e) {
@@ -127,7 +134,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 String result = service.loginUser(username, password);
+                
                 message.reply(new JsonObject(Json.encode(result)));
                 
             } catch (Exception e) {
@@ -142,6 +151,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.logoutUser();
                 message.reply(null);
                 
@@ -161,6 +171,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 
                 //TODO: call implementation
+                
                 service.updateUser(username, body);
                 message.reply(null);
                 

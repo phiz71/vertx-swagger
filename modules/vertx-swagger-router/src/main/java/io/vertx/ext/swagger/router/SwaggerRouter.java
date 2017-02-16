@@ -9,9 +9,11 @@ import java.util.regex.Pattern;
 
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -79,16 +81,37 @@ public class SwaggerRouter {
                     Object value = PARAMETER_EXTRACTORS.get(parameter.getIn()).extract(name, parameter, context);
                     message.put(name, value);
                 });
-                eventBus.<JsonObject> send(serviceId, message, operationResponse -> {
-                    if (operationResponse.succeeded()) {
-                        if(operationResponse.result().body() != null)
-                            context.response().end(operationResponse.result().body().encode());
-                        else
-                            context.response().end();
-                    } else {
-                        internalServerErrorEnd(context.response());
-                    }
-                });
+                
+                String responseType = getOKResponseType(operation.getResponses());
+                
+                if("array".equals(responseType)) {
+                	eventBus.<JsonArray> send(serviceId, message, operationResponse -> {
+	                    if (operationResponse.succeeded()) {
+	                        if(operationResponse.result().body() != null) {
+	                            VERTX_LOGGER.debug(operationResponse.result().body().encode());
+	                            context.response().end(operationResponse.result().body().encode());
+	                        }
+	                        else {
+	                            context.response().end();
+	                        }
+	                    } else {
+	                        internalServerErrorEnd(context.response());
+	                    }
+	                });
+                } else {
+	                eventBus.<JsonObject> send(serviceId, message, operationResponse -> {
+	                    if (operationResponse.succeeded()) {
+	                        if(operationResponse.result().body() != null) {
+	                            VERTX_LOGGER.debug(operationResponse.result().body().encode());
+                                context.response().end(operationResponse.result().body().encode());
+	                        }
+	                        else
+	                            context.response().end();
+	                    } else {
+	                        internalServerErrorEnd(context.response());
+	                    }
+	                });
+                }
             } catch (RuntimeException e) {
                 VERTX_LOGGER.debug("sending Bad Request", e);
                 badRequestEnd(context.response());
@@ -98,7 +121,17 @@ public class SwaggerRouter {
 
     }
 
-    private static String convertParametersToVertx(String path) {
+    private static String getOKResponseType(Map<String, Response> responses) {
+		if(responses.get("200") != null)
+			return responses.get("200").getSchema().getType();
+		else if(responses.get("Default") != null)
+			return responses.get("Default").getSchema().getType();
+		else
+		    //some resources may not answer when it's ok.
+			return "";
+	}
+
+	private static String convertParametersToVertx(String path) {
         Matcher pathMatcher = PATH_PARAMETERS.matcher(path);
         return pathMatcher.replaceAll(":$1");
     }

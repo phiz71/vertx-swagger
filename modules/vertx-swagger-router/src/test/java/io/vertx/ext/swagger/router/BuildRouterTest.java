@@ -1,6 +1,7 @@
 package io.vertx.ext.swagger.router;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -26,7 +27,10 @@ import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.swagger.router.model.Category;
+import io.vertx.ext.swagger.router.model.Pet.StatusEnum;
 import io.vertx.ext.swagger.router.model.User;
+import io.vertx.ext.swagger.router.model.Pet;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -41,12 +45,17 @@ public class BuildRouterTest {
     private static Vertx vertx;
     private static EventBus eventBus;
     private static HttpClient httpClient;
+    private static Pet cat, dog, bird;
 
     @BeforeClass
     public static void beforeClass(TestContext context) {
         Async before = context.async();
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
+        cat = new Pet(1L, new Category(1L, "CAT"), "kitty", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE);
+        dog = new Pet(2L, new Category(2L, "DOG"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.PENDING);
+        bird = new Pet(3L, new Category(3L, "BIRD"), "twetty", new ArrayList<>(), new ArrayList<>(), StatusEnum.SOLD);
+        
 
         // init Router
         FileSystem vertxFileSystem = vertx.fileSystem();
@@ -117,9 +126,17 @@ public class BuildRouterTest {
         });
         eventBus.<JsonObject> consumer("GET_pet_findByStatus").handler(message -> {
             JsonArray status = message.body().getJsonArray("status");
-            JsonObject result = new JsonObject();
+            JsonArray result = new JsonArray();
             for (int i = 0; i < status.size(); i++) {
-                result.put("element " + i, status.getString(i));
+                if(cat.getStatus().toString().equals(status.getString(i))){
+                	result.add(new JsonObject(Json.encode(cat)));
+                }
+                if(dog.getStatus().toString().equals(status.getString(i))){
+                	result.add(new JsonObject(Json.encode(dog)));
+                }
+                if(bird.getStatus().toString().equals(status.getString(i))){
+                	result.add(new JsonObject(Json.encode(bird)));
+                }
             }
             message.reply(result);
         });
@@ -208,9 +225,14 @@ public class BuildRouterTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/findByStatus?status=available", response -> {
             response.bodyHandler(body -> {
-                JsonObject jsonBody = new JsonObject(body.toString(Charset.forName("utf-8")));
-                context.assertTrue(jsonBody.containsKey("element 0"));
-                context.assertEquals("available", jsonBody.getString("element 0"));
+                JsonArray jsonArray = new JsonArray(body.toString(Charset.forName("utf-8")));
+            	context.assertTrue(jsonArray.size()== 1);
+                try {
+					Pet resultCat = Json.mapper.readValue(jsonArray.getJsonObject(0).encode(), Pet.class);
+					context.assertEquals(cat, resultCat);
+                } catch (Exception e) {
+					context.fail(e);
+				}
                 async.complete();
             });
         });
@@ -221,11 +243,17 @@ public class BuildRouterTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/findByStatus?status=available&status=pending", response -> {
             response.bodyHandler(body -> {
-                JsonObject jsonBody = new JsonObject(body.toString(Charset.forName("utf-8")));
-                context.assertTrue(jsonBody.containsKey("element 0"));
-                context.assertEquals("available", jsonBody.getString("element 0"));
-                context.assertTrue(jsonBody.containsKey("element 1"));
-                context.assertEquals("pending", jsonBody.getString("element 1"));
+                JsonArray jsonArray = new JsonArray(body.toString(Charset.forName("utf-8")));
+                context.assertTrue(jsonArray.size()== 2);
+                try {
+					Pet resultCat = Json.mapper.readValue(jsonArray.getJsonObject(0).encode(), Pet.class);
+					Pet resultDog = Json.mapper.readValue(jsonArray.getJsonObject(1).encode(), Pet.class);
+					context.assertEquals(cat, resultCat);
+					context.assertEquals(dog, resultDog);
+                } catch (Exception e) {
+					context.fail(e);
+				}
+                
                 async.complete();
             });
         });
@@ -280,7 +308,7 @@ public class BuildRouterTest {
             context.assertTrue(jsonBody.containsKey("additionalMetadata_received"));
             context.assertEquals("Exceptionnal file !!", jsonBody.getString("additionalMetadata_received"));
             context.assertTrue(jsonBody.containsKey("fileContent_received"));
-            context.assertEquals("This is a test file.", jsonBody.getString("fileContent_received"));
+            context.assertEquals("{\r\n    \"test\":\"This is a test file.\"\r\n}", jsonBody.getString("fileContent_received"));
             async.complete();
         }));
 
@@ -358,4 +386,5 @@ public class BuildRouterTest {
         req.end();
         
     }
+  
 }

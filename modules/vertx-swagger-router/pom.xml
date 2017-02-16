@@ -42,8 +42,8 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<vertx.version>3.2.1</vertx.version>
-		<swagger-parser.version>1.0.19</swagger-parser.version>
+		<vertx.version>3.3.3</vertx.version>
+		<swagger-parser.version>1.0.22</swagger-parser.version>
 	</properties>
 
 	<dependencies>
