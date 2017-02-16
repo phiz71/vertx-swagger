@@ -31,6 +31,7 @@ public class SwaggerRouter {
 
     private static Logger VERTX_LOGGER = LoggerFactory.getLogger(SwaggerRouter.class);
 
+    private static Pattern PATH_PARAMETER_NAME = Pattern.compile("\\{([A-Za-z][A-Za-z0-9_]*)\\}");
     private static Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
     private static Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<HttpMethod, RouteBuilder>(HttpMethod.class) {
         {
@@ -133,7 +134,23 @@ public class SwaggerRouter {
 
 	private static String convertParametersToVertx(String path) {
         Matcher pathMatcher = PATH_PARAMETERS.matcher(path);
+
+        while (pathMatcher.find()) {
+            checkParameterName(pathMatcher.group());
+        }
+
         return pathMatcher.replaceAll(":$1");
+    }
+
+    private static void checkParameterName(String parameterPlaceholder) {
+        final Matcher matcher = PATH_PARAMETER_NAME.matcher(parameterPlaceholder);
+
+        if (!matcher.matches()) {
+            final String parameterName = parameterPlaceholder.substring(1, parameterPlaceholder.length() - 1);
+            throw new IllegalArgumentException("Illegal path parameter name: " + parameterName
+                    + ". Parameter names should only consist of alphabetic character, "
+                    + "numeric character or underscore and follow this pattern: [A-Za-z][A-Za-z0-9_]*");
+        }
     }
 
     private static void internalServerErrorEnd(HttpServerResponse response) {
