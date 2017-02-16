@@ -15,14 +15,14 @@ import java.util.Map;
 public class UserApiVerticle extends AbstractVerticle {
     final static Logger LOGGER = LoggerFactory.getLogger(UserApiVerticle.class); 
     
-    final static String POST_USER_SERVICE_ID = "POST_user";
-    final static String POST_USER_CREATEWITHARRAY_SERVICE_ID = "POST_user_createWithArray";
-    final static String POST_USER_CREATEWITHLIST_SERVICE_ID = "POST_user_createWithList";
-    final static String DELETE_USER_USERNAME_SERVICE_ID = "DELETE_user_username";
-    final static String GET_USER_USERNAME_SERVICE_ID = "GET_user_username";
-    final static String GET_USER_LOGIN_SERVICE_ID = "GET_user_login";
-    final static String GET_USER_LOGOUT_SERVICE_ID = "GET_user_logout";
-    final static String PUT_USER_USERNAME_SERVICE_ID = "PUT_user_username";
+    final static String CREATEUSER_SERVICE_ID = "createUser";
+    final static String CREATEUSERSWITHARRAYINPUT_SERVICE_ID = "createUsersWithArrayInput";
+    final static String CREATEUSERSWITHLISTINPUT_SERVICE_ID = "createUsersWithListInput";
+    final static String DELETEUSER_SERVICE_ID = "deleteUser";
+    final static String GETUSERBYNAME_SERVICE_ID = "getUserByName";
+    final static String LOGINUSER_SERVICE_ID = "loginUser";
+    final static String LOGOUTUSER_SERVICE_ID = "logoutUser";
+    final static String UPDATEUSER_SERVICE_ID = "updateUser";
     
     
     //TODO : create Implementation
@@ -31,8 +31,8 @@ public class UserApiVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         
-        //Consumer for POST_user
-        vertx.eventBus().<JsonObject> consumer(POST_USER_SERVICE_ID).handler(message -> {
+        //Consumer for createUser
+        vertx.eventBus().<JsonObject> consumer(CREATEUSER_SERVICE_ID).handler(message -> {
             try {
                 
                 User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
@@ -49,8 +49,8 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for POST_user_createWithArray
-        vertx.eventBus().<JsonObject> consumer(POST_USER_CREATEWITHARRAY_SERVICE_ID).handler(message -> {
+        //Consumer for createUsersWithArrayInput
+        vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHARRAYINPUT_SERVICE_ID).handler(message -> {
             try {
                 
                 List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), 
@@ -68,8 +68,8 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for POST_user_createWithList
-        vertx.eventBus().<JsonObject> consumer(POST_USER_CREATEWITHLIST_SERVICE_ID).handler(message -> {
+        //Consumer for createUsersWithListInput
+        vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHLISTINPUT_SERVICE_ID).handler(message -> {
             try {
                 
                 List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), 
@@ -87,8 +87,8 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for DELETE_user_username
-        vertx.eventBus().<JsonObject> consumer(DELETE_USER_USERNAME_SERVICE_ID).handler(message -> {
+        //Consumer for deleteUser
+        vertx.eventBus().<JsonObject> consumer(DELETEUSER_SERVICE_ID).handler(message -> {
             try {
                 
                 String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);
@@ -105,8 +105,8 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for GET_user_username
-        vertx.eventBus().<JsonObject> consumer(GET_USER_USERNAME_SERVICE_ID).handler(message -> {
+        //Consumer for getUserByName
+        vertx.eventBus().<JsonObject> consumer(GETUSERBYNAME_SERVICE_ID).handler(message -> {
             try {
                 
                 String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);
@@ -116,7 +116,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 User result = service.getUserByName(username);
                 
-                message.reply(new JsonObject(Json.encode(result)));
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                 
             } catch (Exception e) {
                 //TODO : replace magic number (101)
@@ -124,8 +124,8 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for GET_user_login
-        vertx.eventBus().<JsonObject> consumer(GET_USER_LOGIN_SERVICE_ID).handler(message -> {
+        //Consumer for loginUser
+        vertx.eventBus().<JsonObject> consumer(LOGINUSER_SERVICE_ID).handler(message -> {
             try {
                 
                 String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);
@@ -137,7 +137,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 String result = service.loginUser(username, password);
                 
-                message.reply(new JsonObject(Json.encode(result)));
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                 
             } catch (Exception e) {
                 //TODO : replace magic number (101)
@@ -145,8 +145,8 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for GET_user_logout
-        vertx.eventBus().<JsonObject> consumer(GET_USER_LOGOUT_SERVICE_ID).handler(message -> {
+        //Consumer for logoutUser
+        vertx.eventBus().<JsonObject> consumer(LOGOUTUSER_SERVICE_ID).handler(message -> {
             try {
                 
                 
@@ -161,8 +161,8 @@ public class UserApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for PUT_user_username
-        vertx.eventBus().<JsonObject> consumer(PUT_USER_USERNAME_SERVICE_ID).handler(message -> {
+        //Consumer for updateUser
+        vertx.eventBus().<JsonObject> consumer(UPDATEUSER_SERVICE_ID).handler(message -> {
             try {
                 
                 String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);

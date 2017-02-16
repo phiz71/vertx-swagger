@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import io.swagger.codegen.CodegenConfig;
 import io.swagger.codegen.CodegenModel;
@@ -214,8 +215,11 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
                         // camelize(httpMethod.name().toLowerCase() + " " +
                         // pathname);
                         // operation.addTag(serviceIdTemp);
-
-                        serviceIdTemp = httpMethod.name() + pathname.replaceAll("-", "_").replaceAll("/", "_").replaceAll("[{}]", "");
+                        if(StringUtils.isBlank(operation.getOperationId())) {
+                            serviceIdTemp = httpMethod.name() + pathname.replaceAll("-", "_").replaceAll("/", "_").replaceAll("[{}]", "");
+                        } else {
+                            serviceIdTemp = operation.getOperationId();
+                        }
                         operation.setVendorExtension("x-serviceId", serviceIdTemp);
                         operation.setVendorExtension("x-serviceId-varName", serviceIdTemp.toUpperCase() + "_SERVICE_ID");
                     }
