@@ -310,7 +310,7 @@ public class BuildRouterTest {
             context.assertTrue(jsonBody.containsKey("additionalMetadata_received"));
             context.assertEquals("Exceptionnal file !!", jsonBody.getString("additionalMetadata_received"));
             context.assertTrue(jsonBody.containsKey("fileContent_received"));
-            context.assertEquals("{\r\n    \"test\":\"This is a test file.\"\r\n}", jsonBody.getString("fileContent_received"));
+            context.assertEquals("{\"test\":\"This is a test file.\"}", jsonBody.getString("fileContent_received"));
             async.complete();
         }));
 

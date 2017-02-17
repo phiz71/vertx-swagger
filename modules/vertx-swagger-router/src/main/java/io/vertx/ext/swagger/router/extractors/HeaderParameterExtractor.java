@@ -14,7 +14,7 @@ public class HeaderParameterExtractor implements ParameterExtractor {
         if (!params.contains(name) && headerParam.getRequired()) {
             throw new IllegalArgumentException("Missing required parameter: " + name);
         }
-        if (headerParam.getType().equals("array"))
+        if ("array".equals(headerParam.getType()))
             return params.getAll(name);
         return params.get(name);
     }

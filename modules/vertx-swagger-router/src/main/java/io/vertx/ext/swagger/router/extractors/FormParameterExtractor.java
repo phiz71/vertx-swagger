@@ -14,9 +14,9 @@ public class FormParameterExtractor implements ParameterExtractor {
         if (!params.contains(name) && formParam.getRequired()) {
             throw new IllegalArgumentException("Missing required parameter: " + name);
         }
-        if (formParam.getType().equals("array"))
+        if ("array".equals(formParam.getType()))
             return params.getAll(name);
-        if (formParam.getType().equals("file")) {
+        if ("file".equals(formParam.getType())) {
             String uploadedFileName = null;
             for (FileUpload file : context.fileUploads()) {
                 if (file.name().equals(name)) {

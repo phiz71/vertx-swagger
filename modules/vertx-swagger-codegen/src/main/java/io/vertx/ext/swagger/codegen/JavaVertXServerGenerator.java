@@ -3,6 +3,7 @@ package io.vertx.ext.swagger.codegen;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +26,7 @@ import io.swagger.util.Json;
 public class JavaVertXServerGenerator extends JavaClientCodegen implements CodegenConfig {
 
     // source folder where to write the files
-    protected String sourceFolder = "src/main/java";
+
     protected String resourceFolder = "src/main/resources";
     protected String rootPackage = "io.swagger.server.api";
     protected String apiVersion = "1.0.0-SNAPSHOT";
@@ -35,38 +36,10 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
 
     protected String verticlePackage = "";
 
-    /**
-     * Configures the type of generator.
-     *
-     * @return the CodegenType for this generator
-     * @see io.swagger.codegen.CodegenType
-     */
-    public CodegenType getTag() {
-        return CodegenType.SERVER;
-    }
-
-    /**
-     * Configures a friendly name for the generator. This will be used by the
-     * generator to select the library with the -l flag.
-     *
-     * @return the friendly name for the generator
-     */
-    public String getName() {
-        return "java-vertx";
-    }
-
-    /**
-     * Returns human-friendly help for the generator. Provide the consumer with
-     * help tips, parameters here
-     *
-     * @return A string value for the help message
-     */
-    public String getHelp() {
-        return "Generates a java-Vert.X Server library.";
-    }
-
     public JavaVertXServerGenerator() {
         super();
+
+        sourceFolder = "src/main/java";
 
         // set the output folder here
         outputFolder = "generated-code/javaVertXServer";
@@ -115,9 +88,37 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
         groupId = "io.swagger";
         artifactId = "swagger-java-vertx-server";
         artifactVersion = apiVersion;
-        
-        
 
+    }
+
+    /**
+     * Configures the type of generator.
+     *
+     * @return the CodegenType for this generator
+     * @see io.swagger.codegen.CodegenType
+     */
+    public CodegenType getTag() {
+        return CodegenType.SERVER;
+    }
+
+    /**
+     * Configures a friendly name for the generator. This will be used by the
+     * generator to select the library with the -l flag.
+     *
+     * @return the friendly name for the generator
+     */
+    public String getName() {
+        return "java-vertx";
+    }
+
+    /**
+     * Returns human-friendly help for the generator. Provide the consumer with
+     * help tips, parameters here
+     *
+     * @return A string value for the help message
+     */
+    public String getHelp() {
+        return "Generates a java-Vert.X Server library.";
     }
 
     @Override
@@ -160,9 +161,9 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
 
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
-        objs = super.postProcessOperations(objs);
+        Map<String, Object> newObjs = super.postProcessOperations(objs);
 
-        Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
+        Map<String, Object> operations = (Map<String, Object>) newObjs.get("operations");
         if (operations != null) {
             List<CodegenOperation> ops = (List<CodegenOperation>) operations.get("operation");
             for (CodegenOperation operation : ops) {
@@ -177,55 +178,65 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
                 }
             }
         }
-        return objs;
+        return newObjs;
     }
 
     @Override
     public void preprocessSwagger(Swagger swagger) {
         super.preprocessSwagger(swagger);
 
+        // add full swagger definition in a mustache parameter
         String swaggerDef = Json.pretty(swagger);
         this.additionalProperties.put("fullSwagger", swaggerDef);
 
+        // add server port from the swagger file, 8080 by default
         String host = swagger.getHost();
-        String port = "8080";
-        if (host != null) {
-            String[] parts = host.split(":");
-            if (parts.length > 1) {
-                port = parts[1];
-            }
-        }
+        String port = extractPortFromHost(host);
         this.additionalProperties.put("serverPort", port);
 
-        if(swagger.getInfo() !=null && swagger.getInfo().getVersion() != null) 
+        // retrieve api version from swagger file, 1.0.0-SNAPSHOT by default
+        if (swagger.getInfo() != null && swagger.getInfo().getVersion() != null)
             artifactVersion = apiVersion = swagger.getInfo().getVersion();
-        else 
+        else
             artifactVersion = apiVersion;
-        
-        String serviceIdTemp = "";
-        if (swagger != null && swagger.getPaths() != null) {
-            for (String pathname : swagger.getPaths().keySet()) {
-                Path path = swagger.getPath(pathname);
-                if (path.getOperationMap() != null) {
-                    for (HttpMethod httpMethod : path.getOperationMap().keySet()) {
-                        Operation operation = path.getOperationMap().get(httpMethod);
-                        // if (operation.getTags() != null)
-                        // operation.getTags().clear();
-                        // serviceIdTemp =
-                        // camelize(httpMethod.name().toLowerCase() + " " +
-                        // pathname);
-                        // operation.addTag(serviceIdTemp);
-                        if(StringUtils.isBlank(operation.getOperationId())) {
-                            serviceIdTemp = httpMethod.name() + pathname.replaceAll("-", "_").replaceAll("/", "_").replaceAll("[{}]", "");
-                        } else {
-                            serviceIdTemp = operation.getOperationId();
-                        }
-                        operation.setVendorExtension("x-serviceId", serviceIdTemp);
-                        operation.setVendorExtension("x-serviceId-varName", serviceIdTemp.toUpperCase() + "_SERVICE_ID");
-                    }
-                }
+
+        // manage operation & custom serviceId
+        Map<String, Path> paths = swagger.getPaths();
+        if (paths != null) {
+            for (Entry<String, Path> entry : paths.entrySet()) {
+                manageOperationNames(entry.getValue(), entry.getKey());
+            }
+
+        }
+    }
+
+    private void manageOperationNames(Path path, String pathname) {
+        String serviceIdTemp;
+
+        Map<HttpMethod, Operation> operationMap = path.getOperationMap();
+        if (operationMap != null) {
+            for (Entry<HttpMethod, Operation> entry : operationMap.entrySet()) {
+                serviceIdTemp = computeServiceId(pathname, entry);
+                entry.getValue().setVendorExtension("x-serviceId", serviceIdTemp);
+                entry.getValue().setVendorExtension("x-serviceId-varName", serviceIdTemp.toUpperCase() + "_SERVICE_ID");
             }
         }
+    }
+
+    private String computeServiceId(String pathname, Entry<HttpMethod, Operation> entry) {
+        String operationId = entry.getValue().getOperationId();
+        String result = (operationId != null) ? operationId : entry.getKey().name() + pathname.replaceAll("-", "_").replaceAll("/", "_").replaceAll("[{}]", "");
+        return result;
+    }
+
+    private String extractPortFromHost(String host) {
+        if (host != null) {
+            int portSeprator = host.indexOf(':');
+            if (portSeprator >= 0) {
+                return host.substring(portSeprator);
+            }
+        }
+        return "8080";
     }
 
     private String camelizePath(String path) {

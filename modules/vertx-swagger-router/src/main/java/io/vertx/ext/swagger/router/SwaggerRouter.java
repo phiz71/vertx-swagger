@@ -27,30 +27,26 @@ import io.vertx.ext.web.handler.BodyHandler;
 
 public class SwaggerRouter {
 
-    private static Logger VERTX_LOGGER = LoggerFactory.getLogger(SwaggerRouter.class);
+    private static Logger vertxLogger = LoggerFactory.getLogger(SwaggerRouter.class);
 
-    private static Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
-    private static Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<HttpMethod, RouteBuilder>(HttpMethod.class) {
-        {
-            put(HttpMethod.POST, Router::post);
-            put(HttpMethod.GET, Router::get);
-            put(HttpMethod.PUT, Router::put);
-            put(HttpMethod.PATCH, Router::patch);
-            put(HttpMethod.DELETE, Router::delete);
-            put(HttpMethod.HEAD, Router::head);
-            put(HttpMethod.OPTIONS, Router::options);
-        }
-    };
-
-    private static Map<String, ParameterExtractor> PARAMETER_EXTRACTORS = new HashMap<String, ParameterExtractor>() {
-        {
-            put("path", new PathParameterExtractor());
-            put("query", new QueryParameterExtractor());
-            put("header", new HeaderParameterExtractor());
-            put("formData", new FormParameterExtractor());
-            put("body", new BodyParameterExtractor());
-        }
-    };
+    private static final Pattern PATH_PARAMETER_NAME = Pattern.compile("\\{([A-Za-z][A-Za-z0-9_]*)\\}");
+    private static final Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
+    private static final Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<HttpMethod, RouteBuilder>(HttpMethod.class);
+    private static final Map<String, ParameterExtractor> PARAMETER_EXTRACTORS = new HashMap<String, ParameterExtractor>();
+    static {
+        ROUTE_BUILDERS.put(HttpMethod.POST, Router::post);
+        ROUTE_BUILDERS.put(HttpMethod.GET, Router::get);
+        ROUTE_BUILDERS.put(HttpMethod.PUT, Router::put);
+        ROUTE_BUILDERS.put(HttpMethod.PATCH, Router::patch);
+        ROUTE_BUILDERS.put(HttpMethod.DELETE, Router::delete);
+        ROUTE_BUILDERS.put(HttpMethod.HEAD, Router::head);
+        ROUTE_BUILDERS.put(HttpMethod.OPTIONS, Router::options);
+        PARAMETER_EXTRACTORS.put("path", new PathParameterExtractor());
+        PARAMETER_EXTRACTORS.put("query", new QueryParameterExtractor());
+        PARAMETER_EXTRACTORS.put("header", new HeaderParameterExtractor());
+        PARAMETER_EXTRACTORS.put("formData", new FormParameterExtractor());
+        PARAMETER_EXTRACTORS.put("body", new BodyParameterExtractor());
+    }
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus) {
         return swaggerRouter(baseRouter, swagger, eventBus, new DefaultServiceIdResolver());
@@ -83,7 +79,7 @@ public class SwaggerRouter {
                 eventBus.<String> send(serviceId, message, operationResponse -> {
                     if (operationResponse.succeeded()) {
                         if (operationResponse.result().body() != null) {
-                            VERTX_LOGGER.debug(operationResponse.result().body());
+                            vertxLogger.debug(operationResponse.result().body());
                             context.response().end(operationResponse.result().body());
                         } else {
                             context.response().end();
@@ -93,7 +89,7 @@ public class SwaggerRouter {
                     }
                 });
             } catch (RuntimeException e) {
-                VERTX_LOGGER.debug("sending Bad Request", e);
+                vertxLogger.debug("sending Bad Request", e);
                 badRequestEnd(context.response());
             }
 
@@ -103,7 +99,22 @@ public class SwaggerRouter {
 
     private static String convertParametersToVertx(String path) {
         Matcher pathMatcher = PATH_PARAMETERS.matcher(path);
+
+        while (pathMatcher.find()) {
+            checkParameterName(pathMatcher.group());
+        }
+
         return pathMatcher.replaceAll(":$1");
+    }
+
+    private static void checkParameterName(String parameterPlaceholder) {
+        final Matcher matcher = PATH_PARAMETER_NAME.matcher(parameterPlaceholder);
+
+        if (!matcher.matches()) {
+            final String parameterName = parameterPlaceholder.substring(1, parameterPlaceholder.length() - 1);
+            throw new IllegalArgumentException("Illegal path parameter name: " + parameterName + ". Parameter names should only consist of alphabetic character, "
+                    + "numeric character or underscore and follow this pattern: [A-Za-z][A-Za-z0-9_]*");
+        }
     }
 
     private static void internalServerErrorEnd(HttpServerResponse response) {
