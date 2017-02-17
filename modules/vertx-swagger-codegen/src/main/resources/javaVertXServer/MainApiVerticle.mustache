@@ -9,6 +9,7 @@ import io.vertx.core.Future;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.swagger.router.OperationIdServiceIdResolver;
 import io.vertx.ext.swagger.router.SwaggerRouter;
 import io.vertx.ext.web.Router;
 
@@ -24,7 +25,7 @@ public class MainApiVerticle extends AbstractVerticle {
         vertxFileSystem.readFile("swagger.json", readFile -> {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
-                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, vertx.eventBus());
+                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, vertx.eventBus(), new OperationIdServiceIdResolver());
             
                 deployVerticles(startFuture);
                 

@@ -13,7 +13,7 @@ public class QueryParameterExtractor implements ParameterExtractor {
         if (!params.contains(name) && queryParam.getRequired()) {
             throw new IllegalArgumentException("Missing required parameter: " + name);
         }
-        if (queryParam.getType().equals("array"))
+        if ("array".equals(queryParam.getType()))
             return params.getAll(name);
         return params.get(name);
     }
