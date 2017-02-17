@@ -88,7 +88,6 @@ public class SwaggerRouter {
                         internalServerErrorEnd(context.response());
                     }
                 });
-
             } catch (RuntimeException e) {
                 vertxLogger.debug("sending Bad Request", e);
                 badRequestEnd(context.response());
