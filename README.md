@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/phiz71/vertx-swagger.svg?branch=master)](https://travis-ci.org/phiz71/vertx-swagger)
 # Vert.X - Swagger
 This project aims to provide a code generator based on Swagger to create web server with Vert.X and Vert.X Web.
 It contains 2 modules:
