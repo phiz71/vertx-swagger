@@ -15,10 +15,10 @@ import java.util.Map;
 public class StoreApiVerticle extends AbstractVerticle {
     final static Logger LOGGER = LoggerFactory.getLogger(StoreApiVerticle.class); 
     
-    final static String DELETE_STORE_ORDER_ORDERID_SERVICE_ID = "DELETE_store_order_orderId";
-    final static String GET_STORE_INVENTORY_SERVICE_ID = "GET_store_inventory";
-    final static String GET_STORE_ORDER_ORDERID_SERVICE_ID = "GET_store_order_orderId";
-    final static String POST_STORE_ORDER_SERVICE_ID = "POST_store_order";
+    final static String DELETEORDER_SERVICE_ID = "deleteOrder";
+    final static String GETINVENTORY_SERVICE_ID = "getInventory";
+    final static String GETORDERBYID_SERVICE_ID = "getOrderById";
+    final static String PLACEORDER_SERVICE_ID = "placeOrder";
     
     
     //TODO : create Implementation
@@ -27,8 +27,8 @@ public class StoreApiVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         
-        //Consumer for DELETE_store_order_orderId
-        vertx.eventBus().<JsonObject> consumer(DELETE_STORE_ORDER_ORDERID_SERVICE_ID).handler(message -> {
+        //Consumer for deleteOrder
+        vertx.eventBus().<JsonObject> consumer(DELETEORDER_SERVICE_ID).handler(message -> {
             try {
                 
                 Long orderId = Json.mapper.readValue(message.body().getJsonObject("orderId").encode(), Long.class);
@@ -45,8 +45,8 @@ public class StoreApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for GET_store_inventory
-        vertx.eventBus().<JsonObject> consumer(GET_STORE_INVENTORY_SERVICE_ID).handler(message -> {
+        //Consumer for getInventory
+        vertx.eventBus().<JsonObject> consumer(GETINVENTORY_SERVICE_ID).handler(message -> {
             try {
                 
                 
@@ -54,7 +54,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 Map<String, Integer> result = service.getInventory();
                 
-                message.reply(new JsonObject(Json.encode(result)));
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                 
             } catch (Exception e) {
                 //TODO : replace magic number (101)
@@ -62,8 +62,8 @@ public class StoreApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for GET_store_order_orderId
-        vertx.eventBus().<JsonObject> consumer(GET_STORE_ORDER_ORDERID_SERVICE_ID).handler(message -> {
+        //Consumer for getOrderById
+        vertx.eventBus().<JsonObject> consumer(GETORDERBYID_SERVICE_ID).handler(message -> {
             try {
                 
                 Long orderId = Json.mapper.readValue(message.body().getJsonObject("orderId").encode(), Long.class);
@@ -73,7 +73,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 Order result = service.getOrderById(orderId);
                 
-                message.reply(new JsonObject(Json.encode(result)));
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                 
             } catch (Exception e) {
                 //TODO : replace magic number (101)
@@ -81,8 +81,8 @@ public class StoreApiVerticle extends AbstractVerticle {
             }
         });
         
-        //Consumer for POST_store_order
-        vertx.eventBus().<JsonObject> consumer(POST_STORE_ORDER_SERVICE_ID).handler(message -> {
+        //Consumer for placeOrder
+        vertx.eventBus().<JsonObject> consumer(PLACEORDER_SERVICE_ID).handler(message -> {
             try {
                 
                 Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
@@ -92,7 +92,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 Order result = service.placeOrder(body);
                 
-                message.reply(new JsonObject(Json.encode(result)));
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                 
             } catch (Exception e) {
                 //TODO : replace magic number (101)

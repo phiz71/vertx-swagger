@@ -6,28 +6,28 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserApi  {
-    //POST_user
+    //createUser
     public void createUser(User body);
     
-    //POST_user_createWithArray
+    //createUsersWithArrayInput
     public void createUsersWithArrayInput(List<User> body);
     
-    //POST_user_createWithList
+    //createUsersWithListInput
     public void createUsersWithListInput(List<User> body);
     
-    //DELETE_user_username
+    //deleteUser
     public void deleteUser(String username);
     
-    //GET_user_username
+    //getUserByName
     public User getUserByName(String username);
     
-    //GET_user_login
+    //loginUser
     public String loginUser(String username,String password);
     
-    //GET_user_logout
+    //logoutUser
     public void logoutUser();
     
-    //PUT_user_username
+    //updateUser
     public void updateUser(String username,User body);
     
 }

@@ -8,28 +8,28 @@ import java.util.List;
 import java.util.Map;
 
 public interface PetApi  {
-    //POST_pet
+    //addPet
     public void addPet(Pet body);
     
-    //DELETE_pet_petId
+    //deletePet
     public void deletePet(Long petId,String apiKey);
     
-    //GET_pet_findByStatus
+    //findPetsByStatus
     public List<Pet> findPetsByStatus(List<String> status);
     
-    //GET_pet_findByTags
+    //findPetsByTags
     public List<Pet> findPetsByTags(List<String> tags);
     
-    //GET_pet_petId
+    //getPetById
     public Pet getPetById(Long petId);
     
-    //PUT_pet
+    //updatePet
     public void updatePet(Pet body);
     
-    //POST_pet_petId
+    //updatePetWithForm
     public void updatePetWithForm(Long petId,String name,String status);
     
-    //POST_pet_petId_uploadImage
+    //uploadFile
     public ModelApiResponse uploadFile(Long petId,String additionalMetadata,File file);
     
 }

@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 public interface StoreApi  {
-    //DELETE_store_order_orderId
+    //deleteOrder
     public void deleteOrder(Long orderId);
     
-    //GET_store_inventory
+    //getInventory
     public Map<String, Integer> getInventory();
     
-    //GET_store_order_orderId
+    //getOrderById
     public Order getOrderById(Long orderId);
     
-    //POST_store_order
+    //placeOrder
     public Order placeOrder(Order body);
     
 }

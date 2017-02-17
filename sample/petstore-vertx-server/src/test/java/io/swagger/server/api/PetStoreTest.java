@@ -50,7 +50,7 @@ public class PetStoreTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/findByStatus?status=available", response -> {
             response.bodyHandler(body -> {
-                JsonArray jsonArray = body.toJsonArray();
+                JsonArray jsonArray = new JsonArray(body.toString());
                 context.assertTrue(jsonArray.size() == 1);
                 try {
                     Pet resultDog = Json.mapper.readValue(jsonArray.getJsonObject(0).encode(), Pet.class);
