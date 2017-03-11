@@ -7,25 +7,24 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.BooleanUtils;
-
-import io.swagger.codegen.CodegenConfig;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.CodegenType;
 import io.swagger.codegen.SupportingFile;
-import io.swagger.codegen.languages.JavaClientCodegen;
+import io.swagger.codegen.languages.AbstractJavaCodegen;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.util.Json;
 
-public class JavaVertXServerGenerator extends JavaClientCodegen implements CodegenConfig {
+public class JavaVertXServerGenerator extends  AbstractJavaCodegen {
 
     // source folder where to write the files
-
+    protected String projectFolder = "src" + File.separator + "main";
+    protected String sourceFolder = projectFolder + File.separator + "java";
+        
     protected String resourceFolder = "src/main/resources";
     protected String rootPackage = "io.swagger.server.api";
     protected String apiVersion = "1.0.0-SNAPSHOT";
@@ -37,8 +36,6 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
 
     public JavaVertXServerGenerator() {
         super();
-
-        sourceFolder = "src/main/java";
 
         // set the output folder here
         outputFolder = "generated-code/javaVertXServer";
@@ -128,8 +125,10 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
 
         importMapping.remove("ApiModelProperty");
         importMapping.remove("ApiModel");
+        importMapping.remove("JsonCreator");
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
+        importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
 
         modelDocTemplateFiles.clear();
         apiDocTemplateFiles.clear();
@@ -148,14 +147,15 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
 
-        if (!BooleanUtils.toBoolean(model.isEnum)) {
+        if (!model.isEnum) {
             model.imports.remove("ApiModelProperty");
             model.imports.remove("ApiModel");
+            model.imports.remove("JsonCreator");
             model.imports.add("JsonInclude");
             model.imports.add("JsonProperty");
+            model.imports.add("JsonValue");
         }
 
-        return;
     }
 
     @Override
@@ -207,6 +207,7 @@ public class JavaVertXServerGenerator extends JavaClientCodegen implements Codeg
             }
 
         }
+        this.additionalProperties.remove("gson");
     }
 
     private void manageOperationNames(Path path, String pathname) {

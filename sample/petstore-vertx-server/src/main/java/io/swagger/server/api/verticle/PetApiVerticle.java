@@ -7,9 +7,9 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
-import io.swagger.server.api.model.Pet;
-import io.swagger.server.api.model.ModelApiResponse;
 import java.io.File;
+import io.swagger.server.api.model.ModelApiResponse;
+import io.swagger.server.api.model.Pet;
 
 import java.util.List;
 import java.util.Map;

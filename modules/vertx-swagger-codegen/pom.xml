@@ -12,7 +12,7 @@
   <name>vertx-swagger-codegen</name>
 
   <properties>
-    <swagger-codegen.version>2.1.6</swagger-codegen.version>
+    <swagger-codegen.version>2.2.2</swagger-codegen.version>
   </properties>
 
 

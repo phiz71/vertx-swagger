@@ -2,7 +2,6 @@ package io.vertx.ext.swagger.codegen;
 
 import org.junit.Test;
 
-import io.swagger.codegen.Codegen;
 import io.swagger.codegen.SwaggerCodegen;
 
 public class SampleVertXGeneratorTest {

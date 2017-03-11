@@ -1,8 +1,8 @@
 package io.swagger.server.api.verticle;
 
-import io.swagger.server.api.model.Pet;
-import io.swagger.server.api.model.ModelApiResponse;
 import java.io.File;
+import io.swagger.server.api.model.ModelApiResponse;
+import io.swagger.server.api.model.Pet;
 
 import java.util.List;
 import java.util.Map;

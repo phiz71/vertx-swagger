@@ -3,8 +3,9 @@ package io.swagger.server.api.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 
 
@@ -15,7 +16,7 @@ public class Order   {
   private Long id = null;
   private Long petId = null;
   private Integer quantity = null;
-  private Date shipDate = null;
+  private DateTime shipDate = null;
 
 
   public enum StatusEnum {
@@ -43,7 +44,7 @@ public class Order   {
 
   }
 
-  public Order (Long id, Long petId, Integer quantity, Date shipDate, StatusEnum status, Boolean complete) {
+  public Order (Long id, Long petId, Integer quantity, DateTime shipDate, StatusEnum status, Boolean complete) {
     this.id = id;    this.petId = petId;    this.quantity = quantity;    this.shipDate = shipDate;    this.status = status;    this.complete = complete;
   }
 
@@ -76,10 +77,10 @@ public class Order   {
 
     
   @JsonProperty("shipDate")
-  public Date getShipDate() {
+  public DateTime getShipDate() {
     return shipDate;
   }
-  public void setShipDate(Date shipDate) {
+  public void setShipDate(DateTime shipDate) {
     this.shipDate = shipDate;
   }
 
