@@ -13,6 +13,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -54,6 +55,26 @@ public class PetStoreTest {
                 context.assertTrue(jsonArray.size() == 1);
                 try {
                     Pet resultDog = Json.mapper.readValue(jsonArray.getJsonObject(0).encode(), Pet.class);
+                    context.assertEquals(dog, resultDog);
+                } catch (Exception e) {
+                    context.fail(e);
+                }
+                async.complete();
+            });
+            response.exceptionHandler(err -> {
+                context.fail(err);
+            });
+        });
+    }
+    
+    @Test(timeout = 2000)
+    public void testGetPetById(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/1", response -> {
+            response.bodyHandler(body -> {
+                JsonObject jsonObject = new JsonObject(body.toString());
+                try {
+                    Pet resultDog = Json.mapper.readValue(jsonObject.encode(), Pet.class);
                     context.assertEquals(dog, resultDog);
                 } catch (Exception e) {
                     context.fail(e);

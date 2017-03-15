@@ -37,11 +37,9 @@ public class PetApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(ADDPET_SERVICE_ID).handler(message -> {
             try {
                 
-                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
+                                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 
-                
-                //TODO: call implementation
-                
+             
                 service.addPet(body);
                 message.reply(null);
                 
@@ -55,13 +53,12 @@ public class PetApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(DELETEPET_SERVICE_ID).handler(message -> {
             try {
                 
-                Long petId = Json.mapper.readValue(message.body().getJsonObject("petId").encode(), Long.class);
-                
-                String apiKey = Json.mapper.readValue(message.body().getJsonObject("apiKey").encode(), String.class);
+                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
                 
-                //TODO: call implementation
+                String apiKey = message.body().getString("apiKey");
                 
+             
                 service.deletePet(petId, apiKey);
                 message.reply(null);
                 
@@ -78,9 +75,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), 
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                
-                //TODO: call implementation
-                
+             
                 List<Pet> result = service.findPetsByStatus(status);
                 message.reply(new JsonArray(Json.encode(result)).encodePrettily());
                 
@@ -98,9 +93,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), 
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                
-                //TODO: call implementation
-                
+             
                 List<Pet> result = service.findPetsByTags(tags);
                 message.reply(new JsonArray(Json.encode(result)).encodePrettily());
                 
@@ -115,11 +108,9 @@ public class PetApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(GETPETBYID_SERVICE_ID).handler(message -> {
             try {
                 
-                Long petId = Json.mapper.readValue(message.body().getJsonObject("petId").encode(), Long.class);
+                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
-                
-                //TODO: call implementation
-                
+             
                 Pet result = service.getPetById(petId);
                 
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
@@ -134,11 +125,9 @@ public class PetApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(UPDATEPET_SERVICE_ID).handler(message -> {
             try {
                 
-                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
+                                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 
-                
-                //TODO: call implementation
-                
+             
                 service.updatePet(body);
                 message.reply(null);
                 
@@ -152,15 +141,15 @@ public class PetApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(UPDATEPETWITHFORM_SERVICE_ID).handler(message -> {
             try {
                 
-                Long petId = Json.mapper.readValue(message.body().getJsonObject("petId").encode(), Long.class);
-                
-                String name = Json.mapper.readValue(message.body().getJsonObject("name").encode(), String.class);
-                
-                String status = Json.mapper.readValue(message.body().getJsonObject("status").encode(), String.class);
+                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
                 
-                //TODO: call implementation
+                String name = message.body().getString("name");
                 
+                
+                String status = message.body().getString("status");
+                
+             
                 service.updatePetWithForm(petId, name, status);
                 message.reply(null);
                 
@@ -174,15 +163,14 @@ public class PetApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(UPLOADFILE_SERVICE_ID).handler(message -> {
             try {
                 
-                Long petId = Json.mapper.readValue(message.body().getJsonObject("petId").encode(), Long.class);
-                
-                String additionalMetadata = Json.mapper.readValue(message.body().getJsonObject("additionalMetadata").encode(), String.class);
-                
-                File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
+                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
                 
-                //TODO: call implementation
+                String additionalMetadata = message.body().getString("additionalMetadata");
                 
+                                File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
+                
+             
                 ModelApiResponse result = service.uploadFile(petId, additionalMetadata, file);
                 
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());

@@ -31,11 +31,9 @@ public class StoreApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(DELETEORDER_SERVICE_ID).handler(message -> {
             try {
                 
-                Long orderId = Json.mapper.readValue(message.body().getJsonObject("orderId").encode(), Long.class);
+                                Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
                 
-                
-                //TODO: call implementation
-                
+             
                 service.deleteOrder(orderId);
                 message.reply(null);
                 
@@ -49,9 +47,7 @@ public class StoreApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(GETINVENTORY_SERVICE_ID).handler(message -> {
             try {
                 
-                
-                //TODO: call implementation
-                
+             
                 Map<String, Integer> result = service.getInventory();
                 
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
@@ -66,11 +62,9 @@ public class StoreApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(GETORDERBYID_SERVICE_ID).handler(message -> {
             try {
                 
-                Long orderId = Json.mapper.readValue(message.body().getJsonObject("orderId").encode(), Long.class);
+                                Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
                 
-                
-                //TODO: call implementation
-                
+             
                 Order result = service.getOrderById(orderId);
                 
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
@@ -85,11 +79,9 @@ public class StoreApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(PLACEORDER_SERVICE_ID).handler(message -> {
             try {
                 
-                Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
+                                Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
                 
-                
-                //TODO: call implementation
-                
+             
                 Order result = service.placeOrder(body);
                 
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());

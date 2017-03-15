@@ -34,12 +34,19 @@ public class {{classname}}Verticle extends AbstractVerticle {
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, {{{baseType}}}.class));
                 {{/isListContainer}}
                 {{^isListContainer}}
+                {{#isPrimitiveType}}{{#isString}}
+                {{{dataType}}} {{paramName}} = message.body().getString("{{paramName}}");
+                {{/isString}}
+                {{^isString}}
+                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{paramName}}"), {{{dataType}}}.class);
+                {{/isString}}
+                {{/isPrimitiveType}}
+                {{^isPrimitiveType}}
                 {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonObject("{{paramName}}").encode(), {{{dataType}}}.class);
+                {{/isPrimitiveType}}
                 {{/isListContainer}}
                 {{/allParams}}{{/hasParams}}
-                
-                //TODO: call implementation
-                
+             
                 {{#returnType}}
                 {{{returnType}}} result = service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
                 {{#isListContainer}}message.reply(new JsonArray(Json.encode(result)).encodePrettily());{{/isListContainer}}
