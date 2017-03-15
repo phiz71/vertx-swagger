@@ -5,7 +5,6 @@ addons:
   sonarqube:
     organization: "Florent C."
     token:
-      secure: "I32bNztFAZncac9joTughJmzcxAefGjS2ikIuR1n7CaoX74mPkOGykX1uAp1yH0bWYNlrbS8Vf1UxBAWDYEoDOYza2nUndL3Opb4dspk28Kw725wMlEXinrB7xwF+oF04bCV1u6gZkH1AFwgqiz6c/YymQRaGgKbB5PLgKbhBz6hgqS7ck2/16KJRXttLeJqEVOOadfzcZHoecNH1bXv9nrZeHHuCPwIjyS5ks6BER9oWYtE/aTrD/IRxt4d6HkAGEchxZbkMc2mvYEiKVQvT53k1KEftAKx/mH96YHaduX481Md3KCNwa6W90+v0UZtHmUWlJz4Gu284bD4XKFl/cLm+J9phex48PsPulao4dnBgGd/RoUM+ysnq/UoEUkrcTuyCBlNTUJzMJB7psl+4RWgHfLA0sFYbNlJv9InFlVl/HlFnsty/IwTJlDVjLhEhavg0u+voF8CqkTvpuXLSNEGNfMQ6exW4NNodXYo7AexKBe+OMpt6OlvrpkQpBSpegccJw9GxXd+vebv70Tmm8ZbHpSXCk0DxESsuZzNsreVc07dY4z0HXstQolpHCVj2z4JQ16XQZCT5eyiaYRnvE9APcJ7CPk/B2Kpkwx2/koKeBy0HqWuixQWWpRWMSj2dY4Dr863YDSqnlf/9Vc6k233XC8Gfy5RZg4IYxOZ2Bw="
 jdk:
   - oraclejdk8
 script:
