@@ -4,7 +4,6 @@ install: true
 addons:
   sonarqube:
     token:
-      secure: "e7GbmeV/i93rhYdDQQZ3jbXBldh+tD/Pr3v6/qlRiBlaLJ1vy77kWs5eXC5bpPwoZrNyW8b3q/jaMHBOLx99HynyQDO3QSOzh75W+Cs2dVuwAwsdw1zsdKpVX0iY+HldJ+hun7oKqQF15tUu/kI2q9KX5EgMwSeL6b3IVUPurlGLuJFE/hbKhuezYamINnBXpT9GgHl/wzGe+yoiyhSYFBUyK2ESsIyX5xWBqOaTG9T1DNV1TLoeg9ZcG5EbTB/juDYMnuusFkIOWEO/eXET9nm9JlxlPWH7PabnlOR3e5dyY45Mmgys6LeoO32Ucjifedt/BlHLyWy/THGV1DH3v2HsjksWcJFbCGL6//cpnUFD6hLxeUw/kvcL8A+PZN0KsDN9sf3+m0dv8Am7FhT+URRi8aPYm9l8lelCqBCg3/1yvZ5phIjlQHAxQqFvdj4uoYSckDVEoA2CZM6tlagCAb1PTwQMohSZz+qJNDBifgnMUWZXJnISyB9kMDAVziYewRf3QDY/GK7QirEs6+/TOpX/WdF18obPDV6NwM1Ji+9PP3rtdc97L7qM58XqH0/ssKJeJnY9unaPeoVKRPdJAOEkRkN/4P5MCgWDrCr23SqabneMKaM90dIgW3obDa7W2wg7+I6nbEEbVc0movWs1ZuSq15fRtH9vZseSStAsEg="
 jdk:
   - oraclejdk8
 script:
