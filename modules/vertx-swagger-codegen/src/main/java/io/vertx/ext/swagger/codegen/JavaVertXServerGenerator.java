@@ -14,6 +14,7 @@ import io.swagger.codegen.CodegenType;
 import io.swagger.codegen.SupportingFile;
 import io.swagger.codegen.languages.AbstractJavaCodegen;
 import io.swagger.models.HttpMethod;
+import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
@@ -126,6 +127,7 @@ public class JavaVertXServerGenerator extends  AbstractJavaCodegen {
         importMapping.remove("ApiModelProperty");
         importMapping.remove("ApiModel");
         importMapping.remove("JsonCreator");
+        importMapping.remove("com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
@@ -146,14 +148,14 @@ public class JavaVertXServerGenerator extends  AbstractJavaCodegen {
     @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
-
+        model.imports.remove("ApiModelProperty");
+        model.imports.remove("ApiModel");
         if (!model.isEnum) {
-            model.imports.remove("ApiModelProperty");
-            model.imports.remove("ApiModel");
-            model.imports.remove("JsonCreator");
             model.imports.add("JsonInclude");
             model.imports.add("JsonProperty");
-            model.imports.add("JsonValue");
+            if(model.hasEnums) {
+                model.imports.add("JsonValue");
+            }
         }
 
     }
@@ -178,6 +180,16 @@ public class JavaVertXServerGenerator extends  AbstractJavaCodegen {
             }
         }
         return newObjs;
+    }
+
+    
+    
+    @Override
+    public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
+        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
+        codegenModel.imports.remove("ApiModel");
+        return codegenModel;
+        
     }
 
     @Override
