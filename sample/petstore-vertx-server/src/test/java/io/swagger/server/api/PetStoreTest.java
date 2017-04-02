@@ -1,12 +1,17 @@
 package io.swagger.server.api;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.swagger.server.api.model.Category;
+import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
 import io.vertx.core.Vertx;
@@ -26,12 +31,15 @@ public class PetStoreTest {
     private static Vertx vertx;
     private static HttpClient httpClient;
     private static Pet dog;
+    private static Order orderDog;
 
     @BeforeClass
     public static void beforeClass(TestContext context) {
         Async before = context.async();
+        
         vertx = Vertx.vertx();
         dog = new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE);
+        orderDog = new Order(1L, 1L, 3, OffsetDateTime.of(2017,4,2,11,8,10,0,ZoneOffset.UTC), io.swagger.server.api.model.Order.StatusEnum.APPROVED, Boolean.TRUE);
 
         // init Main
         vertx.deployVerticle("io.swagger.server.api.MainApiVerticle", res -> {
@@ -87,4 +95,23 @@ public class PetStoreTest {
         });
     }
 
+    @Test(timeout = 2000)
+    public void testGetOrderById(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
+            response.bodyHandler(body -> {
+                JsonObject jsonObject = new JsonObject(body.toString());
+                try {
+                    Order resultOrder = Json.mapper.readValue(jsonObject.encode(), Order.class);
+                    context.assertEquals(orderDog, resultOrder);
+                } catch (Exception e) {
+                    context.fail(e);
+                }
+                async.complete();
+            });
+            response.exceptionHandler(err -> {
+                context.fail(err);
+            });
+        });
+    }
 }
