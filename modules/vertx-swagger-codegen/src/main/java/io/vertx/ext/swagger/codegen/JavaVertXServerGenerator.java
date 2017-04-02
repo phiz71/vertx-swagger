@@ -229,11 +229,11 @@ public class JavaVertXServerGenerator extends  AbstractJavaCodegen {
         return result;
     }
 
-    private String extractPortFromHost(String host) {
+    protected String extractPortFromHost(String host) {
         if (host != null) {
-            int portSeprator = host.indexOf(':');
-            if (portSeprator >= 0) {
-                return host.substring(portSeprator);
+            int portSeparatorIndex = host.indexOf(':');
+            if (portSeparatorIndex >= 0 && portSeparatorIndex+1 < host.length()) {
+                 return host.substring(portSeparatorIndex+1);
             }
         }
         return "8080";
