@@ -3,15 +3,11 @@ package io.swagger.server.api.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.Tag;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class Pet   {
@@ -48,7 +44,12 @@ public class Pet   {
   }
 
   public Pet (Long id, Category category, String name, List<String> photoUrls, List<Tag> tags, StatusEnum status) {
-    this.id = id;    this.category = category;    this.name = name;    this.photoUrls = photoUrls;    this.tags = tags;    this.status = status;
+    this.id = id;
+    this.category = category;
+    this.name = name;
+    this.photoUrls = photoUrls;
+    this.tags = tags;
+    this.status = status;
   }
 
     
@@ -154,4 +155,3 @@ public class Pet   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -20,7 +20,6 @@ public class StoreApiVerticle extends AbstractVerticle {
     final static String GETORDERBYID_SERVICE_ID = "getOrderById";
     final static String PLACEORDER_SERVICE_ID = "placeOrder";
     
-    
     //TODO : create Implementation
     StoreApi service = new StoreApiImpl();
 
@@ -30,13 +29,10 @@ public class StoreApiVerticle extends AbstractVerticle {
         //Consumer for deleteOrder
         vertx.eventBus().<JsonObject> consumer(DELETEORDER_SERVICE_ID).handler(message -> {
             try {
+                Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
                 
-                                Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
-                
-             
                 service.deleteOrder(orderId);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -47,11 +43,8 @@ public class StoreApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(GETINVENTORY_SERVICE_ID).handler(message -> {
             try {
                 
-             
                 Map<String, Integer> result = service.getInventory();
-                
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -61,14 +54,10 @@ public class StoreApiVerticle extends AbstractVerticle {
         //Consumer for getOrderById
         vertx.eventBus().<JsonObject> consumer(GETORDERBYID_SERVICE_ID).handler(message -> {
             try {
+                Long orderId = Json.mapper.readValue(message.body().getString("OrderId"), Long.class);
                 
-                                Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
-                
-             
                 Order result = service.getOrderById(orderId);
-                
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -78,14 +67,10 @@ public class StoreApiVerticle extends AbstractVerticle {
         //Consumer for placeOrder
         vertx.eventBus().<JsonObject> consumer(PLACEORDER_SERVICE_ID).handler(message -> {
             try {
+                Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
                 
-                                Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
-                
-             
                 Order result = service.placeOrder(body);
-                
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());

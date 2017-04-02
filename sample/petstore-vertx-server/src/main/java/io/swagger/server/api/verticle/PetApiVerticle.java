@@ -26,7 +26,6 @@ public class PetApiVerticle extends AbstractVerticle {
     final static String UPDATEPETWITHFORM_SERVICE_ID = "updatePetWithForm";
     final static String UPLOADFILE_SERVICE_ID = "uploadFile";
     
-    
     //TODO : create Implementation
     PetApi service = new PetApiImpl();
 
@@ -36,13 +35,10 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for addPet
         vertx.eventBus().<JsonObject> consumer(ADDPET_SERVICE_ID).handler(message -> {
             try {
+                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 
-                                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
-                
-             
                 service.addPet(body);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -52,16 +48,11 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for deletePet
         vertx.eventBus().<JsonObject> consumer(DELETEPET_SERVICE_ID).handler(message -> {
             try {
+                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
+                String apiKey = message.body().getString("api_key");
                 
-                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
-                
-                
-                String apiKey = message.body().getString("apiKey");
-                
-             
                 service.deletePet(petId, apiKey);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -71,15 +62,11 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByStatus
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYSTATUS_SERVICE_ID).handler(message -> {
             try {
-                
-                List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), 
+                List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-             
                 List<Pet> result = service.findPetsByStatus(status);
                 message.reply(new JsonArray(Json.encode(result)).encodePrettily());
-                
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -89,15 +76,11 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByTags
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYTAGS_SERVICE_ID).handler(message -> {
             try {
-                
-                List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), 
+                List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-             
                 List<Pet> result = service.findPetsByTags(tags);
                 message.reply(new JsonArray(Json.encode(result)).encodePrettily());
-                
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -107,14 +90,10 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for getPetById
         vertx.eventBus().<JsonObject> consumer(GETPETBYID_SERVICE_ID).handler(message -> {
             try {
+                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
-                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
-                
-             
                 Pet result = service.getPetById(petId);
-                
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -124,13 +103,10 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for updatePet
         vertx.eventBus().<JsonObject> consumer(UPDATEPET_SERVICE_ID).handler(message -> {
             try {
+                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 
-                                Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
-                
-             
                 service.updatePet(body);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -140,19 +116,12 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for updatePetWithForm
         vertx.eventBus().<JsonObject> consumer(UPDATEPETWITHFORM_SERVICE_ID).handler(message -> {
             try {
-                
-                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
-                
-                
+                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 String name = message.body().getString("name");
-                
-                
                 String status = message.body().getString("status");
                 
-             
                 service.updatePetWithForm(petId, name, status);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -162,19 +131,12 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for uploadFile
         vertx.eventBus().<JsonObject> consumer(UPLOADFILE_SERVICE_ID).handler(message -> {
             try {
-                
-                                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
-                
-                
+                Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 String additionalMetadata = message.body().getString("additionalMetadata");
+                File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 
-                                File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
-                
-             
                 ModelApiResponse result = service.uploadFile(petId, additionalMetadata, file);
-                
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());

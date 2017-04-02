@@ -394,7 +394,7 @@
         "operationId" : "getOrderById",
         "produces" : [ "application/xml", "application/json" ],
         "parameters" : [ {
-          "name" : "orderId",
+          "name" : "OrderId",
           "in" : "path",
           "description" : "ID of pet that needs to be fetched",
           "required" : true,
@@ -742,6 +742,7 @@
           "type" : "string"
         }
       },
+      "description" : "some description",
       "xml" : {
         "name" : "Category"
       }
