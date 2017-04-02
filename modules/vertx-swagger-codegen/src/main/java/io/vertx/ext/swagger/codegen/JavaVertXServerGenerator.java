@@ -84,7 +84,7 @@ public class JavaVertXServerGenerator extends  AbstractJavaCodegen {
         groupId = "io.swagger";
         artifactId = "swagger-java-vertx-server";
         artifactVersion = apiVersion;
-
+        this.setDateLibrary("java8");
     }
 
     /**
