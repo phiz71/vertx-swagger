@@ -13,7 +13,7 @@ public class SampleVertXGeneratorTest {
 		args[1] = "-l";
 		args[2] = "java-vertx";
 		args[3] = "-i";
-		args[4] = "petstore.json";
+		args[4] = "petStore.json";
 		args[5] = "-o";
 		args[6] = "../../sample/petstore-vertx-server";
 		args[7] = "--group-id";
