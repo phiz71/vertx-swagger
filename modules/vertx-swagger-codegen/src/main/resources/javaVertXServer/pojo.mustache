@@ -13,7 +13,8 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
 
   public {{classname}} ({{#vars}}{{{datatypeWithEnum}}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}}) {
     {{#vars}}
-    this.{{name}} = {{name}};{{/vars}}
+    this.{{name}} = {{name}};
+    {{/vars}}
   }
 
   {{#vars}}

@@ -18,7 +18,6 @@ public class {{classname}}Verticle extends AbstractVerticle {
     
     {{#operations}}{{#operation}}{{#vendorExtensions}}final static String {{x-serviceId-varName}} = "{{x-serviceId}}";
     {{/vendorExtensions}}{{/operation}}{{/operations}}
-    
     //TODO : create Implementation
     {{classname}} service = new {{classname}}Impl();
 
@@ -28,35 +27,15 @@ public class {{classname}}Verticle extends AbstractVerticle {
         //Consumer for {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
         vertx.eventBus().<JsonObject> consumer({{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}).handler(message -> {
             try {
-                {{#hasParams}}{{#allParams}}
-                {{#isListContainer}}
-                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonArray("{{baseName}}").encode(), 
+                {{#hasParams}}{{#allParams}}{{#isListContainer}}{{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonArray("{{baseName}}").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, {{{baseType}}}.class));
-                {{/isListContainer}}
-                {{^isListContainer}}
-                {{#isPrimitiveType}}{{#isString}}
-                {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
-                {{/isString}}
-                {{^isString}}
-                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
-                {{/isString}}
-                {{/isPrimitiveType}}
-                {{^isPrimitiveType}}
-                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonObject("{{baseName}}").encode(), {{{dataType}}}.class);
-                {{/isPrimitiveType}}
-                {{/isListContainer}}
-                {{/allParams}}{{/hasParams}}
-             
-                {{#returnType}}
-                {{{returnType}}} result = service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
-                {{#isListContainer}}message.reply(new JsonArray(Json.encode(result)).encodePrettily());{{/isListContainer}}
-                {{^isListContainer}}message.reply(new JsonObject(Json.encode(result)).encodePrettily());{{/isListContainer}}
-                {{/returnType}}
-                {{^returnType}}
-                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
-                message.reply(null);
-                {{/returnType}}
-                
+                {{/isListContainer}}{{^isListContainer}}{{#isPrimitiveType}}{{#isString}}{{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
+                {{/isString}}{{^isString}}{{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
+                {{/isString}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonObject("{{baseName}}").encode(), {{{dataType}}}.class);
+                {{/isPrimitiveType}}{{/isListContainer}}{{/allParams}}{{/hasParams}}
+                {{#returnType}}{{{returnType}}} result = service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
+                {{#isListContainer}}message.reply(new JsonArray(Json.encode(result)).encodePrettily());{{/isListContainer}}{{^isListContainer}}message.reply(new JsonObject(Json.encode(result)).encodePrettily());{{/isListContainer}}{{/returnType}}{{^returnType}}service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
+                message.reply(null);{{/returnType}}
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
