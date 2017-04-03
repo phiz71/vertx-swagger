@@ -2,11 +2,14 @@ package io.swagger.server.api;
 
 import java.nio.charset.Charset;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.file.FileSystem;
+import io.vertx.core.json.Json;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.swagger.router.OperationIdServiceIdResolver;
@@ -20,7 +23,7 @@ public class MainApiVerticle extends AbstractVerticle {
     
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        
+        Json.mapper.registerModule(new JavaTimeModule());
     	FileSystem vertxFileSystem = vertx.fileSystem();
         vertxFileSystem.readFile("swagger.json", readFile -> {
             if (readFile.succeeded()) {

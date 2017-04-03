@@ -4,10 +4,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Date;
-
-
-
+import java.time.OffsetDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class Order   {
@@ -15,7 +12,7 @@ public class Order   {
   private Long id = null;
   private Long petId = null;
   private Integer quantity = null;
-  private Date shipDate = null;
+  private OffsetDateTime shipDate = null;
 
 
   public enum StatusEnum {
@@ -43,8 +40,13 @@ public class Order   {
 
   }
 
-  public Order (Long id, Long petId, Integer quantity, Date shipDate, StatusEnum status, Boolean complete) {
-    this.id = id;    this.petId = petId;    this.quantity = quantity;    this.shipDate = shipDate;    this.status = status;    this.complete = complete;
+  public Order (Long id, Long petId, Integer quantity, OffsetDateTime shipDate, StatusEnum status, Boolean complete) {
+    this.id = id;
+    this.petId = petId;
+    this.quantity = quantity;
+    this.shipDate = shipDate;
+    this.status = status;
+    this.complete = complete;
   }
 
     
@@ -76,10 +78,10 @@ public class Order   {
 
     
   @JsonProperty("shipDate")
-  public Date getShipDate() {
+  public OffsetDateTime getShipDate() {
     return shipDate;
   }
-  public void setShipDate(Date shipDate) {
+  public void setShipDate(OffsetDateTime shipDate) {
     this.shipDate = shipDate;
   }
 
@@ -150,4 +152,3 @@ public class Order   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

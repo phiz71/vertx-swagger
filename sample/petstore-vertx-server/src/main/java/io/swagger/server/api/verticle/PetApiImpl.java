@@ -38,7 +38,8 @@ public class PetApiImpl implements PetApi {
 
     @Override
     public Pet getPetById(Long petId) {
-        // TODO Auto-generated method stub
+        if(petId.equals(1L)) 
+            return new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE);
         return null;
     }
 

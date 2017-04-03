@@ -4,9 +4,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class ModelApiResponse   {
   
@@ -19,7 +16,9 @@ public class ModelApiResponse   {
   }
 
   public ModelApiResponse (Integer code, String type, String message) {
-    this.code = code;    this.type = type;    this.message = message;
+    this.code = code;
+    this.type = type;
+    this.message = message;
   }
 
     
@@ -92,4 +91,3 @@ public class ModelApiResponse   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

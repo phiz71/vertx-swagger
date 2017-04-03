@@ -24,7 +24,6 @@ public class UserApiVerticle extends AbstractVerticle {
     final static String LOGOUTUSER_SERVICE_ID = "logoutUser";
     final static String UPDATEUSER_SERVICE_ID = "updateUser";
     
-    
     //TODO : create Implementation
     UserApi service = new UserApiImpl();
 
@@ -34,15 +33,10 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUser
         vertx.eventBus().<JsonObject> consumer(CREATEUSER_SERVICE_ID).handler(message -> {
             try {
-                
                 User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
-                
-                
-                //TODO: call implementation
                 
                 service.createUser(body);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -52,16 +46,11 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUsersWithArrayInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHARRAYINPUT_SERVICE_ID).handler(message -> {
             try {
-                
-                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), 
+                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
-                
-                
-                //TODO: call implementation
                 
                 service.createUsersWithArrayInput(body);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -71,16 +60,11 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUsersWithListInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHLISTINPUT_SERVICE_ID).handler(message -> {
             try {
-                
-                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), 
+                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
-                
-                
-                //TODO: call implementation
                 
                 service.createUsersWithListInput(body);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -90,15 +74,10 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for deleteUser
         vertx.eventBus().<JsonObject> consumer(DELETEUSER_SERVICE_ID).handler(message -> {
             try {
-                
-                String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);
-                
-                
-                //TODO: call implementation
+                String username = message.body().getString("username");
                 
                 service.deleteUser(username);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -108,16 +87,10 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for getUserByName
         vertx.eventBus().<JsonObject> consumer(GETUSERBYNAME_SERVICE_ID).handler(message -> {
             try {
-                
-                String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);
-                
-                
-                //TODO: call implementation
+                String username = message.body().getString("username");
                 
                 User result = service.getUserByName(username);
-                
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -127,18 +100,11 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for loginUser
         vertx.eventBus().<JsonObject> consumer(LOGINUSER_SERVICE_ID).handler(message -> {
             try {
-                
-                String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);
-                
-                String password = Json.mapper.readValue(message.body().getJsonObject("password").encode(), String.class);
-                
-                
-                //TODO: call implementation
+                String username = message.body().getString("username");
+                String password = message.body().getString("password");
                 
                 String result = service.loginUser(username, password);
-                
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -149,12 +115,8 @@ public class UserApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(LOGOUTUSER_SERVICE_ID).handler(message -> {
             try {
                 
-                
-                //TODO: call implementation
-                
                 service.logoutUser();
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -164,17 +126,11 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for updateUser
         vertx.eventBus().<JsonObject> consumer(UPDATEUSER_SERVICE_ID).handler(message -> {
             try {
-                
-                String username = Json.mapper.readValue(message.body().getJsonObject("username").encode(), String.class);
-                
+                String username = message.body().getString("username");
                 User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
-                
-                
-                //TODO: call implementation
                 
                 service.updateUser(username, body);
                 message.reply(null);
-                
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());

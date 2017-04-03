@@ -4,9 +4,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class Tag   {
   
@@ -18,7 +15,8 @@ public class Tag   {
   }
 
   public Tag (Long id, String name) {
-    this.id = id;    this.name = name;
+    this.id = id;
+    this.name = name;
   }
 
     
@@ -80,4 +78,3 @@ public class Tag   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-
