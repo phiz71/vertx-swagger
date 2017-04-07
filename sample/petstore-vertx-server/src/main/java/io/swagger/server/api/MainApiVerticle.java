@@ -3,6 +3,8 @@ package io.swagger.server.api;
 import java.nio.charset.Charset;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.phiz71.vertx.swagger.router.OperationIdServiceIdResolver;
+import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
@@ -12,8 +14,6 @@ import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.Json;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.swagger.router.OperationIdServiceIdResolver;
-import io.vertx.ext.swagger.router.SwaggerRouter;
 import io.vertx.ext.web.Router;
 
 public class MainApiVerticle extends AbstractVerticle {
