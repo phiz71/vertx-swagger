@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.vertx</groupId>
+    <groupId>com.github.phiz71</groupId>
     <artifactId>vertx-swagger-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
@@ -11,10 +11,10 @@
   <artifactId>vertx-swagger-router</artifactId>
 
 
-  <name>vertx-swagger-router</name>
+  <name>VertX Swagger Router</name>
   <description>A Vert.X Web Router based on a swagger definition</description>
 
-  <url>https://github.com/phiz71/vertx-web-swagger</url>
+  <url>https://github.com/phiz71/vertx-swagger/tree/master/modules/vertx-swagger-router</url>
 
   <licenses>
     <license>
@@ -31,14 +31,6 @@
       <id>phiz71</id>
     </developer>
   </developers>
-
-  <scm>
-    <url>git@github.com:phiz71/vertx-web-swagger</url>
-    <connection>scm:git:git@github.com:phiz71/vertx-web-swagger.git</connection>
-    <developerConnection>scm:git:git@github.com:phiz71/vertx-web-swagger.git</developerConnection>
-
-  </scm>
-
 
   <properties>
     <java.version>1.8</java.version>
@@ -65,60 +57,11 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-unit</artifactId>
       <version>${vertx.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

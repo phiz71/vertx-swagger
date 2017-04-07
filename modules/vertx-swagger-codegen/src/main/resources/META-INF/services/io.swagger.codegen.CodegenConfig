@@ -1,1 +1,1 @@
-io.vertx.ext.swagger.codegen.JavaVertXServerGenerator
+com.github.phiz71.vertx.swagger.codegen.JavaVertXServerGenerator
