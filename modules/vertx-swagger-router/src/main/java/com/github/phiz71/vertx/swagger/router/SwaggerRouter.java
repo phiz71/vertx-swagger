@@ -32,8 +32,8 @@ public class SwaggerRouter {
 
     private static final Pattern PATH_PARAMETER_NAME = Pattern.compile("\\{([A-Za-z][A-Za-z0-9_]*)\\}");
     private static final Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
-    private static final Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<HttpMethod, RouteBuilder>(HttpMethod.class);
-    private static final Map<String, ParameterExtractor> PARAMETER_EXTRACTORS = new HashMap<String, ParameterExtractor>();
+    private static final Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<>(HttpMethod.class);
+    private static final Map<String, ParameterExtractor> PARAMETER_EXTRACTORS = new HashMap<>();
     static {
         ROUTE_BUILDERS.put(HttpMethod.POST, Router::post);
         ROUTE_BUILDERS.put(HttpMethod.GET, Router::get);

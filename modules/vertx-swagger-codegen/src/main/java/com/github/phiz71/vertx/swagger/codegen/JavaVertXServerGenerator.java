@@ -23,10 +23,6 @@ import io.swagger.util.Json;
 
 public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
-    // source folder where to write the files
-    protected String projectFolder = "src" + File.separator + "main";
-    protected String sourceFolder = projectFolder + File.separator + "java";
-
     protected String resourceFolder = "src/main/resources";
     protected String rootPackage = "io.swagger.server.api";
     protected String apiVersion = "1.0.0-SNAPSHOT";
@@ -129,8 +125,6 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
         apiTestTemplateFiles.clear();
 
-        importMapping.remove("ApiModelProperty");
-        importMapping.remove("ApiModel");
         importMapping.remove("JsonCreator");
         importMapping.remove("com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
@@ -153,8 +147,6 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
-        model.imports.remove("ApiModelProperty");
-        model.imports.remove("ApiModel");
         if (!model.isEnum) {
             model.imports.add("JsonInclude");
             model.imports.add("JsonProperty");
@@ -191,6 +183,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         codegenModel.imports.remove("ApiModel");
+        codegenModel.imports.remove("ApiModelProperty");
         return codegenModel;
 
     }
@@ -240,8 +233,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
     private String computeServiceId(String pathname, Entry<HttpMethod, Operation> entry) {
         String operationId = entry.getValue().getOperationId();
-        String result = (operationId != null) ? operationId : entry.getKey().name() + pathname.replaceAll("-", "_").replaceAll("/", "_").replaceAll("[{}]", "");
-        return result;
+        return (operationId != null) ? operationId : entry.getKey().name() + pathname.replaceAll("-", "_").replaceAll("/", "_").replaceAll("[{}]", "");
     }
 
     protected String extractPortFromHost(String host) {
