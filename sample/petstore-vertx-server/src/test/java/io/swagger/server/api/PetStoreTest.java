@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,9 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
+import io.swagger.server.api.verticle.PetApiException;
 import io.vertx.core.Vertx;
+import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
@@ -50,6 +53,25 @@ public class PetStoreTest {
 
         httpClient = Vertx.vertx().createHttpClient();
 
+    }
+    
+    @AfterClass
+    public static void afterClass(TestContext context) {
+        Async after = context.async();
+        FileSystem vertxFileSystem = vertx.fileSystem();
+        vertxFileSystem.deleteRecursive("file-uploads", true, deletedDir -> {
+            if (deletedDir.succeeded()) {
+                vertxFileSystem.deleteRecursive(".vertx", true, vertxDir -> {
+                    if (vertxDir.succeeded()) {
+                        after.complete();
+                    } else {
+                        context.fail(vertxDir.cause());
+                    }
+                });
+            } else {
+                context.fail(deletedDir.cause());
+            }
+        });
     }
 
     @Test(timeout = 2000)
@@ -93,6 +115,30 @@ public class PetStoreTest {
         });
     }
 
+    @Test(timeout = 2000)
+    public void testGetPetByIdPetNotFound(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/3", response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(response.statusCode(), PetApiException.Pet_getPetById_404_Exception.getStatusCode());
+                context.assertEquals(response.statusMessage(), PetApiException.Pet_getPetById_404_Exception.getStatusMessage());
+                async.complete();
+            });
+        });
+    }
+    
+    @Test(timeout = 2000)
+    public void testGetPetByIdInternalServerError(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/2", response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(response.statusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusCode());
+                context.assertEquals(response.statusMessage(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                async.complete();
+            });
+        });
+    }
+    
     @Test(timeout = 2000)
     public void testGetOrderById(TestContext context) {
         Async async = context.async();
