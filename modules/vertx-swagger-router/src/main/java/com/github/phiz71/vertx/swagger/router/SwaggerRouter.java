@@ -18,6 +18,7 @@ import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -86,7 +87,7 @@ public class SwaggerRouter {
                             context.response().end();
                         }
                     } else {
-                        internalServerErrorEnd(context.response());
+                        manageError((ReplyException)operationResponse.cause(), context.response());
                     }
                 });
             } catch (RuntimeException e) {
@@ -118,8 +119,8 @@ public class SwaggerRouter {
         }
     }
 
-    private static void internalServerErrorEnd(HttpServerResponse response) {
-        response.setStatusCode(500).setStatusMessage("Internal Server Error").end();
+    private static void manageError(ReplyException cause, HttpServerResponse response) {
+        response.setStatusCode(cause.failureCode()).setStatusMessage(cause.getMessage()).end();
     }
 
     private static void badRequestEnd(HttpServerResponse response) {

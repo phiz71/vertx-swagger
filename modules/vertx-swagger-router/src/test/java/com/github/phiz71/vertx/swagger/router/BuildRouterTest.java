@@ -83,6 +83,12 @@ public class BuildRouterTest {
         eventBus.<JsonObject> consumer("test.dummy").handler(message -> {
             context.fail("should not be called");
         });
+        eventBus.<JsonObject> consumer("GET_store_order_orderId").handler(message -> {
+            message.fail(500,  "Internal Server Error");
+        });
+        eventBus.<JsonObject> consumer("DELETE_store_order_orderId").handler(message -> {
+            message.fail(404,  "Order not found");
+        });
         eventBus.<JsonObject> consumer("GET_pet_petId").handler(message -> {
             String petId = message.body().getString("petId");
             message.reply(new JsonObject().put("petId_received", petId).encode());
@@ -157,6 +163,26 @@ public class BuildRouterTest {
 
     }
 
+    @Test(timeout = 2000)
+    public void testInternalServerError(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
+            context.assertEquals(response.statusCode(), 500);
+            context.assertEquals(response.statusMessage(), "Internal Server Error");
+            async.complete();
+        });
+    }
+    
+    @Test(timeout = 2000)
+    public void testOrderNotFound(TestContext context) {
+        Async async = context.async();
+        httpClient.delete(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
+            context.assertEquals(response.statusCode(), 404);
+            context.assertEquals(response.statusMessage(), "Order not found");
+            async.complete();
+        }).end();
+    }
+    
     @Test(timeout = 2000)
     public void testResourceNotfound(TestContext context) {
         Async async = context.async();
