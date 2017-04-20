@@ -59,17 +59,11 @@ public class PetStoreTest {
     public static void afterClass(TestContext context) {
         Async after = context.async();
         FileSystem vertxFileSystem = vertx.fileSystem();
-        vertxFileSystem.deleteRecursive("file-uploads", true, deletedDir -> {
-            if (deletedDir.succeeded()) {
-                vertxFileSystem.deleteRecursive(".vertx", true, vertxDir -> {
-                    if (vertxDir.succeeded()) {
-                        after.complete();
-                    } else {
-                        context.fail(vertxDir.cause());
-                    }
-                });
+        vertxFileSystem.deleteRecursive(".vertx", true, vertxDir -> {
+            if (vertxDir.succeeded()) {
+                after.complete();
             } else {
-                context.fail(deletedDir.cause());
+                context.fail(vertxDir.cause());
             }
         });
     }
