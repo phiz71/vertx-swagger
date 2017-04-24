@@ -4,12 +4,14 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
@@ -23,6 +25,7 @@ import io.vertx.ext.swagger.router.extractors.PathParameterExtractor;
 import io.vertx.ext.swagger.router.extractors.QueryParameterExtractor;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
 public class SwaggerRouter {
@@ -49,21 +52,25 @@ public class SwaggerRouter {
     }
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus) {
-        return swaggerRouter(baseRouter, swagger, eventBus, new DefaultServiceIdResolver());
+        return swaggerRouter(baseRouter, swagger, eventBus, new DefaultServiceIdResolver(), null);
     }
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver) {
+        return swaggerRouter(baseRouter, swagger, eventBus, serviceIdResolver, null);
+    }
+
+    public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver, Function<RoutingContext, DeliveryOptions> configureMessage) {
         baseRouter.route().handler(BodyHandler.create());
         swagger.getPaths().forEach((path, pathDescription) -> pathDescription.getOperationMap().forEach((method, operation) -> {
             Route route = ROUTE_BUILDERS.get(method).buildRoute(baseRouter, convertParametersToVertx(path));
             String serviceId = serviceIdResolver.resolve(method, path, operation);
-            configureRoute(route, serviceId, operation, eventBus);
+            configureRoute(route, serviceId, operation, eventBus, configureMessage);
         }));
 
         return baseRouter;
     }
 
-    private static void configureRoute(Route route, String serviceId, Operation operation, EventBus eventBus) {
+    private static void configureRoute(Route route, String serviceId, Operation operation, EventBus eventBus, Function<RoutingContext, DeliveryOptions> configureMessage) {
         Optional.ofNullable(operation.getConsumes()).ifPresent(consumes -> consumes.forEach(route::consumes));
         Optional.ofNullable(operation.getProduces()).ifPresent(produces -> produces.forEach(route::produces));
 
@@ -76,7 +83,10 @@ public class SwaggerRouter {
                     message.put(name, value);
                 });
 
-                eventBus.<String> send(serviceId, message, operationResponse -> {
+                // callback to configure message e.g. provide message header values
+                DeliveryOptions deliveryOptions = configureMessage != null ? configureMessage.apply(context) : new DeliveryOptions();
+
+                eventBus.<String> send(serviceId, message, deliveryOptions, operationResponse -> {
                     if (operationResponse.succeeded()) {
                         if (operationResponse.result().body() != null) {
                             vertxLogger.debug(operationResponse.result().body());
