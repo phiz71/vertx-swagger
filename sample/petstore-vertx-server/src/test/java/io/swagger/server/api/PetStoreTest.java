@@ -8,8 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Pet;

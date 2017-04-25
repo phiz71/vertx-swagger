@@ -2,19 +2,40 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.vertx</groupId>
+    <groupId>com.github.phiz71</groupId>
     <artifactId>vertx-swagger-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
   <artifactId>vertx-swagger-codegen</artifactId>
 
-  <name>vertx-swagger-codegen</name>
+  <name>VertX Swagger Codegen</name>
+
+  <description>A Swagger codegen plugin for Vert.X. Based on the Swagger Router.</description>
+
+  <url>https://github.com/phiz71/vertx-swagger/tree/master/modules/vertx-swagger-codegen</url>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Florent Chamfroy</name>
+      <email>florent.chamfroy@gmail.com</email>
+      <url>https://github.com/phiz71</url>
+      <id>phiz71</id>
+    </developer>
+  </developers>
 
   <properties>
     <swagger-codegen.version>2.2.2</swagger-codegen.version>
+    <java.version>1.6</java.version>
+    <vertx-swagger-router.version>1.0.0-SNAPSHOT</vertx-swagger-router.version>
   </properties>
-
 
   <dependencies>
     <dependency>
@@ -29,86 +50,24 @@
       <version>${swagger-codegen.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.github.phiz71</groupId>
+      <artifactId>vertx-swagger-router</artifactId>
+      <version>${vertx-swagger-router.version}</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.12</version>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>loggerPath</name>
-              <value>conf/log4j.properties</value>
-            </property>
-          </systemProperties>
-          <argLine>-Xms512m -Xmx1500m</argLine>
-          <parallel>methods</parallel>
-          <forkMode>pertest</forkMode>
-        </configuration>
-      </plugin>
-
-      <!-- attach test jar -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-    </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources-filtered</directory>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
   </build>
-
-
-
-
-
-
 </project>
