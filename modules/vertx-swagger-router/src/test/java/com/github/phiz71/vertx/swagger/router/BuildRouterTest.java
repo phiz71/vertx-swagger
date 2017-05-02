@@ -30,6 +30,7 @@ import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -47,6 +48,7 @@ public class BuildRouterTest {
     private static Vertx vertx;
     private static EventBus eventBus;
     private static HttpClient httpClient;
+    private static HttpServer httpServer;
     private static Pet cat, dog, bird;
 
     @BeforeClass
@@ -64,7 +66,7 @@ public class BuildRouterTest {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
                 Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus);
-                vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
+                httpServer = vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
                     if (listen.succeeded()) {
                         before.complete();
                     } else {
@@ -82,12 +84,6 @@ public class BuildRouterTest {
         });
         eventBus.<JsonObject> consumer("test.dummy").handler(message -> {
             context.fail("should not be called");
-        });
-        eventBus.<JsonObject> consumer("GET_store_order_orderId").handler(message -> {
-            message.fail(500,  "Internal Server Error");
-        });
-        eventBus.<JsonObject> consumer("DELETE_store_order_orderId").handler(message -> {
-            message.fail(404,  "Order not found");
         });
         eventBus.<JsonObject> consumer("GET_pet_petId").handler(message -> {
             String petId = message.body().getString("petId");
@@ -163,26 +159,6 @@ public class BuildRouterTest {
 
     }
 
-    @Test(timeout = 2000)
-    public void testInternalServerError(TestContext context) {
-        Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
-            context.assertEquals(response.statusCode(), 500);
-            context.assertEquals(response.statusMessage(), "Internal Server Error");
-            async.complete();
-        });
-    }
-    
-    @Test(timeout = 2000)
-    public void testOrderNotFound(TestContext context) {
-        Async async = context.async();
-        httpClient.delete(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
-            context.assertEquals(response.statusCode(), 404);
-            context.assertEquals(response.statusMessage(), "Order not found");
-            async.complete();
-        }).end();
-    }
-    
     @Test(timeout = 2000)
     public void testResourceNotfound(TestContext context) {
         Async async = context.async();
@@ -405,20 +381,25 @@ public class BuildRouterTest {
     @AfterClass
     public static void afterClass(TestContext context) {
         Async after = context.async();
-        FileSystem vertxFileSystem = vertx.fileSystem();
-        vertxFileSystem.deleteRecursive("file-uploads", true, deletedDir -> {
-            if (deletedDir.succeeded()) {
-                vertxFileSystem.deleteRecursive(".vertx", true, vertxDir -> {
-                    if (vertxDir.succeeded()) {
-                        after.complete();
+        httpServer.close(completionHandler -> {
+            if(completionHandler.succeeded()) {
+                FileSystem vertxFileSystem = vertx.fileSystem();
+                vertxFileSystem.deleteRecursive("file-uploads", true, deletedDir -> {
+                    if (deletedDir.succeeded()) {
+                        vertxFileSystem.deleteRecursive(".vertx", true, vertxDir -> {
+                            if (vertxDir.succeeded()) {
+                                after.complete();
+                            } else {
+                                context.fail(vertxDir.cause());
+                            }
+                        });
                     } else {
-                        context.fail(vertxDir.cause());
+                        context.fail(deletedDir.cause());
                     }
                 });
-            } else {
-                context.fail(deletedDir.cause());
             }
         });
+        
     }
 
 }
