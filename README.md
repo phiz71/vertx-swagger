@@ -14,5 +14,4 @@ It contains 2 modules:
 ## vertx-swagger-codegen :
  - add the possibility to validate the request according the swagger definition
  - support other languages (Groovy, JavaScript, ruby, Ceylon)
- - generate swagger definition using swagger annotations.
   
