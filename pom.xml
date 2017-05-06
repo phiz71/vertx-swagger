@@ -94,7 +94,7 @@
       <properties>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
-        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
       </properties>
 
@@ -159,4 +159,8 @@
     </profile>
   </profiles>
 
+  <description>This project aims to provide a code generator based on Swagger to create web server with Vert.X and Vert.X Web.
+It contains 2 modules:
+ - vertx-swagger-router : a generic Router which can be configured with a swagger definition
+ - vertx-swagger-codegen : a library which has to be used with Swagger Codegen Generator</description>
 </project>
