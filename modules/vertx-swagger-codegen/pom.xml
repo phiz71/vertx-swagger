@@ -34,7 +34,7 @@
   <properties>
     <swagger-codegen.version>2.2.2</swagger-codegen.version>
     <java.version>1.6</java.version>
-    <vertx-swagger-router.version>1.0.0-SNAPSHOT</vertx-swagger-router.version>
+    <vertx-swagger-router.version>${project.parent.version}</vertx-swagger-router.version>
   </properties>
 
   <dependencies>
