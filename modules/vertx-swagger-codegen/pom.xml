@@ -34,7 +34,6 @@
   <properties>
     <swagger-codegen.version>2.2.2</swagger-codegen.version>
     <java.version>1.6</java.version>
-    <vertx-swagger-router.version>${project.parent.version}</vertx-swagger-router.version>
   </properties>
 
   <dependencies>
@@ -53,7 +52,7 @@
     <dependency>
       <groupId>com.github.phiz71</groupId>
       <artifactId>vertx-swagger-router</artifactId>
-      <version>${vertx-swagger-router.version}</version>
+      <version>${project.parent.version}</version>
       <optional>true</optional>
     </dependency>
   </dependencies>
