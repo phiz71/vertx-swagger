@@ -1,6 +1,7 @@
 package io.swagger.server.api.verticle;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -65,8 +66,13 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                List<Pet> result = service.findPetsByStatus(status);
-                message.reply(new JsonArray(Json.encode(result)).encodePrettily());
+                service.findPetsByStatus(status).setHandler(futureResult -> {
+                   if(futureResult.succeeded()) {
+                       message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
+                   } else {
+                       message.fail(101, futureResult.cause().getMessage());
+                   }
+                });
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -79,8 +85,13 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                List<Pet> result = service.findPetsByTags(tags);
-                message.reply(new JsonArray(Json.encode(result)).encodePrettily());
+                service.findPetsByTags(tags).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        message.fail(101, futureResult.cause().getMessage());
+                    }
+                 });
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -92,8 +103,13 @@ public class PetApiVerticle extends AbstractVerticle {
             try {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
-                Pet result = service.getPetById(petId);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.getPetById(petId).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        message.fail(101, futureResult.cause().getMessage());
+                    }
+                 });
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
@@ -135,8 +151,13 @@ public class PetApiVerticle extends AbstractVerticle {
                 String additionalMetadata = message.body().getString("additionalMetadata");
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 
-                ModelApiResponse result = service.uploadFile(petId, additionalMetadata, file);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.uploadFile(petId, additionalMetadata, file).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        message.fail(101, futureResult.cause().getMessage());
+                    }
+                 });
             } catch (Exception e) {
                 //TODO : replace magic number (101)
                 message.fail(101, e.getLocalizedMessage());
