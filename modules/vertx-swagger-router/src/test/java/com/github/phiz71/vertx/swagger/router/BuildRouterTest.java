@@ -151,8 +151,29 @@ public class BuildRouterTest {
             message.reply(null);
         });
         eventBus.<JsonObject> consumer("GET_user_username").handler(message -> {
+            String username = message.body().getString("username");
             DeliveryOptions options = new DeliveryOptions();
-            options.addHeader("Header_KEY", "Header_VALUE");
+            switch (username) {
+            case "statusCode":
+                options.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, "206");
+                break;
+            case "statusMessage":
+                options.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, "My Custom Message");
+                break;
+            case "statusCodeAndMessage":
+                options.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, "206");
+                options.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, "My Custom Message");
+                break;
+            case "simpleHeader":
+                options.addHeader("Header_KEY", "Header_VALUE");
+                break;
+            case "simpleHeaderAndStatusCode":
+                options.addHeader("Header_KEY", "Header_VALUE");
+                options.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, "206");
+                break;
+            }
+            
+            
             message.reply("", options);
         });
 
@@ -383,15 +404,58 @@ public class BuildRouterTest {
     }
     
     @Test(timeout = 2000)
-    public void testWithReturnedHeaderParameter(TestContext context) {
+    public void testWithCustomStatusCode(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/username", response -> { 
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/statusCode", response -> { 
+            context.assertEquals(206, response.statusCode());
+            String header = response.getHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY);
+            context.assertNull(header);
+            async.complete();
+        });
+    }
+    
+    @Test(timeout = 2000)
+    public void testWithCustomStatusMessage(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/statusMessage", response -> { 
+            context.assertEquals("My Custom Message", response.statusMessage());
+            async.complete();
+        });
+    }
+    
+    @Test(timeout = 2000)
+    public void testWithCustomStatusCodeAndMessage(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/statusCodeAndMessage", response -> { 
+            context.assertEquals(206, response.statusCode());
+            context.assertEquals("My Custom Message", response.statusMessage());
+            async.complete();
+        });
+    }
+    
+    @Test(timeout = 2000)
+    public void testWithSimpleReturnedHeader(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/simpleHeader", response -> { 
             String header = response.getHeader("Header_KEY");
             context.assertNotNull(header);
             context.assertEquals("Header_VALUE", header);
             async.complete();
         });
     }
+    
+    @Test(timeout = 2000)
+    public void testWithSimpleReturnedHeaderAndCustomStatusCode(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/simpleHeaderAndStatusCode", response -> {
+            context.assertEquals(206, response.statusCode());
+            String header = response.getHeader("Header_KEY");
+            context.assertNotNull(header);
+            context.assertEquals("Header_VALUE", header);
+            async.complete();
+        });
+    }
+    
     
     @AfterClass
     public static void afterClass(TestContext context) {

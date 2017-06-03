@@ -18,6 +18,7 @@ import com.github.phiz71.vertx.swagger.router.extractors.QueryParameterExtractor
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
+import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServerResponse;
@@ -33,6 +34,9 @@ public class SwaggerRouter {
 
     private static Logger vertxLogger = LoggerFactory.getLogger(SwaggerRouter.class);
 
+    public static final String CUSTOM_STATUS_CODE_HEADER_KEY="CUSTOM_STATUS_CODE";
+    public static final String CUSTOM_STATUS_MESSAGE_HEADER_KEY="CUSTOM_STATUS_MESSAGE";
+    
     private static final Pattern PATH_PARAMETER_NAME = Pattern.compile("\\{([A-Za-z][A-Za-z0-9_]*)\\}");
     private static final Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
     private static final Map<HttpMethod, RouteBuilder> ROUTE_BUILDERS = new EnumMap<>(HttpMethod.class);
@@ -91,7 +95,7 @@ public class SwaggerRouter {
                     if (operationResponse.succeeded()) {
                         if (operationResponse.result().body() != null) {
                             vertxLogger.debug(operationResponse.result().body());
-                            context.response().headers().addAll(operationResponse.result().headers());
+                            manageHeaders(context.response(), operationResponse.result().headers());
                             context.response().end(operationResponse.result().body());
                         } else {
                             context.response().end();
@@ -108,6 +112,20 @@ public class SwaggerRouter {
 
         });
 
+    }
+
+    private static void manageHeaders(HttpServerResponse httpServerResponse, MultiMap messageHeaders) {
+        if(messageHeaders.contains(CUSTOM_STATUS_CODE_HEADER_KEY)) {
+            Integer customStatusCode = Integer.valueOf(messageHeaders.get(CUSTOM_STATUS_CODE_HEADER_KEY));
+            httpServerResponse.setStatusCode(customStatusCode);
+            messageHeaders.remove(CUSTOM_STATUS_CODE_HEADER_KEY);
+        }
+        if(messageHeaders.contains(CUSTOM_STATUS_MESSAGE_HEADER_KEY)) {
+            String customStatusMessage = messageHeaders.get(CUSTOM_STATUS_MESSAGE_HEADER_KEY);
+            httpServerResponse.setStatusMessage(customStatusMessage);
+            messageHeaders.remove(CUSTOM_STATUS_MESSAGE_HEADER_KEY);
+        }
+        httpServerResponse.headers().addAll(messageHeaders);
     }
 
     private static String convertParametersToVertx(String path) {
