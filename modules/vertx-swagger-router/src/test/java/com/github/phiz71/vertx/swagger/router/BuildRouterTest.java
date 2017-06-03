@@ -24,6 +24,7 @@ import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpClient;
@@ -148,6 +149,11 @@ public class BuildRouterTest {
         });
         eventBus.<JsonObject> consumer("GET_user_logout").handler(message -> {
             message.reply(null);
+        });
+        eventBus.<JsonObject> consumer("GET_user_username").handler(message -> {
+            DeliveryOptions options = new DeliveryOptions();
+            options.addHeader("Header_KEY", "Header_VALUE");
+            message.reply("", options);
         });
 
         // init http Server
@@ -375,7 +381,18 @@ public class BuildRouterTest {
         req.end();
 
     }
-
+    
+    @Test(timeout = 2000)
+    public void testWithReturnedHeaderParameter(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/username", response -> { 
+            String header = response.getHeader("Header_KEY");
+            context.assertNotNull(header);
+            context.assertEquals("Header_VALUE", header);
+            async.complete();
+        });
+    }
+    
     @AfterClass
     public static void afterClass(TestContext context) {
         Async after = context.async();

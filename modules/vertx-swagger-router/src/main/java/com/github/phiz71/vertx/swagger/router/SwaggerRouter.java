@@ -91,11 +91,13 @@ public class SwaggerRouter {
                     if (operationResponse.succeeded()) {
                         if (operationResponse.result().body() != null) {
                             vertxLogger.debug(operationResponse.result().body());
+                            context.response().headers().addAll(operationResponse.result().headers());
                             context.response().end(operationResponse.result().body());
                         } else {
                             context.response().end();
                         }
                     } else {
+                        vertxLogger.debug("Internal Server Error", operationResponse.cause());
                         internalServerErrorEnd(context.response());
                     }
                 });
