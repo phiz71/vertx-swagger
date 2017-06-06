@@ -7,3 +7,4 @@ sample/petstore-vertx-server/.settings/org.eclipse.core.resources.prefs
 sample/petstore-vertx-server/vertx.log
 modules/vertx-swagger-router/vertx.log
 sample/petstore-vertx-server/vertx.log.1
+*.releaseBackup

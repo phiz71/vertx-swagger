@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.github.phiz71</groupId>
     <artifactId>vertx-swagger-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
 
@@ -34,14 +33,19 @@
 
   <properties>
     <java.version>1.8</java.version>
-    <vertx.version>3.3.3</vertx.version>
-    <swagger-parser.version>1.0.22</swagger-parser.version>
+    <vertx.version>3.4.1</vertx.version>
+    <swagger-parser.version>1.0.26</swagger-parser.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
+      <version>${vertx.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-rx-java</artifactId>
       <version>${vertx.version}</version>
     </dependency>
     <dependency>
