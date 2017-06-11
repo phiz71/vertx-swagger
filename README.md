@@ -10,10 +10,29 @@ Here is a [blog post](http://vertx.io/blog/presentation-of-the-vert-x-swagger-pr
   
 # Maven :
 ## vertx-swagger-parent :
-<script src="https://gist.github.com/phiz71/7bb24bbffb8adcb2b591e420e615ae9e.js"></script>
+```XML
+<dependency>
+  <groupId>com.github.phiz71</groupId>
+  <artifactId>vertx-swagger-parent</artifactId>
+  <version>1.1.0</version>
+  <type>pom</type>
+</dependency>
+```
 
 ## vertx-swagger-router :
-<script src="https://gist.github.com/phiz71/56e723362a1d1370c7262bff246fb087.js"></script>
+```XML
+<dependency>
+  <groupId>com.github.phiz71</groupId>
+  <artifactId>vertx-swagger-router</artifactId>
+  <version>1.1.0</version>
+</dependency>
+```
 
 ## vertx-swagger-codegen :
-<script src="https://gist.github.com/phiz71/5943d17e4e2dbbfa5619ebe443ecaf00.js"></script>
+```XML
+<dependency>
+  <groupId>com.github.phiz71</groupId>
+  <artifactId>vertx-swagger-codegen</artifactId>
+  <version>1.1.0</version>
+</dependency>
+```
