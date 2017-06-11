@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.Order;
 
 import java.util.List;
@@ -33,9 +34,11 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 service.deleteOrder(orderId);
                 message.reply(null);
+            } catch (StoreApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+DELETEORDER_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -45,9 +48,11 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 Map<String, Integer> result = service.getInventory();
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+            } catch (StoreApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+GETINVENTORY_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -58,9 +63,11 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 Order result = service.getOrderById(orderId);
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+            } catch (StoreApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+GETORDERBYID_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -71,9 +78,11 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 Order result = service.placeOrder(body);
                 message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+            } catch (StoreApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+PLACEORDER_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         

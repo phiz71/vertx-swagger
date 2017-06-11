@@ -1,6 +1,7 @@
 package io.swagger.server.api.verticle;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -8,6 +9,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
 import java.io.File;
+import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 
@@ -39,9 +41,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.addPet(body);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+ADDPET_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -53,9 +57,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.deletePet(petId, apiKey);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+DELETEPET_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -65,11 +71,16 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                List<Pet> result = service.findPetsByStatus(status);
-                message.reply(new JsonArray(Json.encode(result)).encodePrettily());
+                service.findPetsByStatus(status).setHandler(futureResult -> {
+                   if(futureResult.succeeded()) {
+                       message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
+                   } else {
+                       message.fail(101, futureResult.cause().getMessage());
+                   }
+                });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+FINDPETSBYSTATUS_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -79,11 +90,16 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                List<Pet> result = service.findPetsByTags(tags);
-                message.reply(new JsonArray(Json.encode(result)).encodePrettily());
+                service.findPetsByTags(tags).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        message.fail(101, futureResult.cause().getMessage());
+                    }
+                 });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+FINDPETSBYTAGS_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -92,11 +108,16 @@ public class PetApiVerticle extends AbstractVerticle {
             try {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
-                Pet result = service.getPetById(petId);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.getPetById(petId).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        message.fail(101, futureResult.cause().getMessage());
+                    }
+                 });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+GETPETBYID_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -107,9 +128,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.updatePet(body);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+UPDATEPET_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -122,9 +145,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.updatePetWithForm(petId, name, status);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+UPDATEPETWITHFORM_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -135,11 +160,16 @@ public class PetApiVerticle extends AbstractVerticle {
                 String additionalMetadata = message.body().getString("additionalMetadata");
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 
-                ModelApiResponse result = service.uploadFile(petId, additionalMetadata, file);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.uploadFile(petId, additionalMetadata, file).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        message.fail(101, futureResult.cause().getMessage());
+                    }
+                 });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+UPLOADFILE_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         

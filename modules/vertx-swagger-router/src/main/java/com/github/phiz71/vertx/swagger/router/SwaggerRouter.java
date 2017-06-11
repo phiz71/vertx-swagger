@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.phiz71.vertx.swagger.router.extractors.BodyParameterExtractor;
 import com.github.phiz71.vertx.swagger.router.extractors.FormParameterExtractor;
 import com.github.phiz71.vertx.swagger.router.extractors.HeaderParameterExtractor;
@@ -15,12 +17,15 @@ import com.github.phiz71.vertx.swagger.router.extractors.ParameterExtractor;
 import com.github.phiz71.vertx.swagger.router.extractors.PathParameterExtractor;
 import com.github.phiz71.vertx.swagger.router.extractors.QueryParameterExtractor;
 
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpStatusClass;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -102,7 +107,7 @@ public class SwaggerRouter {
                         }
                     } else {
                         vertxLogger.debug("Internal Server Error", operationResponse.cause());
-                        internalServerErrorEnd(context.response());
+                        manageError((ReplyException)operationResponse.cause(), context.response());
                     }
                 });
             } catch (RuntimeException e) {
@@ -148,8 +153,26 @@ public class SwaggerRouter {
         }
     }
 
-    private static void internalServerErrorEnd(HttpServerResponse response) {
-        response.setStatusCode(500).setStatusMessage("Internal Server Error").end();
+    private static void manageError( ReplyException cause, HttpServerResponse response) {
+        if(isExistingHttStatusCode(cause.failureCode())) {
+            response.setStatusCode(cause.failureCode());
+            if(StringUtils.isNotEmpty(cause.getMessage())) {
+                response.setStatusMessage(cause.getMessage());
+            }
+        } else {
+            response.setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
+        }
+        response.end();
+    }
+
+    private static boolean isExistingHttStatusCode(int failureCode) {
+        try {
+            HttpResponseStatus.valueOf(failureCode);
+        } catch (IllegalArgumentException e) {
+            vertxLogger.info(failureCode+" is not a valid HttpStatusCode", e);
+            return false;
+        }
+        return true;
     }
 
     private static void badRequestEnd(HttpServerResponse response) {
