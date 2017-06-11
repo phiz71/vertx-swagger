@@ -3,6 +3,8 @@
 This project aims at having a generic Vert.X Router which is configure dynamically with a swagger defitinion (json or yaml format).
 It's using [Swagger-Parser](https://github.com/swagger-api/swagger-parser#usage)
 
+Here is a [blog post](http://vertx.io/blog/presentation-of-the-vert-x-swagger-project) that explains how to use this library.
+
 ## Usage:
 
 ```java
@@ -47,3 +49,4 @@ The SwaggerRouter will be automatically configured as if you've done this
         });
     });
 ```
+
