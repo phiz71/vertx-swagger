@@ -37,10 +37,13 @@ public class PetApiImpl implements PetApi {
     }
 
     @Override
-    public Pet getPetById(Long petId) {
+    public Pet getPetById(Long petId) throws PetApiException {
         if(petId.equals(1L)) 
             return new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE);
-        return null;
+        else if (petId.equals(2L))
+            throw new NullPointerException("simulation");
+        
+        throw PetApiException.Pet_getPetById_404_Exception;
     }
 
     @Override
