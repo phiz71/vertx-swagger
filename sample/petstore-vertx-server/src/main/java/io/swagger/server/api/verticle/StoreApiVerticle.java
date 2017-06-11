@@ -46,8 +46,14 @@ public class StoreApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(GETINVENTORY_SERVICE_ID).handler(message -> {
             try {
                 
-                Map<String, Integer> result = service.getInventory();
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.getInventory().setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        LOGGER.error("Error in "+GETINVENTORY_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                    }
+                });
             } catch (StoreApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
@@ -61,8 +67,14 @@ public class StoreApiVerticle extends AbstractVerticle {
             try {
                 Long orderId = Json.mapper.readValue(message.body().getString("OrderId"), Long.class);
                 
-                Order result = service.getOrderById(orderId);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.getOrderById(orderId).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        LOGGER.error("Error in "+GETORDERBYID_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                    }
+                });
             } catch (StoreApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
@@ -76,8 +88,14 @@ public class StoreApiVerticle extends AbstractVerticle {
             try {
                 Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
                 
-                Order result = service.placeOrder(body);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.placeOrder(body).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        LOGGER.error("Error in "+PLACEORDER_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                    }
+                });
             } catch (StoreApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {

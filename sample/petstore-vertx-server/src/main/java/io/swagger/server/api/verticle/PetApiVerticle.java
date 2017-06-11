@@ -1,7 +1,6 @@
 package io.swagger.server.api.verticle;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -72,12 +71,15 @@ public class PetApiVerticle extends AbstractVerticle {
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
                 service.findPetsByStatus(status).setHandler(futureResult -> {
-                   if(futureResult.succeeded()) {
-                       message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
-                   } else {
-                       message.fail(101, futureResult.cause().getMessage());
-                   }
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        LOGGER.error("Error in "+FINDPETSBYSTATUS_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                    }
                 });
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
                 LOGGER.error("Error in "+FINDPETSBYSTATUS_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -94,9 +96,12 @@ public class PetApiVerticle extends AbstractVerticle {
                     if(futureResult.succeeded()) {
                         message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
                     } else {
-                        message.fail(101, futureResult.cause().getMessage());
+                        LOGGER.error("Error in "+FINDPETSBYTAGS_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
                     }
-                 });
+                });
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
                 LOGGER.error("Error in "+FINDPETSBYTAGS_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -112,9 +117,12 @@ public class PetApiVerticle extends AbstractVerticle {
                     if(futureResult.succeeded()) {
                         message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
                     } else {
-                        message.fail(101, futureResult.cause().getMessage());
+                        LOGGER.error("Error in "+GETPETBYID_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
                     }
-                 });
+                });
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
                 LOGGER.error("Error in "+GETPETBYID_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -164,9 +172,12 @@ public class PetApiVerticle extends AbstractVerticle {
                     if(futureResult.succeeded()) {
                         message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
                     } else {
-                        message.fail(101, futureResult.cause().getMessage());
+                        LOGGER.error("Error in "+UPLOADFILE_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
                     }
-                 });
+                });
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
                 LOGGER.error("Error in "+UPLOADFILE_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());

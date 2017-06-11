@@ -6,6 +6,7 @@ import java.util.Map;
 
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Order.StatusEnum;
+import io.vertx.core.Future;
 
 public class StoreApiImpl implements StoreApi {
 
@@ -16,18 +17,20 @@ public class StoreApiImpl implements StoreApi {
     }
 
     @Override
-    public Map<String, Integer> getInventory() {
+    public Future<Map<String, Integer>> getInventory() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Order getOrderById(Long orderId) {
-        return new Order(1L, 1L, 3, OffsetDateTime.of(2017,4,2,11,8,10,0,ZoneOffset.UTC), StatusEnum.APPROVED, Boolean.TRUE);
+    public Future<Order> getOrderById(Long orderId) {
+        Future<Order> futureResult = Future.future();
+        futureResult.complete(new Order(1L, 1L, 3, OffsetDateTime.of(2017,4,2,11,8,10,0,ZoneOffset.UTC), StatusEnum.APPROVED, Boolean.TRUE));
+        return futureResult;
     }
 
     @Override
-    public Order placeOrder(Order body) {
+    public Future<Order> placeOrder(Order body) {
         // TODO Auto-generated method stub
         return null;
     }

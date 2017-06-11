@@ -38,7 +38,8 @@ public class {{classname}}Verticle extends AbstractVerticle {
                     if(futureResult.succeeded()) {
                         {{#isListContainer}}message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());{{/isListContainer}}{{^isListContainer}}message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());{{/isListContainer}}
                     } else {
-                        message.fail(101, futureResult.cause().getMessage());
+                        LOGGER.error("Error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
                     }
                 });
                 {{/returnType}}
@@ -46,9 +47,11 @@ public class {{classname}}Verticle extends AbstractVerticle {
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}});
                 message.reply(null);
                 {{/returnType}}
+            } catch ({{classname}}Exception e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         {{/operation}}{{/operations}}

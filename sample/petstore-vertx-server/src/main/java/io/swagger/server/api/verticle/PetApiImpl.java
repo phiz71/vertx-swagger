@@ -40,13 +40,17 @@ public class PetApiImpl implements PetApi {
     }
 
     @Override
-    public Future<Pet> getPetById(Long petId) {
+    public Future<Pet> getPetById(Long petId) throws PetApiException {
         Future<Pet> futureResult = Future.future();
-        if(petId.equals(1L))
+        if(petId.equals(1L)) {
             futureResult.complete(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE));
-        else
-            futureResult.complete(null);
-        return futureResult;
+            return futureResult;
+        }
+        else if (petId.equals(2L))
+             throw new NullPointerException("simulation");
+        
+        throw PetApiException.Pet_getPetById_404_Exception;
+        
     }
 
     @Override

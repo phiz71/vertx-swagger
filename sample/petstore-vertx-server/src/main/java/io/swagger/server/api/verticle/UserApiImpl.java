@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import java.util.List;
 
 import io.swagger.server.api.model.User;
+import io.vertx.core.Future;
 
 public class UserApiImpl implements UserApi {
 
@@ -31,13 +32,13 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
-    public User getUserByName(String username) {
+    public Future<User> getUserByName(String username) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public String loginUser(String username, String password) {
+    public Future<String> loginUser(String username, String password) {
         // TODO Auto-generated method stub
         return null;
     }

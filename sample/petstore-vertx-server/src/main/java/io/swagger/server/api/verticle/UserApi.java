@@ -1,7 +1,9 @@
 package io.swagger.server.api.verticle;
 
+
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.User;
+import io.vertx.core.Future;
 
 import java.util.List;
 import java.util.Map;
@@ -20,10 +22,10 @@ public interface UserApi  {
     public void deleteUser(String username) throws UserApiException;
     
     //getUserByName
-    public User getUserByName(String username) throws UserApiException;
+    public Future<User> getUserByName(String username) throws UserApiException;
     
     //loginUser
-    public String loginUser(String username,String password) throws UserApiException;
+    public Future<String> loginUser(String username,String password) throws UserApiException;
     
     //logoutUser
     public void logoutUser() throws UserApiException;
