@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.swagger.codegen.CliOption;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenProperty;
@@ -30,11 +31,14 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public static final String ROOT_PACKAGE = "rootPackage";
     public static final String VERTX_SWAGGER_ROUTER_VERSION = "vertxSwaggerRouterVersion";
 
+    public static final String FUTURE_GENERATION_OPTION = "futureGenerationOption";
+    
     protected String verticlePackage = "";
 
     public JavaVertXServerGenerator() {
         super();
 
+        
         // set the output folder here
         outputFolder = "generated-code/javaVertXServer";
 
@@ -88,6 +92,9 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
         String vertxSwaggerRouterVersion = ResourceBundle.getBundle("vertx-swagger-router").getString("vertx-swagger-router.version");
         additionalProperties.put(VERTX_SWAGGER_ROUTER_VERSION, vertxSwaggerRouterVersion);
+        
+        cliOptions.add(CliOption.newBoolean(FUTURE_GENERATION_OPTION,
+                "When specified, returned object of operations in each API interface will be wrapped into a Future."));
     }
 
     /**
@@ -124,6 +131,14 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public void processOpts() {
         super.processOpts();
 
+        if (additionalProperties.containsKey(FUTURE_GENERATION_OPTION)) {
+            apiTemplateFiles.clear();
+            apiTemplateFiles.put("apiFuture.mustache", // the template to use
+                    ".java"); // the extension for each file to write
+            apiTemplateFiles.put("apiFutureVerticle.mustache", // the template to use
+                    "Verticle.java"); // the extension for each file to write
+        }
+        
         apiTestTemplateFiles.clear();
 
         importMapping.remove("JsonCreator");
@@ -162,7 +177,6 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         Map<String, Object> newObjs = super.postProcessOperations(objs);
-
         Map<String, Object> operations = (Map<String, Object>) newObjs.get("operations");
         if (operations != null) {
             List<CodegenOperation> ops = (List<CodegenOperation>) operations.get("operation");
