@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.User;
 
 import java.util.List;
@@ -37,9 +38,11 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.createUser(body);
                 message.reply(null);
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+CREATEUSER_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -51,9 +54,11 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.createUsersWithArrayInput(body);
                 message.reply(null);
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+CREATEUSERSWITHARRAYINPUT_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -65,9 +70,11 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.createUsersWithListInput(body);
                 message.reply(null);
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+CREATEUSERSWITHLISTINPUT_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -78,9 +85,11 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.deleteUser(username);
                 message.reply(null);
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+DELETEUSER_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -89,11 +98,19 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 String username = message.body().getString("username");
                 
-                User result = service.getUserByName(username);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.getUserByName(username).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        LOGGER.error("Error in "+GETUSERBYNAME_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                    }
+                });
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+GETUSERBYNAME_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -103,11 +120,19 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 String password = message.body().getString("password");
                 
-                String result = service.loginUser(username, password);
-                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                service.loginUser(username, password).setHandler(futureResult -> {
+                    if(futureResult.succeeded()) {
+                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
+                    } else {
+                        LOGGER.error("Error in "+LOGINUSER_SERVICE_ID, futureResult.cause());
+                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                    }
+                });
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+LOGINUSER_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -117,9 +142,11 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.logoutUser();
                 message.reply(null);
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+LOGOUTUSER_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -131,9 +158,11 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.updateUser(username, body);
                 message.reply(null);
+            } catch (UserApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+UPDATEUSER_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         

@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.swagger.codegen.CliOption;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenProperty;
@@ -28,14 +29,16 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     protected String apiVersion = "1.0.0-SNAPSHOT";
 
     public static final String ROOT_PACKAGE = "rootPackage";
-    public static final String VERTICLE_PACKAGE = "verticlePackage";
     public static final String VERTX_SWAGGER_ROUTER_VERSION = "vertxSwaggerRouterVersion";
 
+    public static final String FUTURE_GENERATION_OPTION = "futureGenerationOption";
+    
     protected String verticlePackage = "";
 
     public JavaVertXServerGenerator() {
         super();
 
+        
         // set the output folder here
         outputFolder = "generated-code/javaVertXServer";
 
@@ -60,6 +63,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
                 ".java"); // the extension for each file to write
         apiTemplateFiles.put("apiVerticle.mustache", // the template to use
                 "Verticle.java"); // the extension for each file to write
+        apiTemplateFiles.put("apiException.mustache", // the template to use
+                "Exception.java"); // the extension for each file to write
 
         /**
          * Template Location. This is the location which templates will be read
@@ -87,6 +92,9 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
         String vertxSwaggerRouterVersion = ResourceBundle.getBundle("vertx-swagger-router").getString("vertx-swagger-router.version");
         additionalProperties.put(VERTX_SWAGGER_ROUTER_VERSION, vertxSwaggerRouterVersion);
+        
+        cliOptions.add(CliOption.newBoolean(FUTURE_GENERATION_OPTION,
+                "When specified, returned object of operations in each API interface will be wrapped into a Future."));
     }
 
     /**
@@ -123,6 +131,14 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public void processOpts() {
         super.processOpts();
 
+        if (additionalProperties.containsKey(FUTURE_GENERATION_OPTION)) {
+            apiTemplateFiles.clear();
+            apiTemplateFiles.put("apiFuture.mustache", // the template to use
+                    ".java"); // the extension for each file to write
+            apiTemplateFiles.put("apiFutureVerticle.mustache", // the template to use
+                    "Verticle.java"); // the extension for each file to write
+        }
+        
         apiTestTemplateFiles.clear();
 
         importMapping.remove("JsonCreator");
@@ -130,14 +146,15 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
+        importMapping.put("MainApiException", rootPackage+".MainApiException");
 
         modelDocTemplateFiles.clear();
         apiDocTemplateFiles.clear();
 
         supportingFiles.clear();
         supportingFiles.add(new SupportingFile("swagger.mustache", resourceFolder, "swagger.json"));
-
         supportingFiles.add(new SupportingFile("MainApiVerticle.mustache", sourceFolder + File.separator + rootPackage.replace(".", File.separator), "MainApiVerticle.java"));
+        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + rootPackage.replace(".", File.separator), "MainApiException.java"));
 
         writeOptional(outputFolder, new SupportingFile("vertx-default-jul-logging.mustache", resourceFolder, "vertx-default-jul-logging.properties"));
         writeOptional(outputFolder, new SupportingFile("pom.mustache", "", "pom.xml"));
@@ -160,7 +177,6 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         Map<String, Object> newObjs = super.postProcessOperations(objs);
-
         Map<String, Object> operations = (Map<String, Object>) newObjs.get("operations");
         if (operations != null) {
             List<CodegenOperation> ops = (List<CodegenOperation>) operations.get("operation");
@@ -174,10 +190,21 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
                 if (operation.getHasPathParams()) {
                     operation.path = camelizePath(operation.path);
                 }
+                
             }
         }
         return newObjs;
     }
+
+    
+    
+    @Override
+    public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
+        CodegenOperation codegenOperation =  super.fromOperation(path, httpMethod, operation, definitions, swagger);
+        codegenOperation.imports.add("MainApiException");
+        return codegenOperation;
+    }
+    
 
     @Override
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
@@ -213,7 +240,6 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
             for (Entry<String, Path> entry : paths.entrySet()) {
                 manageOperationNames(entry.getValue(), entry.getKey());
             }
-
         }
         this.additionalProperties.remove("gson");
     }
