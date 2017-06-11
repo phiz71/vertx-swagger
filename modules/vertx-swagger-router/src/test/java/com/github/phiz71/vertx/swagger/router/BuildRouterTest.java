@@ -30,6 +30,7 @@ import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -47,6 +48,7 @@ public class BuildRouterTest {
     private static Vertx vertx;
     private static EventBus eventBus;
     private static HttpClient httpClient;
+    private static HttpServer httpServer;
     private static Pet cat, dog, bird;
 
     @BeforeClass
@@ -64,7 +66,7 @@ public class BuildRouterTest {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
                 Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus);
-                vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
+                httpServer = vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
                     if (listen.succeeded()) {
                         before.complete();
                     } else {
@@ -379,20 +381,25 @@ public class BuildRouterTest {
     @AfterClass
     public static void afterClass(TestContext context) {
         Async after = context.async();
-        FileSystem vertxFileSystem = vertx.fileSystem();
-        vertxFileSystem.deleteRecursive("file-uploads", true, deletedDir -> {
-            if (deletedDir.succeeded()) {
-                vertxFileSystem.deleteRecursive(".vertx", true, vertxDir -> {
-                    if (vertxDir.succeeded()) {
-                        after.complete();
+        httpServer.close(completionHandler -> {
+            if(completionHandler.succeeded()) {
+                FileSystem vertxFileSystem = vertx.fileSystem();
+                vertxFileSystem.deleteRecursive("file-uploads", true, deletedDir -> {
+                    if (deletedDir.succeeded()) {
+                        vertxFileSystem.deleteRecursive(".vertx", true, vertxDir -> {
+                            if (vertxDir.succeeded()) {
+                                after.complete();
+                            } else {
+                                context.fail(vertxDir.cause());
+                            }
+                        });
                     } else {
-                        context.fail(vertxDir.cause());
+                        context.fail(deletedDir.cause());
                     }
                 });
-            } else {
-                context.fail(deletedDir.cause());
             }
         });
+        
     }
 
 }

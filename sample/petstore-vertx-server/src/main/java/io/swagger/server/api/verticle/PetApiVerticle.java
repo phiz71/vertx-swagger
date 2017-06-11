@@ -9,6 +9,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
 import java.io.File;
+import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 
@@ -40,9 +41,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.addPet(body);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+ADDPET_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -54,9 +57,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.deletePet(petId, apiKey);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+DELETEPET_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -74,8 +79,8 @@ public class PetApiVerticle extends AbstractVerticle {
                    }
                 });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+FINDPETSBYSTATUS_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -93,8 +98,8 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                  });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+FINDPETSBYTAGS_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -111,8 +116,8 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                  });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+GETPETBYID_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -123,9 +128,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.updatePet(body);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+UPDATEPET_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -138,9 +145,11 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.updatePetWithForm(petId, name, status);
                 message.reply(null);
+            } catch (PetApiException e) {
+                message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+UPDATEPETWITHFORM_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         
@@ -159,8 +168,8 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                  });
             } catch (Exception e) {
-                //TODO : replace magic number (101)
-                message.fail(101, e.getLocalizedMessage());
+                LOGGER.error("Error in "+UPLOADFILE_SERVICE_ID, e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
         

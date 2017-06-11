@@ -1,6 +1,7 @@
 package io.swagger.server.api.verticle;
 
 import java.io.File;
+import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.vertx.core.Future;
@@ -10,10 +11,10 @@ import java.util.Map;
 
 public interface PetApi  {
     //addPet
-    public void addPet(Pet body);
+    public void addPet(Pet body) throws PetApiException;
     
     //deletePet
-    public void deletePet(Long petId,String apiKey);
+    public void deletePet(Long petId,String apiKey) throws PetApiException;
     
     //findPetsByStatus
     public Future<List<Pet>> findPetsByStatus(List<String> status);
@@ -25,10 +26,10 @@ public interface PetApi  {
     public Future<Pet> getPetById(Long petId);
     
     //updatePet
-    public void updatePet(Pet body);
+    public void updatePet(Pet body) throws PetApiException;
     
     //updatePetWithForm
-    public void updatePetWithForm(Long petId,String name,String status);
+    public void updatePetWithForm(Long petId,String name,String status) throws PetApiException;
     
     //uploadFile
     public Future<ModelApiResponse> uploadFile(Long petId,String additionalMetadata,File file);

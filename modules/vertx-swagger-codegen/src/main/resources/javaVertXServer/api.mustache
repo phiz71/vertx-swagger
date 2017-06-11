@@ -10,7 +10,7 @@ public interface {{classname}}  {
 {{#operations}}
 {{#operation}}
     //{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
-    public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+    public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}}) throws {{classname}}Exception;
     
 {{/operation}}
 {{/operations}}
