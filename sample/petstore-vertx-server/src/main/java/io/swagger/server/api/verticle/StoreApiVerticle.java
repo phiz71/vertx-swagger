@@ -44,12 +44,15 @@ public class StoreApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+DELETEORDER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -70,12 +73,15 @@ public class StoreApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+GETINVENTORY_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -97,12 +103,15 @@ public class StoreApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+GETORDERBYID_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -124,12 +133,15 @@ public class StoreApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+PLACEORDER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });

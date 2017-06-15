@@ -48,12 +48,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+CREATEUSER_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+CREATEUSER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+CREATEUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -76,12 +79,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+CREATEUSERSWITHARRAYINPUT_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+CREATEUSERSWITHARRAYINPUT_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+CREATEUSERSWITHARRAYINPUT_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -104,12 +110,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+CREATEUSERSWITHLISTINPUT_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+CREATEUSERSWITHLISTINPUT_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+CREATEUSERSWITHLISTINPUT_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -131,12 +140,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+DELETEUSER_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+DELETEUSER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+DELETEUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -158,12 +170,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+GETUSERBYNAME_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+GETUSERBYNAME_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+GETUSERBYNAME_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -186,12 +201,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+LOGINUSER_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+LOGINUSER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+LOGINUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -212,12 +230,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+LOGOUTUSER_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+LOGOUTUSER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+LOGOUTUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -240,12 +261,15 @@ public class UserApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+UPDATEUSER_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+UPDATEUSER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+UPDATEUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });

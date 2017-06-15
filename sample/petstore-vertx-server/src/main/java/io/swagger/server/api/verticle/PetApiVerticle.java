@@ -50,12 +50,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+ADDPET_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+ADDPET_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+ADDPET_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -78,12 +81,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+DELETEPET_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+DELETEPET_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+DELETEPET_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -106,12 +112,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+FINDPETSBYSTATUS_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+FINDPETSBYSTATUS_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+FINDPETSBYSTATUS_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -134,12 +143,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+FINDPETSBYTAGS_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+FINDPETSBYTAGS_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+FINDPETSBYTAGS_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -161,12 +173,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+GETPETBYID_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+GETPETBYID_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+GETPETBYID_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -188,12 +203,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+UPDATEPET_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+UPDATEPET_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+UPDATEPET_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -217,12 +235,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+UPDATEPETWITHFORM_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+UPDATEPETWITHFORM_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+UPDATEPETWITHFORM_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -246,12 +267,15 @@ public class PetApiVerticle extends AbstractVerticle {
                             code = ((MainApiException)cause).getStatusCode();
                             statusMessage = ((MainApiException)cause).getStatusMessage();
                         }
+                        else {
+                            LOGGER.error("Unexpected error in "+UPLOADFILE_SERVICE_ID, cause);
+                        }
 
                         message.fail(code, statusMessage);
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Error in "+UPLOADFILE_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+UPLOADFILE_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
