@@ -71,13 +71,21 @@ public class SwaggerRouter {
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver, Function<RoutingContext, DeliveryOptions> configureMessage) {
         baseRouter.route().handler(BodyHandler.create());
+        final String basePath = getBasePath(swagger);
         swagger.getPaths().forEach((path, pathDescription) -> pathDescription.getOperationMap().forEach((method, operation) -> {
-            Route route = ROUTE_BUILDERS.get(method).buildRoute(baseRouter, convertParametersToVertx(path));
+            Route route = ROUTE_BUILDERS.get(method).buildRoute(baseRouter, convertParametersToVertx(basePath + path));
             String serviceId = serviceIdResolver.resolve(method, path, operation);
             configureRoute(route, serviceId, operation, eventBus, configureMessage);
         }));
 
         return baseRouter;
+    }
+
+    private static String getBasePath(Swagger swagger) {
+        String result = swagger.getBasePath();
+        if (result == null)
+            result = "";
+        return result;
     }
 
     private static void configureRoute(Route route, String serviceId, Operation operation, EventBus eventBus, Function<RoutingContext, DeliveryOptions> configureMessage) {

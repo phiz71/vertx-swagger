@@ -189,7 +189,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testResourceNotfound(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/dummy", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/dummy", response -> {
             context.assertEquals(response.statusCode(), 404);
             async.complete();
         });
@@ -199,7 +199,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testMessageIsConsume(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/store/inventory", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/store/inventory", response -> {
             response.bodyHandler(body -> {
                 JsonObject jsonBody = new JsonObject(body.toString(Charset.forName("utf-8")));
                 context.assertTrue(jsonBody.containsKey("sold"));
@@ -212,7 +212,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000, expected = TimeoutException.class)
     public void testMessageIsNotConsume(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/logout", response -> response.exceptionHandler(err -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/logout", response -> response.exceptionHandler(err -> {
             async.complete();
         }));
     }
@@ -220,7 +220,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithPathParameter(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/5", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/5", response -> {
             response.bodyHandler(body -> {
                 JsonObject jsonBody = new JsonObject(body.toString(Charset.forName("utf-8")));
                 context.assertTrue(jsonBody.containsKey("petId_received"));
@@ -233,7 +233,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithQuerySimpleParameter(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/login?username=myUser&password=mySecret", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/login?username=myUser&password=mySecret", response -> {
             response.bodyHandler(body -> {
                 JsonObject jsonBody = new JsonObject(body.toString(Charset.forName("utf-8")));
                 context.assertTrue(jsonBody.containsKey("username_received"));
@@ -246,7 +246,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithQueryArrayParameter(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/findByStatus?status=available", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/findByStatus?status=available", response -> {
             response.bodyHandler(body -> {
                 JsonArray jsonArray = new JsonArray(body.toString(Charset.forName("utf-8")));
                 context.assertTrue(jsonArray.size() == 1);
@@ -264,7 +264,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithQueryManyArrayParameter(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/findByStatus?status=available&status=pending", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/findByStatus?status=available&status=pending", response -> {
             response.bodyHandler(body -> {
                 JsonArray jsonArray = new JsonArray(body.toString(Charset.forName("utf-8")));
                 context.assertTrue(jsonArray.size() == 2);
@@ -285,7 +285,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithBodyParameterNoBody(TestContext context) {
         Async async = context.async();
-        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/user/createWithArray");
+        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/v2/user/createWithArray");
         req.handler(response -> {
             context.assertEquals(response.statusCode(), 400);
             async.complete();
@@ -298,7 +298,7 @@ public class BuildRouterTest {
         User user1 = new User(1L, "user 1", "first 1", "last 1", "email 1", "secret 1", "phone 1", 1);
         User user2 = new User(2L, "user 2", "first 2", "last 2", "email 2", "secret 2", "phone 2", 2);
         JsonArray users = new JsonArray(Arrays.asList(user1, user2));
-        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/user/createWithArray");
+        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/v2/user/createWithArray");
         req.setChunked(true);
         req.handler(response -> response.bodyHandler(result -> {
             JsonObject jsonBody = new JsonObject(result.toString(Charset.forName("utf-8")));
@@ -313,7 +313,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testNullBodyResponse(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/logout", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/logout", response -> {
             context.assertEquals(response.statusCode(), 200);
             async.complete();
         });
@@ -322,7 +322,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithFormParameterMultiPart(TestContext context) {
         Async async = context.async();
-        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/pet/1/uploadImage");
+        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/v2/pet/1/uploadImage");
         req.setChunked(false);
         req.handler(response -> response.bodyHandler(result -> {
             JsonObject jsonBody = new JsonObject(result.toString(Charset.forName("utf-8")));
@@ -365,7 +365,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithFormParameterUrlEncoded(TestContext context) {
         Async async = context.async();
-        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/pet/1");
+        HttpClientRequest req = httpClient.post(TEST_PORT, TEST_HOST, "/v2/pet/1");
 
         req.handler(response -> response.bodyHandler(result -> {
             JsonObject jsonBody = new JsonObject(result.toString(Charset.forName("utf-8")));
@@ -391,7 +391,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithHeaderParameter(TestContext context) {
         Async async = context.async();
-        HttpClientRequest req = httpClient.delete(TEST_PORT, TEST_HOST, "/pet/1");
+        HttpClientRequest req = httpClient.delete(TEST_PORT, TEST_HOST, "/v2/pet/1");
         req.putHeader("api_key", "MyAPIKey");
         req.handler(response -> response.bodyHandler(result -> {
             JsonObject jsonBody = new JsonObject(result.toString(Charset.forName("utf-8")));
@@ -408,7 +408,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithCustomStatusCode(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/statusCode", response -> { 
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/statusCode", response -> {
             context.assertEquals(206, response.statusCode());
             String header = response.getHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY);
             context.assertNull(header);
@@ -419,7 +419,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithCustomStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/statusMessage", response -> { 
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/statusMessage", response -> {
             context.assertEquals("My Custom Message", response.statusMessage());
             async.complete();
         });
@@ -428,7 +428,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithCustomStatusCodeAndMessage(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/statusCodeAndMessage", response -> { 
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/statusCodeAndMessage", response -> {
             context.assertEquals(206, response.statusCode());
             context.assertEquals("My Custom Message", response.statusMessage());
             async.complete();
@@ -438,7 +438,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithSimpleReturnedHeader(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/simpleHeader", response -> { 
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/simpleHeader", response -> {
             String header = response.getHeader("Header_KEY");
             context.assertNotNull(header);
             context.assertEquals("Header_VALUE", header);
@@ -449,7 +449,7 @@ public class BuildRouterTest {
     @Test(timeout = 2000)
     public void testWithSimpleReturnedHeaderAndCustomStatusCode(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/simpleHeaderAndStatusCode", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/simpleHeaderAndStatusCode", response -> {
             context.assertEquals(206, response.statusCode());
             String header = response.getHeader("Header_KEY");
             context.assertNotNull(header);

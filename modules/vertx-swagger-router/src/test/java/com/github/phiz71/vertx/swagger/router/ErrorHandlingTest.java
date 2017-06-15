@@ -102,7 +102,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testStatusCodeAndStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/store/inventory", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/store/inventory", response -> {
             response.bodyHandler(body -> {
                 context.assertEquals(response.statusCode(), EXISTING_HTTP_STATUS_CODE);
                 context.assertEquals(response.statusMessage(), ERROR_CUSTOM_MESSAGE);
@@ -114,7 +114,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testStatusCodeAndNullStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/store/order/1", response -> {
             context.assertEquals(response.statusCode(), EXISTING_HTTP_STATUS_CODE);
             context.assertEquals(response.statusMessage(), HttpResponseStatus.valueOf(EXISTING_HTTP_STATUS_CODE).reasonPhrase());
             async.complete();
@@ -124,7 +124,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testStatusCodeAndEmptyStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.delete(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
+        httpClient.delete(TEST_PORT, TEST_HOST, "/v2/store/order/1", response -> {
             context.assertEquals(response.statusCode(), EXISTING_HTTP_STATUS_CODE);
             context.assertEquals(response.statusMessage(), HttpResponseStatus.valueOf(EXISTING_HTTP_STATUS_CODE).reasonPhrase());
             async.complete();
@@ -134,7 +134,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testInexistingStatusCodeAndStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/5", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/5", response -> {
             response.bodyHandler(body -> {
                 context.assertEquals(response.statusCode(), NOT_EXISTING_HTTP_STATUS_CODE);
                 context.assertEquals(response.statusMessage(), ERROR_CUSTOM_MESSAGE);
@@ -146,7 +146,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testInexistingStatusCodeAndNullStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.post(TEST_PORT, TEST_HOST, "/pet/1", response -> response.bodyHandler(result -> {
+        httpClient.post(TEST_PORT, TEST_HOST, "/v2/pet/1", response -> response.bodyHandler(result -> {
             context.assertEquals(response.statusCode(), NOT_EXISTING_HTTP_STATUS_CODE);
             context.assertEquals(response.statusMessage(), NOT_EXISTING_HTTP_STATUS_MESSAGE);
             async.complete();
@@ -156,7 +156,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testInexistingStatusCodeAndEmptyStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.delete(TEST_PORT, TEST_HOST, "/pet/1", response -> response.bodyHandler(result -> {
+        httpClient.delete(TEST_PORT, TEST_HOST, "/v2/pet/1", response -> response.bodyHandler(result -> {
             context.assertEquals(response.statusCode(), NOT_EXISTING_HTTP_STATUS_CODE);
             context.assertEquals(response.statusMessage(), NOT_EXISTING_HTTP_STATUS_MESSAGE);
             async.complete();
@@ -167,7 +167,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testInvalidStatusCodeAndStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.post(TEST_PORT, TEST_HOST, "/pet/1/uploadImage", response -> response.bodyHandler(result -> {
+        httpClient.post(TEST_PORT, TEST_HOST, "/v2/pet/1/uploadImage", response -> response.bodyHandler(result -> {
             context.assertEquals(response.statusCode(), DEFAULT_HTTP_STATUS_CODE);
             context.assertEquals(response.statusMessage(), HttpResponseStatus.valueOf(DEFAULT_HTTP_STATUS_CODE).reasonPhrase());
             async.complete();
@@ -177,7 +177,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testInvalidStatusCodeAndNullStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/user/login?username=myUser&password=mySecret", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/login?username=myUser&password=mySecret", response -> {
             response.bodyHandler(body -> {
                 context.assertEquals(response.statusCode(), DEFAULT_HTTP_STATUS_CODE);
                 context.assertEquals(response.statusMessage(), HttpResponseStatus.valueOf(DEFAULT_HTTP_STATUS_CODE).reasonPhrase());
@@ -189,7 +189,7 @@ public class ErrorHandlingTest {
     @Test(timeout = 2000)
     public void testInvalidStatusCodeAndEmptyStatusMessage(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/findByStatus?status=available", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/findByStatus?status=available", response -> {
             response.bodyHandler(body -> {
                 context.assertEquals(response.statusCode(), DEFAULT_HTTP_STATUS_CODE);
                 context.assertEquals(response.statusMessage(), HttpResponseStatus.valueOf(DEFAULT_HTTP_STATUS_CODE).reasonPhrase());
