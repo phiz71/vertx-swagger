@@ -35,7 +35,7 @@ public class {{classname}}Verticle extends AbstractVerticle {
                 {{/isPrimitiveType}}{{/isListContainer}}{{/allParams}}{{/hasParams}}
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{^hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}result -> {
                     if (result.succeeded())
-                        {{#isListContainer}}message.reply(new JsonArray(Json.encode(result.result())).encodePrettily());{{/isListContainer}}{{^isListContainer}}message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());{{/isListContainer}}
+                        {{#returnType}}{{#isListContainer}}message.reply(new JsonArray(Json.encode(result.result())).encodePrettily());{{/isListContainer}}{{^isListContainer}}message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());{{/isListContainer}}{{/returnType}}{{^returnType}}message.reply(null);{{/returnType}}
                     else {
                         Throwable cause = result.cause();
 

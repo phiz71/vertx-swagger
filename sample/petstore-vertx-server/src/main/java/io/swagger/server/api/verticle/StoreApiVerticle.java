@@ -34,7 +34,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                 
                 service.deleteOrder(orderId, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 

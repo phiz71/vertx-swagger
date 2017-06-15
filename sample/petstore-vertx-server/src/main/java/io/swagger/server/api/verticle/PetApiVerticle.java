@@ -40,7 +40,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.addPet(body, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -68,7 +68,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.deletePet(petId, apiKey, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -178,7 +178,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.updatePet(body, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -207,7 +207,7 @@ public class PetApiVerticle extends AbstractVerticle {
                 
                 service.updatePetWithForm(petId, name, status, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 

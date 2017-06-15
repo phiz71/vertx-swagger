@@ -38,7 +38,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.createUser(body, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -66,7 +66,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.createUsersWithArrayInput(body, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -94,7 +94,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.createUsersWithListInput(body, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -121,7 +121,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.deleteUser(username, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -202,7 +202,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.logoutUser(result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
@@ -230,7 +230,7 @@ public class UserApiVerticle extends AbstractVerticle {
                 
                 service.updateUser(username, body, result -> {
                     if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(null);
                     else {
                         Throwable cause = result.cause();
 
