@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>io.swagger</groupId>
-	<artifactId>petstore-vertx-server</artifactId>
+	<artifactId>petstore-vertx-rx-server</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
   

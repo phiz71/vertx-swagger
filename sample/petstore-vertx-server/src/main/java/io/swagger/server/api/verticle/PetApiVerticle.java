@@ -70,14 +70,8 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                service.findPetsByStatus(status).setHandler(futureResult -> {
-                    if(futureResult.succeeded()) {
-                        message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
-                    } else {
-                        LOGGER.error("Error in "+FINDPETSBYSTATUS_SERVICE_ID, futureResult.cause());
-                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-                    }
-                });
+                List<Pet> result = service.findPetsByStatus(status);
+                message.reply(new JsonArray(Json.encode(result)).encodePrettily());
             } catch (PetApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
@@ -92,14 +86,8 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
-                service.findPetsByTags(tags).setHandler(futureResult -> {
-                    if(futureResult.succeeded()) {
-                        message.reply(new JsonArray(Json.encode(futureResult.result())).encodePrettily());
-                    } else {
-                        LOGGER.error("Error in "+FINDPETSBYTAGS_SERVICE_ID, futureResult.cause());
-                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-                    }
-                });
+                List<Pet> result = service.findPetsByTags(tags);
+                message.reply(new JsonArray(Json.encode(result)).encodePrettily());
             } catch (PetApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
@@ -113,14 +101,8 @@ public class PetApiVerticle extends AbstractVerticle {
             try {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
-                service.getPetById(petId).setHandler(futureResult -> {
-                    if(futureResult.succeeded()) {
-                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
-                    } else {
-                        LOGGER.error("Error in "+GETPETBYID_SERVICE_ID, futureResult.cause());
-                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-                    }
-                });
+                Pet result = service.getPetById(petId);
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
             } catch (PetApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
@@ -168,14 +150,8 @@ public class PetApiVerticle extends AbstractVerticle {
                 String additionalMetadata = message.body().getString("additionalMetadata");
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 
-                service.uploadFile(petId, additionalMetadata, file).setHandler(futureResult -> {
-                    if(futureResult.succeeded()) {
-                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
-                    } else {
-                        LOGGER.error("Error in "+UPLOADFILE_SERVICE_ID, futureResult.cause());
-                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-                    }
-                });
+                ModelApiResponse result = service.uploadFile(petId, additionalMetadata, file);
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
             } catch (PetApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {

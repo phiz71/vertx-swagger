@@ -31,7 +31,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public static final String ROOT_PACKAGE = "rootPackage";
     public static final String VERTX_SWAGGER_ROUTER_VERSION = "vertxSwaggerRouterVersion";
 
-    public static final String FUTURE_GENERATION_OPTION = "futureGenerationOption";
+    public static final String RX_INTERFACE_OPTION = "rxInterface";
     
     protected String verticlePackage = "";
 
@@ -93,8 +93,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         String vertxSwaggerRouterVersion = ResourceBundle.getBundle("vertx-swagger-router").getString("vertx-swagger-router.version");
         additionalProperties.put(VERTX_SWAGGER_ROUTER_VERSION, vertxSwaggerRouterVersion);
         
-        cliOptions.add(CliOption.newBoolean(FUTURE_GENERATION_OPTION,
-                "When specified, returned object of operations in each API interface will be wrapped into a Future."));
+        cliOptions.add(CliOption.newBoolean(RX_INTERFACE_OPTION,
+                "When specified, API interfaces are generated with RX and methods return Single<>."));
     }
 
     /**
@@ -131,12 +131,14 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public void processOpts() {
         super.processOpts();
 
-        if (additionalProperties.containsKey(FUTURE_GENERATION_OPTION)) {
+        if (additionalProperties.containsKey(RX_INTERFACE_OPTION)) {
             apiTemplateFiles.clear();
-            apiTemplateFiles.put("apiFuture.mustache", // the template to use
+            apiTemplateFiles.put("apiRX.mustache", // the template to use
                     ".java"); // the extension for each file to write
-            apiTemplateFiles.put("apiFutureVerticle.mustache", // the template to use
+            apiTemplateFiles.put("apiRXVerticle.mustache", // the template to use
                     "Verticle.java"); // the extension for each file to write
+            apiTemplateFiles.put("apiException.mustache", // the template to use
+                    "Exception.java"); // the extension for each file to write
         }
         
         apiTestTemplateFiles.clear();

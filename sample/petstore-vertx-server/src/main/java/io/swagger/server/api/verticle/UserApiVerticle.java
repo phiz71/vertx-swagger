@@ -98,14 +98,8 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 String username = message.body().getString("username");
                 
-                service.getUserByName(username).setHandler(futureResult -> {
-                    if(futureResult.succeeded()) {
-                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
-                    } else {
-                        LOGGER.error("Error in "+GETUSERBYNAME_SERVICE_ID, futureResult.cause());
-                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-                    }
-                });
+                User result = service.getUserByName(username);
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
             } catch (UserApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {
@@ -120,14 +114,8 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 String password = message.body().getString("password");
                 
-                service.loginUser(username, password).setHandler(futureResult -> {
-                    if(futureResult.succeeded()) {
-                        message.reply(new JsonObject(Json.encode(futureResult.result())).encodePrettily());
-                    } else {
-                        LOGGER.error("Error in "+LOGINUSER_SERVICE_ID, futureResult.cause());
-                        message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-                    }
-                });
+                String result = service.loginUser(username, password);
+                message.reply(new JsonObject(Json.encode(result)).encodePrettily());
             } catch (UserApiException e) {
                 message.fail(e.getStatusCode(), e.getStatusMessage());
             } catch (Exception e) {

@@ -8,7 +8,6 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
-import io.vertx.core.Future;
 
 public class PetApiImpl implements PetApi {
 
@@ -25,32 +24,27 @@ public class PetApiImpl implements PetApi {
     }
 
     @Override
-    public Future<List<Pet>> findPetsByStatus(List<String> status) {
-        Future<List<Pet>> futureResult = Future.future();
+    public List<Pet> findPetsByStatus(List<String> status) {
         List<Pet> pets = new ArrayList<>();
-        pets.add(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE));
-        futureResult.complete(pets);
-        return futureResult;
+        pets.add(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE));
+        return pets;
     }
 
     @Override
-    public Future<List<Pet>> findPetsByTags(List<String> tags) {
+    public List<Pet> findPetsByTags(List<String> tags) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Future<Pet> getPetById(Long petId) throws PetApiException {
-        Future<Pet> futureResult = Future.future();
-        if(petId.equals(1L)) {
-            futureResult.complete(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE));
-            return futureResult;
-        }
-        else if (petId.equals(2L))
-             throw new NullPointerException("simulation");
-        
+    public Pet getPetById(Long petId) throws PetApiException {
+        if (petId.equals(1L)) {
+            return new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE);
+        } else if (petId.equals(2L))
+            throw new NullPointerException("simulation");
+
         throw PetApiException.Pet_getPetById_404_Exception;
-        
+
     }
 
     @Override
@@ -66,7 +60,7 @@ public class PetApiImpl implements PetApi {
     }
 
     @Override
-    public Future<ModelApiResponse> uploadFile(Long petId, String additionalMetadata, File file) {
+    public ModelApiResponse uploadFile(Long petId, String additionalMetadata, File file) {
         // TODO Auto-generated method stub
         return null;
     }
