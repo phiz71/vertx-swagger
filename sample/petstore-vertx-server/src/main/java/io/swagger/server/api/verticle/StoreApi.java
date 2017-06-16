@@ -1,24 +1,26 @@
 package io.swagger.server.api.verticle;
 
-
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.Order;
-import io.vertx.core.Future;
 
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+
+import java.util.function.Consumer;
 import java.util.List;
 import java.util.Map;
 
 public interface StoreApi  {
     //deleteOrder
-    public void deleteOrder(Long orderId) throws StoreApiException;
+    void deleteOrder(Long orderId, Handler<AsyncResult<Void>> handler);
     
     //getInventory
-    public Future<Map<String, Integer>> getInventory() throws StoreApiException;
+    void getInventory(Handler<AsyncResult<Map<String, Integer>>> handler);
     
     //getOrderById
-    public Future<Order> getOrderById(Long orderId) throws StoreApiException;
+    void getOrderById(Long orderId, Handler<AsyncResult<Order>> handler);
     
     //placeOrder
-    public Future<Order> placeOrder(Order body) throws StoreApiException;
+    void placeOrder(Order body, Handler<AsyncResult<Order>> handler);
     
 }
