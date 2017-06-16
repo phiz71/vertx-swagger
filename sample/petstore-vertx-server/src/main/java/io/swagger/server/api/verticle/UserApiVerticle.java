@@ -34,6 +34,7 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUser
         vertx.eventBus().<JsonObject> consumer(CREATEUSER_SERVICE_ID).handler(message -> {
             try {
+                
                 User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
                 
                 service.createUser(body, result -> {
@@ -64,6 +65,7 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUsersWithArrayInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHARRAYINPUT_SERVICE_ID).handler(message -> {
             try {
+                
                 List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
                 
@@ -95,6 +97,7 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUsersWithListInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHLISTINPUT_SERVICE_ID).handler(message -> {
             try {
+                
                 List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
                 
@@ -126,6 +129,7 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for deleteUser
         vertx.eventBus().<JsonObject> consumer(DELETEUSER_SERVICE_ID).handler(message -> {
             try {
+                
                 String username = message.body().getString("username");
                 
                 service.deleteUser(username, result -> {
@@ -156,6 +160,7 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for getUserByName
         vertx.eventBus().<JsonObject> consumer(GETUSERBYNAME_SERVICE_ID).handler(message -> {
             try {
+                
                 String username = message.body().getString("username");
                 
                 service.getUserByName(username, result -> {
@@ -186,7 +191,9 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for loginUser
         vertx.eventBus().<JsonObject> consumer(LOGINUSER_SERVICE_ID).handler(message -> {
             try {
+                
                 String username = message.body().getString("username");
+                
                 String password = message.body().getString("password");
                 
                 service.loginUser(username, password, result -> {
@@ -246,7 +253,9 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for updateUser
         vertx.eventBus().<JsonObject> consumer(UPDATEUSER_SERVICE_ID).handler(message -> {
             try {
+                
                 String username = message.body().getString("username");
+                
                 User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
                 
                 service.updateUser(username, body, result -> {

@@ -36,6 +36,7 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for addPet
         vertx.eventBus().<JsonObject> consumer(ADDPET_SERVICE_ID).handler(message -> {
             try {
+                
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 
                 service.addPet(body, result -> {
@@ -66,7 +67,9 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for deletePet
         vertx.eventBus().<JsonObject> consumer(DELETEPET_SERVICE_ID).handler(message -> {
             try {
+                
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
+                
                 String apiKey = message.body().getString("api_key");
                 
                 service.deletePet(petId, apiKey, result -> {
@@ -97,6 +100,7 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByStatus
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYSTATUS_SERVICE_ID).handler(message -> {
             try {
+                
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
@@ -128,6 +132,7 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByTags
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYTAGS_SERVICE_ID).handler(message -> {
             try {
+                
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 
@@ -159,6 +164,7 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for getPetById
         vertx.eventBus().<JsonObject> consumer(GETPETBYID_SERVICE_ID).handler(message -> {
             try {
+                
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 
                 service.getPetById(petId, result -> {
@@ -189,6 +195,7 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for updatePet
         vertx.eventBus().<JsonObject> consumer(UPDATEPET_SERVICE_ID).handler(message -> {
             try {
+                
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 
                 service.updatePet(body, result -> {
@@ -219,8 +226,11 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for updatePetWithForm
         vertx.eventBus().<JsonObject> consumer(UPDATEPETWITHFORM_SERVICE_ID).handler(message -> {
             try {
+                
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
+                
                 String name = message.body().getString("name");
+                
                 String status = message.body().getString("status");
                 
                 service.updatePetWithForm(petId, name, status, result -> {
@@ -251,8 +261,11 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for uploadFile
         vertx.eventBus().<JsonObject> consumer(UPLOADFILE_SERVICE_ID).handler(message -> {
             try {
+                
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
+                
                 String additionalMetadata = message.body().getString("additionalMetadata");
+                
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 
                 service.uploadFile(petId, additionalMetadata, file, result -> {
