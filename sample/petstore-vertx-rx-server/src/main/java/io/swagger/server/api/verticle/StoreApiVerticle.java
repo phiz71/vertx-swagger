@@ -33,24 +33,24 @@ public class StoreApiVerticle extends AbstractVerticle {
             try {
                 Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
                 service.deleteOrder(orderId).subscribe(
-                    onSuccess -> {
+                    () -> {
                         message.reply(null);
                     },
-                    onError -> {
-                        LOGGER.error("Error in " + DELETEORDER_SERVICE_ID, onError);
-                        
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (onError instanceof MainApiException) {
-                            code = ((MainApiException)onError).getStatusCode();
-                            statusMessage = ((MainApiException)onError).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
+                        } else {
+                            LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, error);
                         }
 
                         message.fail(code, statusMessage);
                     });
 
             } catch (Exception e) {
-                LOGGER.error("Error in "+DELETEORDER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -59,24 +59,24 @@ public class StoreApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(GETINVENTORY_SERVICE_ID).handler(message -> {
             try {
                 service.getInventory().subscribe(
-                    onSuccess -> {
-                        message.reply(new JsonObject(Json.encode(onSuccess)).encodePrettily());
+                    result -> {
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
-                    onError -> {
-                        LOGGER.error("Error in " + GETINVENTORY_SERVICE_ID, onError);
-                        
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (onError instanceof MainApiException) {
-                            code = ((MainApiException)onError).getStatusCode();
-                            statusMessage = ((MainApiException)onError).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
+                        } else {
+                            LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, error);
                         }
 
                         message.fail(code, statusMessage);
                     });
 
             } catch (Exception e) {
-                LOGGER.error("Error in "+GETINVENTORY_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -86,24 +86,24 @@ public class StoreApiVerticle extends AbstractVerticle {
             try {
                 Long orderId = Json.mapper.readValue(message.body().getString("OrderId"), Long.class);
                 service.getOrderById(orderId).subscribe(
-                    onSuccess -> {
-                        message.reply(new JsonObject(Json.encode(onSuccess)).encodePrettily());
+                    result -> {
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
-                    onError -> {
-                        LOGGER.error("Error in " + GETORDERBYID_SERVICE_ID, onError);
-                        
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (onError instanceof MainApiException) {
-                            code = ((MainApiException)onError).getStatusCode();
-                            statusMessage = ((MainApiException)onError).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
+                        } else {
+                            LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, error);
                         }
 
                         message.fail(code, statusMessage);
                     });
 
             } catch (Exception e) {
-                LOGGER.error("Error in "+GETORDERBYID_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
@@ -113,24 +113,24 @@ public class StoreApiVerticle extends AbstractVerticle {
             try {
                 Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
                 service.placeOrder(body).subscribe(
-                    onSuccess -> {
-                        message.reply(new JsonObject(Json.encode(onSuccess)).encodePrettily());
+                    result -> {
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
-                    onError -> {
-                        LOGGER.error("Error in " + PLACEORDER_SERVICE_ID, onError);
-                        
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (onError instanceof MainApiException) {
-                            code = ((MainApiException)onError).getStatusCode();
-                            statusMessage = ((MainApiException)onError).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
+                        } else {
+                            LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, error);
                         }
 
                         message.fail(code, statusMessage);
                     });
 
             } catch (Exception e) {
-                LOGGER.error("Error in "+PLACEORDER_SERVICE_ID, e);
+                LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });

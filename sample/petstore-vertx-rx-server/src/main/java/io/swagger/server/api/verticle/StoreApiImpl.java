@@ -2,22 +2,24 @@ package io.swagger.server.api.verticle;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.Map;
 
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Order.StatusEnum;
+import rx.Completable;
 import rx.Single;
 
 public class StoreApiImpl implements StoreApi {
 
     @Override
-    public Single<Void> deleteOrder(Long orderId) {
-        return Single.just(null);
+    public Completable deleteOrder(Long orderId) {
+        return Completable.complete();
     }
 
     @Override
     public Single<Map<String, Integer>> getInventory() {
-        return Single.just(null);
+        return Single.just(new HashMap<>());
     }
 
     @Override
@@ -27,7 +29,7 @@ public class StoreApiImpl implements StoreApi {
 
     @Override
     public Single<Order> placeOrder(Order body) {
-        return Single.just(null);
+        return Single.just(new Order());
     }
 
 }

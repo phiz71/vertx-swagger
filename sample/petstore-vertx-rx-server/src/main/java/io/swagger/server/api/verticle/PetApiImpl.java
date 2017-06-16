@@ -8,19 +8,20 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
+import rx.Completable;
 import rx.Single;
 import rx.functions.Func1;
 
 public class PetApiImpl implements PetApi {
 
     @Override
-    public Single<Void> addPet(Pet body) {
-        return Single.just(null);
+    public Completable addPet(Pet body) {
+        return Completable.complete();
     }
 
     @Override
-    public Single<Void> deletePet(Long petId, String apiKey) {
-        return Single.just(null);
+    public Completable deletePet(Long petId, String apiKey) {
+        return Completable.complete();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class PetApiImpl implements PetApi {
 
     @Override
     public Single<List<Pet>> findPetsByTags(List<String> tags) {
-        return Single.just(null);
+        return Single.just(new ArrayList<>());
     }
 
     @Override
@@ -53,18 +54,18 @@ public class PetApiImpl implements PetApi {
     }
 
     @Override
-    public Single<Void> updatePet(Pet body) {
-        return Single.just(null);
+    public Completable updatePet(Pet body) {
+        return Completable.complete();
     }
 
     @Override
-    public Single<Void> updatePetWithForm(Long petId, String name, String status) {
-        return Single.just(null);
+    public Completable updatePetWithForm(Long petId, String name, String status) {
+        return Completable.complete();
     }
 
     @Override
     public Single<ModelApiResponse> uploadFile(Long petId, String additionalMetadata, File file) {
-        return Single.just(null);
+        return Single.just(new ModelApiResponse());
     }
 
 }

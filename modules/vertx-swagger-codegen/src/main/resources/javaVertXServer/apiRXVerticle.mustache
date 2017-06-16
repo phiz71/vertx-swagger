@@ -49,34 +49,35 @@ public class {{classname}}Verticle extends AbstractVerticle {
                     {{/allParams}}
                 {{/hasParams}}
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}).subscribe(
-                    onSuccess -> {
                 {{#returnType}}
+                    result -> {
                     {{#isListContainer}}
-                        message.reply(new JsonArray(Json.encode(onSuccess)).encodePrettily());
+                        message.reply(new JsonArray(Json.encode(result)).encodePrettily());
                     {{/isListContainer}}
                     {{^isListContainer}}
-                        message.reply(new JsonObject(Json.encode(onSuccess)).encodePrettily());
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     {{/isListContainer}}
                 {{/returnType}}
                 {{^returnType}}
+                    () -> {
                         message.reply(null);
                 {{/returnType}}
                     },
-                    onError -> {
-                        LOGGER.error("Error in " + {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, onError);
-                        
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (onError instanceof MainApiException) {
-                            code = ((MainApiException)onError).getStatusCode();
-                            statusMessage = ((MainApiException)onError).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
+                        } else {
+                            LOGGER.error("Unexpected error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, error);
                         }
 
                         message.fail(code, statusMessage);
                     });
 
             } catch (Exception e) {
-                LOGGER.error("Error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, e);
+                LOGGER.error("Unexpected error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
