@@ -8,61 +8,66 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 
 public class PetApiImpl implements PetApi {
 
     @Override
-    public void addPet(Pet body) {
+    public void addPet(Pet body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void deletePet(Long petId, String apiKey) {
+    public void deletePet(Long petId, String apiKey, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public List<Pet> findPetsByStatus(List<String> status) {
+    public void findPetsByStatus(List<String> status, Handler<AsyncResult<List<Pet>>> handler) {
         List<Pet> pets = new ArrayList<>();
-        pets.add(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE));
-        return pets;
+        pets.add(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE));
+        handler.handle(Future.succeededFuture(pets));
     }
 
     @Override
-    public List<Pet> findPetsByTags(List<String> tags) {
+    public void findPetsByTags(List<String> tags, Handler<AsyncResult<List<Pet>>> handler) {
         // TODO Auto-generated method stub
-        return null;
+        handler.handle(Future.succeededFuture(null));
     }
 
     @Override
-    public Pet getPetById(Long petId) throws PetApiException {
-        if (petId.equals(1L)) {
-            return new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE);
-        } else if (petId.equals(2L))
-            throw new NullPointerException("simulation");
+    public void getPetById(Long petId, Handler<AsyncResult<Pet>> handler) {
+        if(petId.equals(1L)) {
+            handler.handle(Future.succeededFuture(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE)));
+            return;
+        }
+        else if (petId.equals(2L))
+             handler.handle(Future.failedFuture(new NullPointerException("simulation")));
 
-        throw PetApiException.Pet_getPetById_404_Exception;
-
+        handler.handle(Future.failedFuture(PetApiException.Pet_getPetById_404_Exception));
+        
     }
 
     @Override
-    public void updatePet(Pet body) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void updatePetWithForm(Long petId, String name, String status) {
+    public void updatePet(Pet body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public ModelApiResponse uploadFile(Long petId, String additionalMetadata, File file) {
+    public void updatePetWithForm(Long petId, String name, String status, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
-        return null;
+
+    }
+
+    @Override
+    public void uploadFile(Long petId, String additionalMetadata, File file, Handler<AsyncResult<ModelApiResponse>> handler) {
+        // TODO Auto-generated method stub
+
     }
 
 }

@@ -3,6 +3,15 @@ package {{package}};
 {{#imports}}import {{import}};
 {{/imports}}
 
+{{#rxInterface}}
+import rx.Completable;
+import rx.Single;
+{{/rxInterface}}
+{{^rxInterface}}
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+{{/rxInterface}}
+
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +19,12 @@ public interface {{classname}}  {
 {{#operations}}
 {{#operation}}
     //{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
-    public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}}) throws {{classname}}Exception;
+    {{#rxInterface}}
+{{>RxMethod}}
+    {{/rxInterface}}
+    {{^rxInterface}}
+{{>AsyncMethod}}
+    {{/rxInterface}}
     
 {{/operation}}
 {{/operations}}

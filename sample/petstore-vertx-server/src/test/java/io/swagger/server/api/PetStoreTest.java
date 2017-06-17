@@ -71,7 +71,7 @@ public class PetStoreTest {
     @Test(timeout = 2000)
     public void testFindByStatus(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/findByStatus?status=available", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/findByStatus?status=available", response -> {
             response.bodyHandler(body -> {
                 JsonArray jsonArray = new JsonArray(body.toString());
                 context.assertTrue(jsonArray.size() == 1);
@@ -92,7 +92,7 @@ public class PetStoreTest {
     @Test(timeout = 2000)
     public void testGetPetById(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/1", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/1", response -> {
             response.bodyHandler(body -> {
                 JsonObject jsonObject = new JsonObject(body.toString());
                 try {
@@ -112,7 +112,7 @@ public class PetStoreTest {
     @Test(timeout = 2000)
     public void testGetPetByIdPetNotFound(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/3", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/3", response -> {
             response.bodyHandler(body -> {
                 context.assertEquals(response.statusCode(), PetApiException.Pet_getPetById_404_Exception.getStatusCode());
                 context.assertEquals(response.statusMessage(), PetApiException.Pet_getPetById_404_Exception.getStatusMessage());
@@ -124,7 +124,7 @@ public class PetStoreTest {
     @Test(timeout = 2000)
     public void testGetPetByIdInternalServerError(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/pet/2", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/2", response -> {
             response.bodyHandler(body -> {
                 context.assertEquals(response.statusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusCode());
                 context.assertEquals(response.statusMessage(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -136,7 +136,7 @@ public class PetStoreTest {
     @Test(timeout = 2000)
     public void testGetOrderById(TestContext context) {
         Async async = context.async();
-        httpClient.getNow(TEST_PORT, TEST_HOST, "/store/order/1", response -> {
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/store/order/1", response -> {
             response.bodyHandler(body -> {
                 JsonObject jsonObject = new JsonObject(body.toString());
                 try {

@@ -3,47 +3,49 @@ package io.swagger.server.api.verticle;
 import java.util.List;
 
 import io.swagger.server.api.model.User;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 
 public class UserApiImpl implements UserApi {
 
     @Override
-    public void createUser(User body) {
-
+    public void createUser(User body, Handler<AsyncResult<Void>> handler) {
+        // TODO Auto-generated method stub
     }
 
     @Override
-    public void createUsersWithArrayInput(List<User> body) {
-
+    public void createUsersWithArrayInput(List<User> body, Handler<AsyncResult<Void>> handler) {
+        // TODO Auto-generated method stub
     }
 
     @Override
-    public void createUsersWithListInput(List<User> body) {
-
+    public void createUsersWithListInput(List<User> body, Handler<AsyncResult<Void>> handler) {
+        // TODO Auto-generated method stub
     }
 
     @Override
-    public void deleteUser(String username) {
-
+    public void deleteUser(String username, Handler<AsyncResult<Void>> handler) {
+        // TODO Auto-generated method stub
     }
 
     @Override
-    public User getUserByName(String username) {
-        return null;
+    public void getUserByName(String username, Handler<AsyncResult<User>> handler) {
+        // TODO Auto-generated method stub
     }
 
     @Override
-    public String loginUser(String username, String password) {
-        return null;
+    public void loginUser(String username, String password, Handler<AsyncResult<String>> handler) {
+        // TODO Auto-generated method stub
     }
 
     @Override
-    public void logoutUser() {
-
+    public void logoutUser(Handler<AsyncResult<Void>> handler) {
+        // TODO Auto-generated method stub
     }
 
     @Override
-    public void updateUser(String username, User body) {
-
+    public void updateUser(String username, User body, Handler<AsyncResult<Void>> handler) {
+        // TODO Auto-generated method stub
     }
 
 }

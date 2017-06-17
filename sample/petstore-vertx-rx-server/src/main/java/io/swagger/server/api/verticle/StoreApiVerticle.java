@@ -7,7 +7,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
-
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.Order;
 
@@ -45,10 +44,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -71,10 +69,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -98,10 +95,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -125,10 +121,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());

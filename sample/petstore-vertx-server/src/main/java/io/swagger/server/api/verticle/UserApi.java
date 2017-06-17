@@ -3,32 +3,35 @@ package io.swagger.server.api.verticle;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.User;
 
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+
 import java.util.List;
 import java.util.Map;
 
 public interface UserApi  {
     //createUser
-    public void createUser(User body) throws UserApiException;
+    void createUser(User body, Handler<AsyncResult<Void>> handler);
     
     //createUsersWithArrayInput
-    public void createUsersWithArrayInput(List<User> body) throws UserApiException;
+    void createUsersWithArrayInput(List<User> body, Handler<AsyncResult<Void>> handler);
     
     //createUsersWithListInput
-    public void createUsersWithListInput(List<User> body) throws UserApiException;
+    void createUsersWithListInput(List<User> body, Handler<AsyncResult<Void>> handler);
     
     //deleteUser
-    public void deleteUser(String username) throws UserApiException;
+    void deleteUser(String username, Handler<AsyncResult<Void>> handler);
     
     //getUserByName
-    public User getUserByName(String username) throws UserApiException;
+    void getUserByName(String username, Handler<AsyncResult<User>> handler);
     
     //loginUser
-    public String loginUser(String username,String password) throws UserApiException;
+    void loginUser(String username, String password, Handler<AsyncResult<String>> handler);
     
     //logoutUser
-    public void logoutUser() throws UserApiException;
+    void logoutUser(Handler<AsyncResult<Void>> handler);
     
     //updateUser
-    public void updateUser(String username,User body) throws UserApiException;
+    void updateUser(String username, User body, Handler<AsyncResult<Void>> handler);
     
 }

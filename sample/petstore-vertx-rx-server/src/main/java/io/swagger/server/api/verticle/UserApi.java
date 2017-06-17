@@ -1,8 +1,8 @@
 package io.swagger.server.api.verticle;
 
-
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.User;
+
 import rx.Completable;
 import rx.Single;
 

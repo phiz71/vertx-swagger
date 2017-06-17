@@ -131,16 +131,6 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public void processOpts() {
         super.processOpts();
 
-        if (additionalProperties.containsKey(RX_INTERFACE_OPTION)) {
-            apiTemplateFiles.clear();
-            apiTemplateFiles.put("apiRX.mustache", // the template to use
-                    ".java"); // the extension for each file to write
-            apiTemplateFiles.put("apiRXVerticle.mustache", // the template to use
-                    "Verticle.java"); // the extension for each file to write
-            apiTemplateFiles.put("apiException.mustache", // the template to use
-                    "Exception.java"); // the extension for each file to write
-        }
-        
         apiTestTemplateFiles.clear();
 
         importMapping.remove("JsonCreator");

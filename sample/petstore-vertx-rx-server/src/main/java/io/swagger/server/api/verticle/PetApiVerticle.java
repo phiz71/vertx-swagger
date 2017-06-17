@@ -7,7 +7,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
-
 import java.io.File;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ModelApiResponse;
@@ -51,10 +50,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+ADDPET_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+ADDPET_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -79,10 +77,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+DELETEPET_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+DELETEPET_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -92,7 +89,8 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByStatus
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYSTATUS_SERVICE_ID).handler(message -> {
             try {
-                List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(),
+                        Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 service.findPetsByStatus(status).subscribe(
                     result -> {
                         message.reply(new JsonArray(Json.encode(result)).encodePrettily());
@@ -106,10 +104,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+FINDPETSBYSTATUS_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+FINDPETSBYSTATUS_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -119,7 +116,8 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByTags
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYTAGS_SERVICE_ID).handler(message -> {
             try {
-                List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(),
+                        Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 service.findPetsByTags(tags).subscribe(
                     result -> {
                         message.reply(new JsonArray(Json.encode(result)).encodePrettily());
@@ -133,10 +131,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+FINDPETSBYTAGS_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+FINDPETSBYTAGS_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -160,10 +157,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+GETPETBYID_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+GETPETBYID_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -187,10 +183,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+UPDATEPET_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+UPDATEPET_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -216,10 +211,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+UPDATEPETWITHFORM_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+UPDATEPETWITHFORM_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -245,10 +239,9 @@ public class PetApiVerticle extends AbstractVerticle {
                         } else {
                             LOGGER.error("Unexpected error in "+UPLOADFILE_SERVICE_ID, error);
                         }
-
+                
                         message.fail(code, statusMessage);
                     });
-
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+UPLOADFILE_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
