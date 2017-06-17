@@ -5,32 +5,35 @@ import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+
 import java.util.List;
 import java.util.Map;
 
 public interface PetApi  {
     //addPet
-    public void addPet(Pet body) throws PetApiException;
+    void addPet(Pet body, Handler<AsyncResult<Void>> handler);
     
     //deletePet
-    public void deletePet(Long petId,String apiKey) throws PetApiException;
+    void deletePet(Long petId, String apiKey, Handler<AsyncResult<Void>> handler);
     
     //findPetsByStatus
-    public List<Pet> findPetsByStatus(List<String> status) throws PetApiException;
+    void findPetsByStatus(List<String> status, Handler<AsyncResult<List<Pet>>> handler);
     
     //findPetsByTags
-    public List<Pet> findPetsByTags(List<String> tags) throws PetApiException;
+    void findPetsByTags(List<String> tags, Handler<AsyncResult<List<Pet>>> handler);
     
     //getPetById
-    public Pet getPetById(Long petId) throws PetApiException;
+    void getPetById(Long petId, Handler<AsyncResult<Pet>> handler);
     
     //updatePet
-    public void updatePet(Pet body) throws PetApiException;
+    void updatePet(Pet body, Handler<AsyncResult<Void>> handler);
     
     //updatePetWithForm
-    public void updatePetWithForm(Long petId,String name,String status) throws PetApiException;
+    void updatePetWithForm(Long petId, String name, String status, Handler<AsyncResult<Void>> handler);
     
     //uploadFile
-    public ModelApiResponse uploadFile(Long petId,String additionalMetadata,File file) throws PetApiException;
+    void uploadFile(Long petId, String additionalMetadata, File file, Handler<AsyncResult<ModelApiResponse>> handler);
     
 }
