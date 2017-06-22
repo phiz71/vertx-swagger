@@ -6,5 +6,46 @@ This library extends the [Swagger Codegen Generator](https://github.com/swagger-
 ## Getting started 
 Here is a [blog post](http://vertx.io/blog/presentation-of-the-vert-x-swagger-project) that explains how to use this library.
 
-###Example
-Have a look into `../sample` : a petstore-vertx-server based on [Swagger Petstore example](http://petstore.swagger.io/) is generated during the test phase of maven build.
+### Examples
+In the `sample` directory, you may find 2 generated servers based on [Swagger Petstore example](http://petstore.swagger.io/):
+* `petstore-vertx-server`
+* `petstore-vertx-rx-server`
+
+They are both generated during the test phase of maven build.
+The first one, using this command:
+```
+java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1.2.0.jar io.swagger.codegen.SwaggerCodegen generate \
+  -l java-vertx \
+  -o path/to/destination/folder \
+  -i path/to/swagger/definition \
+  --group-id your.group.id \
+  --artifact-id your.artifact.id
+```
+
+The Rx version is generated like before but with a new option "rxInterface":
+```bash
+java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1.2.0.jar io.swagger.codegen.SwaggerCodegen generate \
+  -l java-vertx \
+  -o path/to/destination/folder \
+  -i path/to/swagger/definition \
+  --group-id your.group.id \
+  --artifact-id your.artifact.id \
+  -DrxInterface=true
+```
+
+## Servers style
+When `-DrxInterface=false` or if `rxInterface` option is not set, the generated API interfaces use Handler<>.
+```java
+void addPet(Pet body, Handler<AsyncResult<Void>> handler);
+
+void getPetById(Long petId, Handler<AsyncResult<Pet>> handler);
+```
+
+When `-DrxInterface=true`, the generated API interfaces use Single<> and Completable.
+```java
+public Completable addPet(Pet body);
+
+public Single<Pet> getPetById(Long petId);
+```
+
+
