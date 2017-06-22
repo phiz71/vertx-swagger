@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.github.phiz71</groupId>
     <artifactId>vertx-swagger-parent</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.2.0</version>
     <relativePath>../..</relativePath>
   </parent>
 
