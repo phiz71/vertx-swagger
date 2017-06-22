@@ -27,54 +27,33 @@ public class {{classname}}Verticle extends AbstractVerticle {
         //Consumer for {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
         vertx.eventBus().<JsonObject> consumer({{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}).handler(message -> {
             try {
-                {{#hasParams}}{{#allParams}}
-                    {{#isListContainer}}
+                {{#hasParams}}
+                    {{#allParams}}
+                        {{#isListContainer}}
                 {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonArray("{{baseName}}").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, {{{baseType}}}.class));
-                    {{/isListContainer}}
-                    {{^isListContainer}}
-                        {{#isPrimitiveType}}
-                            {{#isString}}
-                {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
-                            {{/isString}}
-                            {{^isString}}
-                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
-                            {{/isString}}
-                        {{/isPrimitiveType}}
-                        {{^isPrimitiveType}}
-                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonObject("{{baseName}}").encode(), {{{dataType}}}.class);
-                        {{/isPrimitiveType}}
-                    {{/isListContainer}}
-                {{/allParams}}{{/hasParams}}
-                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{^hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}result -> {
-                    if (result.succeeded())
-                    {{#returnType}}
-                        {{#isListContainer}}
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily());
                         {{/isListContainer}}
                         {{^isListContainer}}
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                            {{#isPrimitiveType}}
+                                {{#isString}}
+                {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
+                                {{/isString}}
+                                {{^isString}}
+                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
+                                {{/isString}}
+                            {{/isPrimitiveType}}
+                            {{^isPrimitiveType}}
+                {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonObject("{{baseName}}").encode(), {{{dataType}}}.class);
+                            {{/isPrimitiveType}}
                         {{/isListContainer}}
-                    {{/returnType}}
-                    {{^returnType}}
-                        message.reply(null);
-                    {{/returnType}}
-                    else {
-                        Throwable cause = result.cause();
-
-                        int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
-                        String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
-                        }
-                        else {
-                            LOGGER.error("Unexpected error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, cause);
-                        }
-
-                        message.fail(code, statusMessage);
-                    }
-                });
+                    {{/allParams}}
+                {{/hasParams}}
+                {{#rxInterface}}
+{{>RxCall}}
+                {{/rxInterface}}
+                {{^rxInterface}}
+{{>AsyncCall}}
+                {{/rxInterface}}
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());

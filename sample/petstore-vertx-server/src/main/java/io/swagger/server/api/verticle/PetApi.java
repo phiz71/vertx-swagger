@@ -8,7 +8,6 @@ import io.swagger.server.api.model.Pet;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
-import java.util.function.Consumer;
 import java.util.List;
 import java.util.Map;
 

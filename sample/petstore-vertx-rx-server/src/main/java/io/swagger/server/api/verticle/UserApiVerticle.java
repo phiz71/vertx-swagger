@@ -35,24 +35,22 @@ public class UserApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(CREATEUSER_SERVICE_ID).handler(message -> {
             try {
                 User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
-                service.createUser(body, result -> {
-                    if (result.succeeded())
+                service.createUser(body).subscribe(
+                    () -> {
                         message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+CREATEUSER_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+CREATEUSER_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+CREATEUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -64,24 +62,22 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
-                service.createUsersWithArrayInput(body, result -> {
-                    if (result.succeeded())
+                service.createUsersWithArrayInput(body).subscribe(
+                    () -> {
                         message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+CREATEUSERSWITHARRAYINPUT_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+CREATEUSERSWITHARRAYINPUT_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+CREATEUSERSWITHARRAYINPUT_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -93,24 +89,22 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
                         Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
-                service.createUsersWithListInput(body, result -> {
-                    if (result.succeeded())
+                service.createUsersWithListInput(body).subscribe(
+                    () -> {
                         message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+CREATEUSERSWITHLISTINPUT_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+CREATEUSERSWITHLISTINPUT_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+CREATEUSERSWITHLISTINPUT_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -121,24 +115,22 @@ public class UserApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(DELETEUSER_SERVICE_ID).handler(message -> {
             try {
                 String username = message.body().getString("username");
-                service.deleteUser(username, result -> {
-                    if (result.succeeded())
+                service.deleteUser(username).subscribe(
+                    () -> {
                         message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+DELETEUSER_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+DELETEUSER_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+DELETEUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -149,24 +141,22 @@ public class UserApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(GETUSERBYNAME_SERVICE_ID).handler(message -> {
             try {
                 String username = message.body().getString("username");
-                service.getUserByName(username, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
-                    else {
-                        Throwable cause = result.cause();
-                
+                service.getUserByName(username).subscribe(
+                    result -> {
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+GETUSERBYNAME_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+GETUSERBYNAME_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+GETUSERBYNAME_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -178,24 +168,22 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 String username = message.body().getString("username");
                 String password = message.body().getString("password");
-                service.loginUser(username, password, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
-                    else {
-                        Throwable cause = result.cause();
-                
+                service.loginUser(username, password).subscribe(
+                    result -> {
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+LOGINUSER_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+LOGINUSER_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+LOGINUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -205,24 +193,22 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for logoutUser
         vertx.eventBus().<JsonObject> consumer(LOGOUTUSER_SERVICE_ID).handler(message -> {
             try {
-                service.logoutUser(result -> {
-                    if (result.succeeded())
+                service.logoutUser().subscribe(
+                    () -> {
                         message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+LOGOUTUSER_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+LOGOUTUSER_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+LOGOUTUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
@@ -234,24 +220,22 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 String username = message.body().getString("username");
                 User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
-                service.updateUser(username, body, result -> {
-                    if (result.succeeded())
+                service.updateUser(username, body).subscribe(
+                    () -> {
                         message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                
+                    },
+                    error -> {
                         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
                         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
+                        if (error instanceof MainApiException) {
+                            code = ((MainApiException)error).getStatusCode();
+                            statusMessage = ((MainApiException)error).getStatusMessage();
                         } else {
-                            LOGGER.error("Unexpected error in "+UPDATEUSER_SERVICE_ID, cause);
+                            LOGGER.error("Unexpected error in "+UPDATEUSER_SERVICE_ID, error);
                         }
                 
                         message.fail(code, statusMessage);
-                    }
-                });
+                    });
             } catch (Exception e) {
                 LOGGER.error("Unexpected error in "+UPDATEUSER_SERVICE_ID, e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());

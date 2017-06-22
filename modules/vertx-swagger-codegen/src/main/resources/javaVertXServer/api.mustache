@@ -3,10 +3,15 @@ package {{package}};
 {{#imports}}import {{import}};
 {{/imports}}
 
+{{#rxInterface}}
+import rx.Completable;
+import rx.Single;
+{{/rxInterface}}
+{{^rxInterface}}
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+{{/rxInterface}}
 
-import java.util.function.Consumer;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +19,12 @@ public interface {{classname}}  {
 {{#operations}}
 {{#operation}}
     //{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
-    void {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{^hasMore}}, {{/hasMore}}{{/allParams}}Handler<AsyncResult<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}>> handler);
+    {{#rxInterface}}
+{{>RxMethod}}
+    {{/rxInterface}}
+    {{^rxInterface}}
+{{>AsyncMethod}}
+    {{/rxInterface}}
     
 {{/operation}}
 {{/operations}}

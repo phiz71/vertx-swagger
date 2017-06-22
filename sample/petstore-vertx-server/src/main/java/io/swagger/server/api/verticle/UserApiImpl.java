@@ -4,11 +4,9 @@ import java.util.List;
 
 import io.swagger.server.api.model.User;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
 public class UserApiImpl implements UserApi {
-
 
     @Override
     public void createUser(User body, Handler<AsyncResult<Void>> handler) {
@@ -49,5 +47,5 @@ public class UserApiImpl implements UserApi {
     public void updateUser(String username, User body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
     }
-    
+
 }
