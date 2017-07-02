@@ -182,6 +182,26 @@
           }
         }
       }
+    },
+    "/query/simple/required/allowempty": {
+      "get": {
+        "description": "service where query param is a required string",
+        "parameters": [
+          {
+            "name": "queryRequired",
+            "in": "query",
+            "required": true,
+            "allowEmptyValue": true,
+            "description": "a required query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   }
 }

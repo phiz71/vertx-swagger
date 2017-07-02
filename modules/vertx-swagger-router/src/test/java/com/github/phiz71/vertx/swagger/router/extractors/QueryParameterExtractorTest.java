@@ -82,6 +82,9 @@ public class QueryParameterExtractorTest {
         eventBus.<JsonObject> consumer("GET_query_simple_required").handler(message -> {
             message.reply(message.body().getString("queryRequired"));
         });
+        eventBus.<JsonObject> consumer("GET_query_simple_required_allowempty").handler(message -> {
+            message.reply(message.body().getString("queryRequired"));
+        });
         eventBus.<JsonObject> consumer("GET_query_simple_not_required").handler(message -> {
             message.reply(message.body().getString("queryNotRequired"));
         });
@@ -103,6 +106,31 @@ public class QueryParameterExtractorTest {
         }).end();
     }
 
+    @Test()
+    public void testKoQuerySimpleRequiredWithEmptyValue(TestContext context) {
+        Async async = context.async();
+        HttpClientRequest req = httpClient.get(TEST_PORT, TEST_HOST, "/query/simple/required?queryRequired=");
+        req.handler(response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(response.statusCode(), 400);
+                async.complete();
+            });
+        }).end();
+    }
+
+    @Test()
+    public void testOkQuerySimpleRequiredAllowEmpty(TestContext context) {
+        Async async = context.async();
+        HttpClientRequest req = httpClient.get(TEST_PORT, TEST_HOST, "/query/simple/required/allowempty?queryRequired=");
+        req.handler(response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(response.statusCode(), 200);
+                context.assertEquals("", body.toString());
+                async.complete();
+            });
+        }).end();
+    }
+    
     @Test()
     public void testKoQuerySimpleRequired(TestContext context) {
         Async async = context.async();
