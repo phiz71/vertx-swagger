@@ -1,0 +1,92 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Body Extractor Test"
+  },
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/body/required": {
+      "post": {
+        "description": "service where body is mandatory",
+        "parameters": [
+          {
+            "name": "bodyRequired",
+            "in": "body",
+            "required": true,
+            "description": "required body",
+            "schema": {
+              "$ref": "#/definitions/BodyType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/body/not/required": {
+      "post": {
+        "description": "service where body is not needed",
+        "parameters": [
+          {
+            "name": "bodyNotRequired",
+            "in": "body",
+            "required": false,
+            "description": "not required body",
+            "schema": {
+              "$ref": "#/definitions/BodyType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/body/array": {
+      "post": {
+        "description": "service where body is an array",
+        "parameters": [
+          {
+            "name": "arrayBody",
+            "in": "body",
+            "required": true,
+            "description": "required array body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BodyType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
