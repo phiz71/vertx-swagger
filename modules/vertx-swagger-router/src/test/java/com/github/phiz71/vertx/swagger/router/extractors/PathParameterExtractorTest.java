@@ -3,10 +3,6 @@ package com.github.phiz71.vertx.swagger.router.extractors;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.text.html.HTML;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -18,14 +14,11 @@ import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpServer;
-import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;

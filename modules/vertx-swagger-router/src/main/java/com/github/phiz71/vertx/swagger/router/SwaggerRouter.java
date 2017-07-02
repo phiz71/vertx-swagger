@@ -18,7 +18,6 @@ import com.github.phiz71.vertx.swagger.router.extractors.PathParameterExtractor;
 import com.github.phiz71.vertx.swagger.router.extractors.QueryParameterExtractor;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpStatusClass;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
@@ -120,7 +119,7 @@ public class SwaggerRouter {
                         manageError((ReplyException)operationResponse.cause(), context.response());
                     }
                 });
-            } catch (RuntimeException e) {
+            } catch (Exception e) {
                 vertxLogger.error("sending Bad Request", e);
                 badRequestEnd(context.response());
             }

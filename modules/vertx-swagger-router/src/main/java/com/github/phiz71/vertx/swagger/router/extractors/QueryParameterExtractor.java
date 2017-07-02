@@ -1,5 +1,7 @@
 package com.github.phiz71.vertx.swagger.router.extractors;
 
+import java.util.List;
+
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.QueryParameter;
 import io.vertx.core.MultiMap;
@@ -14,7 +16,13 @@ public class QueryParameterExtractor implements ParameterExtractor {
             throw new IllegalArgumentException("Missing required parameter: " + name);
         }
         if ("array".equals(queryParam.getType()))
-            return params.getAll(name);
+            if("multi".equals(queryParam.getCollectionFormat()))
+                return params.getAll(name);
+            else {
+                List<String> resultParams = this.splitArrayParam(queryParam, params.get(name));
+                if(resultParams != null) 
+                    return resultParams;
+            }
         return params.get(name);
     }
 }
