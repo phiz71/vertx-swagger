@@ -1,0 +1,145 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Path Extractor Test"
+  },
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/path/array/pipes/{array_id}": {
+      "get": {
+        "description": "service where path param is an array - pipe format",
+        "parameters": [
+          {
+            "name": "array_id",
+            "in": "path",
+            "required": true,
+            "description": "path ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "pipes"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/path/array/ssv/{array_id}": {
+      "get": {
+        "description": "service where path param is an array - ssv format",
+        "parameters": [
+          {
+            "name": "array_id",
+            "in": "path",
+            "required": true,
+            "description": "path ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "ssv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/path/array/tsv/{array_id}": {
+      "get": {
+        "description": "service where path param is an array - tsv format",
+        "parameters": [
+          {
+            "name": "array_id",
+            "in": "path",
+            "required": true,
+            "description": "path ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "tsv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/path/array/csv/{array_id}": {
+      "get": {
+        "description": "service where path param is an array - csv format",
+        "parameters": [
+          {
+            "name": "array_id",
+            "in": "path",
+            "required": true,
+            "description": "path ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "csv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/path/array/{array_id}": {
+      "get": {
+        "description": "service where path param is an array - defaut format (csv)",
+        "parameters": [
+          {
+            "name": "array_id",
+            "in": "path",
+            "required": true,
+            "description": "path ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/path/simple/{id}": {
+      "get": {
+        "description": "service where path param is a string",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "path id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
