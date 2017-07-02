@@ -106,20 +106,21 @@ public class SwaggerRouter {
 
                 eventBus.<String> send(serviceId, message, deliveryOptions, operationResponse -> {
                     if (operationResponse.succeeded()) {
+                        manageHeaders(context.response(), operationResponse.result().headers());
+
                         if (operationResponse.result().body() != null) {
-                            vertxLogger.debug(operationResponse.result().body());
-                            manageHeaders(context.response(), operationResponse.result().headers());
                             context.response().end(operationResponse.result().body());
                         } else {
                             context.response().end();
                         }
+                      
                     } else {
-                        vertxLogger.debug("Internal Server Error", operationResponse.cause());
+                        vertxLogger.error("Internal Server Error", operationResponse.cause());
                         manageError((ReplyException)operationResponse.cause(), context.response());
                     }
                 });
             } catch (RuntimeException e) {
-                vertxLogger.debug("sending Bad Request", e);
+                vertxLogger.error("sending Bad Request", e);
                 badRequestEnd(context.response());
             }
 
