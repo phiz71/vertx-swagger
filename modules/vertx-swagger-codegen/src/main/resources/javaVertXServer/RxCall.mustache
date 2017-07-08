@@ -14,14 +14,5 @@
                 {{/returnType}}
                     },
                     error -> {
-                        int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
-                        String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (error instanceof MainApiException) {
-                            code = ((MainApiException)error).getStatusCode();
-                            statusMessage = ((MainApiException)error).getStatusMessage();
-                        } else {
-                            LOGGER.error("Unexpected error in "+{{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, error);
-                        }
-                
-                        message.fail(code, statusMessage);
+                        manageError(message, error, "{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}");
                     });
