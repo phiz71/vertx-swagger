@@ -1,6 +1,7 @@
 package io.swagger.server.api.verticle;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -36,22 +37,11 @@ public class StoreApiVerticle extends AbstractVerticle {
                         message.reply(null);
                     else {
                         Throwable cause = result.cause();
-                
-                        int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
-                        String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
-                        } else {
-                            LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, cause);
-                        }
-                
-                        message.fail(code, statusMessage);
+                        manageError(message, cause, "deleteOrder");
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Unexpected error in "+DELETEORDER_SERVICE_ID, e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "deleteOrder");
             }
         });
         
@@ -63,22 +53,11 @@ public class StoreApiVerticle extends AbstractVerticle {
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
                     else {
                         Throwable cause = result.cause();
-                
-                        int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
-                        String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
-                        } else {
-                            LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, cause);
-                        }
-                
-                        message.fail(code, statusMessage);
+                        manageError(message, cause, "getInventory");
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Unexpected error in "+GETINVENTORY_SERVICE_ID, e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "getInventory");
             }
         });
         
@@ -91,22 +70,11 @@ public class StoreApiVerticle extends AbstractVerticle {
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
                     else {
                         Throwable cause = result.cause();
-                
-                        int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
-                        String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
-                        } else {
-                            LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, cause);
-                        }
-                
-                        message.fail(code, statusMessage);
+                        manageError(message, cause, "getOrderById");
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Unexpected error in "+GETORDERBYID_SERVICE_ID, e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "getOrderById");
             }
         });
         
@@ -119,24 +87,30 @@ public class StoreApiVerticle extends AbstractVerticle {
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
                     else {
                         Throwable cause = result.cause();
-                
-                        int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
-                        String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
-                        if (cause instanceof MainApiException) {
-                            code = ((MainApiException)cause).getStatusCode();
-                            statusMessage = ((MainApiException)cause).getStatusMessage();
-                        } else {
-                            LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, cause);
-                        }
-                
-                        message.fail(code, statusMessage);
+                        manageError(message, cause, "placeOrder");
                     }
                 });
             } catch (Exception e) {
-                LOGGER.error("Unexpected error in "+PLACEORDER_SERVICE_ID, e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "placeOrder");
             }
         });
         
+    }
+    
+    private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
+        int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
+        String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
+        if (cause instanceof MainApiException) {
+            code = ((MainApiException)cause).getStatusCode();
+            statusMessage = ((MainApiException)cause).getStatusMessage();
+        } else {
+            logUnexpectedError(serviceName, cause); 
+        }
+            
+        message.fail(code, statusMessage);
+    }
+    
+    private void logUnexpectedError(String serviceName, Throwable cause) {
+        LOGGER.error("Unexpected error in "+ serviceName, cause);
     }
 }
