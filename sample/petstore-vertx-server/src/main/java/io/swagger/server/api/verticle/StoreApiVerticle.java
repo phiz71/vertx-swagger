@@ -41,8 +41,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("deleteOrder", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "deleteOrder");
             }
         });
         
@@ -58,8 +57,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("getInventory", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "getInventory");
             }
         });
         
@@ -76,8 +74,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("getOrderById", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "getOrderById");
             }
         });
         
@@ -94,8 +91,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("placeOrder", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "placeOrder");
             }
         });
         
