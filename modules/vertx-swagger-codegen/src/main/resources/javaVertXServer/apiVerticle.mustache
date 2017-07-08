@@ -56,8 +56,7 @@ public class {{classname}}Verticle extends AbstractVerticle {
 {{>AsyncCall}}
                 {{/rxInterface}}
             } catch (Exception e) {
-                logUnexpectedError("{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}");
             }
         });
         {{/operation}}{{/operations}}

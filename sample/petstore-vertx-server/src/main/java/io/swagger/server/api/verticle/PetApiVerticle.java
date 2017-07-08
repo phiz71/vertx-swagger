@@ -47,8 +47,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("addPet", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "addPet");
             }
         });
         
@@ -66,8 +65,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("deletePet", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "deletePet");
             }
         });
         
@@ -85,8 +83,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("findPetsByStatus", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "findPetsByStatus");
             }
         });
         
@@ -104,8 +101,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("findPetsByTags", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "findPetsByTags");
             }
         });
         
@@ -122,8 +118,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("getPetById", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "getPetById");
             }
         });
         
@@ -140,8 +135,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("updatePet", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "updatePet");
             }
         });
         
@@ -160,8 +154,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("updatePetWithForm", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "updatePetWithForm");
             }
         });
         
@@ -180,8 +173,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("uploadFile", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "uploadFile");
             }
         });
         

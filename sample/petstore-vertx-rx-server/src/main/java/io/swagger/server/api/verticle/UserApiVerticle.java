@@ -44,8 +44,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "createUser");
                     });
             } catch (Exception e) {
-                logUnexpectedError("createUser", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "createUser");
             }
         });
         
@@ -62,8 +61,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "createUsersWithArrayInput");
                     });
             } catch (Exception e) {
-                logUnexpectedError("createUsersWithArrayInput", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "createUsersWithArrayInput");
             }
         });
         
@@ -80,8 +78,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "createUsersWithListInput");
                     });
             } catch (Exception e) {
-                logUnexpectedError("createUsersWithListInput", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "createUsersWithListInput");
             }
         });
         
@@ -97,8 +94,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "deleteUser");
                     });
             } catch (Exception e) {
-                logUnexpectedError("deleteUser", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "deleteUser");
             }
         });
         
@@ -114,8 +110,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "getUserByName");
                     });
             } catch (Exception e) {
-                logUnexpectedError("getUserByName", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "getUserByName");
             }
         });
         
@@ -132,8 +127,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "loginUser");
                     });
             } catch (Exception e) {
-                logUnexpectedError("loginUser", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "loginUser");
             }
         });
         
@@ -148,8 +142,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "logoutUser");
                     });
             } catch (Exception e) {
-                logUnexpectedError("logoutUser", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "logoutUser");
             }
         });
         
@@ -166,8 +159,7 @@ public class UserApiVerticle extends AbstractVerticle {
                         manageError(message, error, "updateUser");
                     });
             } catch (Exception e) {
-                logUnexpectedError("updateUser", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+                manageError(message, e, "updateUser");
             }
         });
         
