@@ -1,0 +1,27 @@
+{  
+  "swagger":"2.0",
+  "info":{  
+    "version":"1.0.0",
+    "title":"test MainApiVerticle option"
+   },
+  "host":"localhost",
+  "schemes":[  
+    "http"
+  ],
+  "paths":{  
+    "/test":{  
+      "get":{  
+        "tags":[
+            "Test"
+        ],
+        "summary":"test generator options",
+        "operationId":"dummy",
+        "responses":{  
+          "default":{  
+            "description":"OK"
+          }
+        }
+      }
+    }
+  }
+}
