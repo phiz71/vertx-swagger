@@ -1,4 +1,4 @@
-package io.vertx.rxjava.ext.swagger.router;
+package com.github.phiz71.rxjava.vertx.swagger.router;
 
 import java.util.function.Function;
 
