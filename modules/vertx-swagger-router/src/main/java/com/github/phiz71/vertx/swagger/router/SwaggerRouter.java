@@ -18,7 +18,6 @@ import com.github.phiz71.vertx.swagger.router.extractors.PathParameterExtractor;
 import com.github.phiz71.vertx.swagger.router.extractors.QueryParameterExtractor;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpStatusClass;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
@@ -103,23 +102,25 @@ public class SwaggerRouter {
 
                 // callback to configure message e.g. provide message header values
                 DeliveryOptions deliveryOptions = configureMessage != null ? configureMessage.apply(context) : new DeliveryOptions();
-
+                deliveryOptions.setHeaders(context.request().headers());
+                
                 eventBus.<String> send(serviceId, message, deliveryOptions, operationResponse -> {
                     if (operationResponse.succeeded()) {
+                        manageHeaders(context.response(), operationResponse.result().headers());
+
                         if (operationResponse.result().body() != null) {
-                            vertxLogger.debug(operationResponse.result().body());
-                            manageHeaders(context.response(), operationResponse.result().headers());
                             context.response().end(operationResponse.result().body());
                         } else {
                             context.response().end();
                         }
+                      
                     } else {
-                        vertxLogger.debug("Internal Server Error", operationResponse.cause());
+                        vertxLogger.error("Internal Server Error", operationResponse.cause());
                         manageError((ReplyException)operationResponse.cause(), context.response());
                     }
                 });
-            } catch (RuntimeException e) {
-                vertxLogger.debug("sending Bad Request", e);
+            } catch (Exception e) {
+                vertxLogger.error("sending Bad Request", e);
                 badRequestEnd(context.response());
             }
 

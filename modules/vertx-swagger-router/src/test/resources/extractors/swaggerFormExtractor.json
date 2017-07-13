@@ -1,0 +1,232 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "FormData Extractor Test"
+  },
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/x-www-form-urlencoded"
+  ],
+  "paths": {
+    "/formdata/array/pipes": {
+      "post": {
+        "description": "service where formdata param is a required array - pipe format",
+        "parameters": [
+          {
+            "name": "array_formdata",
+            "in": "formData",
+            "required": true,
+            "description": "some formDatas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "pipes"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/array/ssv": {
+      "post": {
+        "description": "service where formdata param is a required array - ssv format",
+        "parameters": [
+          {
+            "name": "array_formdata",
+            "in": "formData",
+            "required": true,
+            "description": "some formDatas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "ssv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/array/tsv": {
+      "post": {
+        "description": "service where formdata param is a required array - tsv format",
+        "parameters": [
+          {
+            "name": "array_formdata",
+            "in": "formData",
+            "required": true,
+            "description": "some formDatas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "tsv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/array/csv": {
+      "post": {
+        "description": "service where formdata param is a required array - csv format",
+        "parameters": [
+          {
+            "name": "array_formdata",
+            "in": "formData",
+            "required": true,
+            "description": "some formDatas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "csv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/array/multi": {
+      "post": {
+        "description": "service where formdata param is a required array - multi format",
+        "parameters": [
+          {
+            "name": "array_formdata",
+            "in": "formData",
+            "required": true,
+            "description": "some formDatas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/array": {
+      "post": {
+        "description": "service where formdata param is a required array - defaut format (csv)",
+        "parameters": [
+          {
+            "name": "array_formdata",
+            "in": "formData",
+            "required": true,
+            "description": "some formDatas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/simple/required": {
+      "post": {
+        "description": "service where formdata param is a required string",
+        "parameters": [
+          {
+            "name": "formDataRequired",
+            "in": "formData",
+            "required": true,
+            "description": "a required formData",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/simple/not/required": {
+      "post": {
+        "description": "service where formdata param is not a required string",
+        "parameters": [
+          {
+            "name": "formDataNotRequired",
+            "in": "formData",
+            "required": false,
+            "description": "not a required formData",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/simple/required/allowempty": {
+      "post": {
+        "description": "service where formdata param is a required string",
+        "parameters": [
+          {
+            "name": "formDataRequired",
+            "in": "formData",
+            "required": true,
+            "allowEmptyValue": true,
+            "description": "a required formData",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/formdata/simple/file": {
+      "post": {
+        "description": "service where formdata param is a required file",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "formDataRequired",
+            "in": "formData",
+            "required": true,
+            "description": "a required formData",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

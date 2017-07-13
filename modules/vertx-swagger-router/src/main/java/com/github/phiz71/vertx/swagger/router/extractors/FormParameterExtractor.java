@@ -2,30 +2,23 @@ package com.github.phiz71.vertx.swagger.router.extractors;
 
 import io.swagger.models.parameters.FormParameter;
 import io.swagger.models.parameters.Parameter;
-import io.vertx.core.MultiMap;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 
-public class FormParameterExtractor implements ParameterExtractor {
+public class FormParameterExtractor extends AbstractSerializableParameterExtractor implements ParameterExtractor {
     @Override
     public Object extract(String name, Parameter parameter, RoutingContext context) {
         FormParameter formParam = (FormParameter) parameter;
-        MultiMap params = context.request().formAttributes();
-        if (!params.contains(name) && formParam.getRequired()) {
-            throw new IllegalArgumentException("Missing required parameter: " + name);
-        }
-        if ("array".equals(formParam.getType()))
-            return params.getAll(name);
         if ("file".equals(formParam.getType())) {
-            String uploadedFileName = null;
             for (FileUpload file : context.fileUploads()) {
                 if (file.name().equals(name)) {
-                    uploadedFileName = file.uploadedFileName();
-                    break;
+                    return file.uploadedFileName();
                 }
             }
-            return uploadedFileName;
-        }
-        return params.get(name);
+            if(formParam.getRequired())
+                throw new IllegalArgumentException("Missing required parameter: " + name);
+            return null;
+        } else 
+            return this.extract(name, parameter, context.request().formAttributes());
     }
 }

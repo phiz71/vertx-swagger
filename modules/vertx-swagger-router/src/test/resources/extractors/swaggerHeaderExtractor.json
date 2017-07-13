@@ -1,0 +1,72 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Header Extractor Test"
+  },
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/header/required": {
+      "get": {
+        "description": "service where header is mandatory",
+        "parameters": [
+          {
+            "name": "headerRequired",
+            "in": "header",
+            "required": true,
+            "description": "required header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/header/not/required": {
+      "get": {
+        "description": "service where header is not needed",
+        "parameters": [
+          {
+            "name": "headerNotRequired",
+            "in": "header",
+            "required": false,
+            "description": "not required header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/header/array": {
+      "get": {
+        "description": "service where header is an array",
+        "parameters": [
+          {
+            "name": "arrayHeader",
+            "in": "header",
+            "required": true,
+            "description": "required array header",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

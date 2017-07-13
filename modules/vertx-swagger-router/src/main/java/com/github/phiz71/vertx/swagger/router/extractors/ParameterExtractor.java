@@ -5,4 +5,5 @@ import io.vertx.ext.web.RoutingContext;
 
 public interface ParameterExtractor {
     Object extract(String name, Parameter parameter, RoutingContext context);
+    
 }

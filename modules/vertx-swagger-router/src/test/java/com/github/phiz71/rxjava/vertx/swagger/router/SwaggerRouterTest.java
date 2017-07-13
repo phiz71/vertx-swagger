@@ -1,5 +1,6 @@
-package io.vertx.rxjava.ext.swagger.router;
+package com.github.phiz71.rxjava.vertx.swagger.router;
 
+import com.github.phiz71.rxjava.vertx.swagger.router.SwaggerRouter;
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 
