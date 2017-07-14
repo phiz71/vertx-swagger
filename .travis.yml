@@ -2,7 +2,7 @@ language: java
 sudo: false
 install: true
 addons:
-  sonarqube:
+  sonarcloud:
     organization: "phiz71-github"
     token:
       secure: "heWV3uv9UgMa5IiD/S/DhjFDTUVlRJoE8eBMbd9Mv4hghlhGt1VReY6uPNjY61QPPLV2RrtbnvjlJohh1RCfl0rISg8t35YhMTnWW93VeZD5YuP+3IlemS5Bg86nsMEtzaRPoqaP6WNIoTI+84ZbXsSiyWuemPlHF/DFoQoDYXaIovIqls5xLXArhYZ5mdVTYxjWG9TPZwoMop0ADi1oYbGdIxrbsO9qU85vv/zzJEEliWJUDs2p2h/N4oN/+2OH68OY2wQL56xIt8BPTNV9/akUzIrWIeEIoEu+wFAYlwFUuhsl8pnwm1mcVYoh5RTIQnLkY4v2ofnKEsZJ7DmNNiImpqU2VljvMsOjxx1lO43laSDMj7vX/qdCjhUTLUdCAgfrXWc/IMidUpbzBmf9YRIdIFL23puaS74/XviK6FERI6Xp0MhvqMzoD+V1+Kmbpiy5gu3BqMhAHLZ9ZZ759Su8ED30jvetVXzxTu/VtrEfPFfQNyt/qs69wXhbtFD3KdE7fgXtVFG6N80uws18wN12SeAxe/L4c1t+ohlfpi+QEI6n/xAAikn+XKnnpN2uM5TT35k6GaytwoFex5SRhZpuxabryKY9KxOobsGiXUFPgvCYMUxjSoIPmIv4csfzGi8wwywIZOzT/vRtd1uT1czwPpGAVHTNA3o9BaD7wSE="
