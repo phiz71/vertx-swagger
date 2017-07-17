@@ -1,0 +1,207 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Query Extractor Test"
+  },
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/query/array/pipes": {
+      "get": {
+        "description": "service where query param is a required array - pipe format",
+        "parameters": [
+          {
+            "name": "array_query",
+            "in": "query",
+            "required": true,
+            "description": "some queries",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "pipes"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/array/ssv": {
+      "get": {
+        "description": "service where query param is a required array - ssv format",
+        "parameters": [
+          {
+            "name": "array_query",
+            "in": "query",
+            "required": true,
+            "description": "some queries",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "ssv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/array/tsv": {
+      "get": {
+        "description": "service where query param is a required array - tsv format",
+        "parameters": [
+          {
+            "name": "array_query",
+            "in": "query",
+            "required": true,
+            "description": "some queries",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "tsv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/array/csv": {
+      "get": {
+        "description": "service where query param is a required array - csv format",
+        "parameters": [
+          {
+            "name": "array_query",
+            "in": "query",
+            "required": true,
+            "description": "some queries",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "csv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/array/multi": {
+      "get": {
+        "description": "service where query param is a required array - multi format",
+        "parameters": [
+          {
+            "name": "array_query",
+            "in": "query",
+            "required": true,
+            "description": "some queries",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/array": {
+      "get": {
+        "description": "service where query param is a required array - defaut format (csv)",
+        "parameters": [
+          {
+            "name": "array_query",
+            "in": "query",
+            "required": true,
+            "description": "some queries",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/simple/required": {
+      "get": {
+        "description": "service where query param is a required string",
+        "parameters": [
+          {
+            "name": "queryRequired",
+            "in": "query",
+            "required": true,
+            "description": "a required query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/simple/not/required": {
+      "get": {
+        "description": "service where query param is not a required string",
+        "parameters": [
+          {
+            "name": "queryNotRequired",
+            "in": "query",
+            "required": false,
+            "description": "not a required query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/simple/required/allowempty": {
+      "get": {
+        "description": "service where query param is a required string",
+        "parameters": [
+          {
+            "name": "queryRequired",
+            "in": "query",
+            "required": true,
+            "allowEmptyValue": true,
+            "description": "a required query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
