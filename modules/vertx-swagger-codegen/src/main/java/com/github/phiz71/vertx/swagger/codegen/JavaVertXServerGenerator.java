@@ -25,15 +25,12 @@ import io.swagger.util.Json;
 public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
     protected String resourceFolder = "src/main/resources";
-    protected String rootPackage = "io.swagger.server.api";
     protected String apiVersion = "1.0.0-SNAPSHOT";
 
-    public static final String ROOT_PACKAGE = "rootPackage";
+    public static final String ROOT_PACKAGE = "io.swagger.server.api";
     public static final String VERTX_SWAGGER_ROUTER_VERSION = "vertxSwaggerRouterVersion";
     public static final String RX_INTERFACE_OPTION = "rxInterface";
     public static final String MAIN_API_VERTICAL_GENERATION_OPTION = "mainVerticleGeneration";
-    
-    protected String verticlePackage = "";
 
     public JavaVertXServerGenerator() {
         super();
@@ -42,7 +39,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         // set the output folder here
         outputFolder = "generated-code/javaVertXServer";
 
-        /**
+        /*
          * Models. You can write model files using the modelTemplateFiles map.
          * if you want to create one template for file, you can do so here. for
          * multiple files for model, just put another entry in the
@@ -53,7 +50,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         modelTemplateFiles.put("model.mustache", // the template to use
                 ".java"); // the extension for each file to write
 
-        /**
+        /*
          * Api classes. You can write classes for each Api file with the
          * apiTemplateFiles map. as with models, add multiple entries with
          * different extensions for multiple files per class
@@ -66,24 +63,27 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         apiTemplateFiles.put("apiException.mustache", // the template to use
                 "Exception.java"); // the extension for each file to write
 
-        /**
+        /*
          * Template Location. This is the location which templates will be read
          * from. The generator will use the resource stream to attempt to read
          * the templates.
          */
         embeddedTemplateDir = templateDir = "javaVertXServer";
 
-        /**
+        /*
          * Api Package. Optional, if needed, this can be used in templates
          */
-        apiPackage = rootPackage + ".verticle";
+        apiPackage = ROOT_PACKAGE + ".verticle";
 
-        /**
+        /*
          * Model Package. Optional, if needed, this can be used in templates
          */
-        modelPackage = rootPackage + ".model";
+        modelPackage = ROOT_PACKAGE + ".model";
 
-        additionalProperties.put(ROOT_PACKAGE, rootPackage);
+        /*
+         * Invoker Package. Optional, if needed, this can be used in templates
+         */
+        invokerPackage = ROOT_PACKAGE;
 
         groupId = "io.swagger";
         artifactId = "swagger-java-vertx-server";
@@ -95,7 +95,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         
         cliOptions.add(CliOption.newBoolean(RX_INTERFACE_OPTION,
                 "When specified, API interfaces are generated with RX and methods return Single<>."));
-        
+
         cliOptions.add(CliOption.newBoolean(MAIN_API_VERTICAL_GENERATION_OPTION,
                 "When specified, MainApiVerticle.java will not be generated"));
     }
@@ -141,18 +141,18 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
-        importMapping.put("MainApiException", rootPackage+".MainApiException");
+        importMapping.put("MainApiException", invokerPackage+".MainApiException");
 
         modelDocTemplateFiles.clear();
         apiDocTemplateFiles.clear();
 
         supportingFiles.clear();
         supportingFiles.add(new SupportingFile("swagger.mustache", resourceFolder, "swagger.json"));
-        
+
         if(Boolean.parseBoolean(additionalProperties.getOrDefault(MAIN_API_VERTICAL_GENERATION_OPTION, "true").toString())) {
-            supportingFiles.add(new SupportingFile("MainApiVerticle.mustache", sourceFolder + File.separator + rootPackage.replace(".", File.separator), "MainApiVerticle.java"));
+            supportingFiles.add(new SupportingFile("MainApiVerticle.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiVerticle.java"));
         }
-        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + rootPackage.replace(".", File.separator), "MainApiException.java"));
+        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiException.java"));
 
         writeOptional(outputFolder, new SupportingFile("vertx-default-jul-logging.mustache", resourceFolder, "vertx-default-jul-logging.properties"));
         writeOptional(outputFolder, new SupportingFile("pom.mustache", "", "pom.xml"));
@@ -172,6 +172,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         Map<String, Object> newObjs = super.postProcessOperations(objs);
