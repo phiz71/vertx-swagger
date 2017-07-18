@@ -1,13 +1,15 @@
 package com.github.phiz71.vertx.swagger.router;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import com.github.phiz71.vertx.swagger.router.auth.SwaggerAuthHandlerFactory;
+import io.swagger.models.SecurityRequirement;
+import io.vertx.ext.auth.AuthProvider;
+import io.vertx.ext.web.handler.AuthHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.phiz71.vertx.swagger.router.extractors.BodyParameterExtractor;
@@ -61,23 +63,71 @@ public class SwaggerRouter {
     }
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus) {
-        return swaggerRouter(baseRouter, swagger, eventBus, new DefaultServiceIdResolver(), null);
+        return swaggerRouter(baseRouter, swagger, eventBus, new DefaultServiceIdResolver(), null, null);
+    }
+
+    public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, Map<String, AuthProvider> authProviders) {
+        return swaggerRouter(baseRouter, swagger, eventBus, new DefaultServiceIdResolver(), null, authProviders);
     }
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver) {
-        return swaggerRouter(baseRouter, swagger, eventBus, serviceIdResolver, null);
+        return swaggerRouter(baseRouter, swagger, eventBus, serviceIdResolver, null, null);
+    }
+
+    public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver, Map<String, AuthProvider> authProviders) {
+        return swaggerRouter(baseRouter, swagger, eventBus, serviceIdResolver, null, authProviders);
     }
 
     public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver, Function<RoutingContext, DeliveryOptions> configureMessage) {
+        return swaggerRouter(baseRouter, swagger, eventBus, serviceIdResolver, configureMessage, null);
+    }
+
+    public static Router swaggerRouter(Router baseRouter, Swagger swagger, EventBus eventBus, ServiceIdResolver serviceIdResolver, Function<RoutingContext, DeliveryOptions> configureMessage, Map<String, AuthProvider> authProviders) {
         baseRouter.route().handler(BodyHandler.create());
         final String basePath = getBasePath(swagger);
+        SwaggerAuthHandlerFactory authHandlerFactory = getSwaggerAuthHandlerFactory(swagger, authProviders);
         swagger.getPaths().forEach((path, pathDescription) -> pathDescription.getOperationMap().forEach((method, operation) -> {
-            Route route = ROUTE_BUILDERS.get(method).buildRoute(baseRouter, convertParametersToVertx(basePath + path));
+            String convertedPath = convertParametersToVertx(basePath + path);
+            configureAuthRoute(baseRouter, method, convertedPath, swagger, operation, authHandlerFactory);
+            Route route = ROUTE_BUILDERS.get(method).buildRoute(baseRouter, convertedPath);
             String serviceId = serviceIdResolver.resolve(method, path, operation);
             configureRoute(route, serviceId, operation, eventBus, configureMessage);
         }));
 
         return baseRouter;
+    }
+
+
+    private static void configureAuthRoute(Router baseRouter, HttpMethod method, String path, Swagger swagger, Operation operation,
+                                           SwaggerAuthHandlerFactory authHandlerFactory) {
+        AuthHandler authHandler = getAuthHandler(authHandlerFactory, swagger, operation);
+        if(authHandler != null) {
+            ROUTE_BUILDERS.get(method).buildRoute(baseRouter, path).handler(authHandler);
+        }
+    }
+
+    private static AuthHandler getAuthHandler(SwaggerAuthHandlerFactory authHandlerFactory, Swagger swagger, Operation operation) {
+        AuthHandler authHandler = null;
+        if(authHandlerFactory != null) {
+            if(operation.getSecurity() != null && !operation.getSecurity().isEmpty()) {
+                authHandler = authHandlerFactory.createAuthHandler(operation.getSecurity());
+            } else if(swagger.getSecurity() != null && !swagger.getSecurity().isEmpty()) {
+                List<Map<String, List<String>>> security = swagger.getSecurity().stream()
+                        .map(SecurityRequirement::getRequirements)
+                        .collect(Collectors.toList());
+                authHandler = authHandlerFactory.createAuthHandler(security);
+            }
+        }
+
+        return authHandler;
+    }
+
+    private static SwaggerAuthHandlerFactory getSwaggerAuthHandlerFactory(Swagger swagger, Map<String, AuthProvider> authProviders) {
+        SwaggerAuthHandlerFactory authHandlerFactory = null;
+        if(authProviders != null && !authProviders.isEmpty()) {
+            authHandlerFactory = SwaggerAuthHandlerFactory.create(swagger.getSecurityDefinitions()).addAuthProviders(authProviders);
+        }
+        return authHandlerFactory;
     }
 
     private static String getBasePath(Swagger swagger) {
