@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package com.github.phiz71.vertx.swagger.router.auth;
 
 import com.github.phiz71.vertx.swagger.router.auth.ApiKeyAuthHandler.Location;
