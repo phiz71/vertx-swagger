@@ -1,5 +1,6 @@
 package io.swagger.server.api.verticle;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
@@ -70,8 +71,7 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByStatus
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYSTATUS_SERVICE_ID).handler(message -> {
             try {
-                List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(),
-                        Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByStatus(status).subscribe(
                     result -> {
                         message.reply(new JsonArray(Json.encode(result)).encodePrettily());
@@ -87,8 +87,7 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for findPetsByTags
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYTAGS_SERVICE_ID).handler(message -> {
             try {
-                List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(),
-                        Json.mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByTags(tags).subscribe(
                     result -> {
                         message.reply(new JsonArray(Json.encode(result)).encodePrettily());

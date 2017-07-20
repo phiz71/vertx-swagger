@@ -1,0 +1,39 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "test MainApiVerticle option"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/test": {
+            "put": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "test generator options",
+                "operationId": "dummy",
+                "parameters": [
+                    {
+                        "name": "updateModel",
+                        "in": "body",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
+}
