@@ -2,6 +2,7 @@ package com.github.phiz71.vertx.swagger.router;
 
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,12 +17,14 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
+import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 @RunWith(VertxUnitRunner.class)
 public class BuildRouterTest {
@@ -44,7 +47,13 @@ public class BuildRouterTest {
         vertxFileSystem.readFile("swagger.json", readFile -> {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
-                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus);
+                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus, new DefaultServiceIdResolver(), new Function<RoutingContext, DeliveryOptions>() {
+                    @Override
+                    public DeliveryOptions apply(RoutingContext t) {
+                        // TODO Auto-generated method stub
+                        return new DeliveryOptions().addHeader("MainHeader", "MainValue");
+                    }
+                });
                 httpServer = vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
                     if (listen.succeeded()) {
                         before.complete();
@@ -94,6 +103,11 @@ public class BuildRouterTest {
             message.reply("", options);
         });
 
+        eventBus.<JsonObject> consumer("GET_pet_petId").handler(message -> {
+            DeliveryOptions options = new DeliveryOptions();
+            message.reply(null, options.setHeaders(message.headers()));
+        });
+        
         // init http Server
         HttpClientOptions options = new HttpClientOptions();
         options.setDefaultPort(TEST_PORT);
@@ -194,6 +208,36 @@ public class BuildRouterTest {
         });
     }
 
+    
+    @Test(timeout = 2000)
+    public void testMainHeaderOnly(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/1", response -> {
+            context.assertEquals(response.statusCode(), 200);
+            String header = response.getHeader("MainHeader");
+            context.assertNotNull(header);
+            context.assertEquals("MainValue", header);
+            async.complete();
+        });
+    }
+
+    @Test(timeout = 2000)
+    public void testMainHeaderWithAnotherHeader(TestContext context) {
+        Async async = context.async();
+        HttpClientRequest req = httpClient.get(TEST_PORT, TEST_HOST, "/v2/pet/1", response -> {
+            context.assertEquals(response.statusCode(), 200);
+            String header = response.getHeader("MainHeader");
+            context.assertNotNull(header);
+            context.assertEquals("MainValue", header);
+            String customerHeader = response.getHeader("MyCustomerHeader");
+            context.assertNotNull(customerHeader);
+            context.assertEquals("MyCustomerValue", customerHeader);
+            async.complete();
+        });
+        req.putHeader("MyCustomerHeader", "MyCustomerValue");
+        req.end();
+    }
+    
     @AfterClass
     public static void afterClass(TestContext context) {
         Async after = context.async();
