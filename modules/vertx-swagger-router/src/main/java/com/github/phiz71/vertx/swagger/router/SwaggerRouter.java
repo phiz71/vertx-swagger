@@ -109,8 +109,10 @@ public class SwaggerRouter {
     private static AuthHandler getAuthHandler(SwaggerAuthHandlerFactory authHandlerFactory, Swagger swagger, Operation operation) {
         AuthHandler authHandler = null;
         if(authHandlerFactory != null) {
-            if(operation.getSecurity() != null && !operation.getSecurity().isEmpty()) {
-                authHandler = authHandlerFactory.createAuthHandler(operation.getSecurity());
+            if(operation.getSecurity() != null) { 
+            	if(!operation.getSecurity().isEmpty()) {
+            		authHandler = authHandlerFactory.createAuthHandler(operation.getSecurity());
+            	}
             } else if(swagger.getSecurity() != null && !swagger.getSecurity().isEmpty()) {
                 List<Map<String, List<String>>> security = swagger.getSecurity().stream()
                         .map(SecurityRequirement::getRequirements)
