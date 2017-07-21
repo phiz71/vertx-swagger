@@ -1,5 +1,6 @@
 package io.swagger.server.api.verticle;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
@@ -51,8 +52,7 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUsersWithArrayInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHARRAYINPUT_SERVICE_ID).handler(message -> {
             try {
-                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
-                        Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
+                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<User>>(){});
                 service.createUsersWithArrayInput(body).subscribe(
                     () -> {
                         message.reply(null);
@@ -68,8 +68,7 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUsersWithListInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHLISTINPUT_SERVICE_ID).handler(message -> {
             try {
-                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(),
-                        Json.mapper.getTypeFactory().constructCollectionType(List.class, User.class));
+                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<User>>(){});
                 service.createUsersWithListInput(body).subscribe(
                     () -> {
                         message.reply(null);

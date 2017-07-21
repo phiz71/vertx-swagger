@@ -1,5 +1,6 @@
 package io.swagger.server.api.verticle;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
