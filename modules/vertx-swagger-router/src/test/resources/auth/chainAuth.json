@@ -1,0 +1,52 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "For complex basic security testing",
+        "version": "1.0.0",
+        "title": "Swagger Complex Basic Sec"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/test": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "test complex basic auth",
+                "operationId": "testComplexBasic",
+                "responses": {
+                    "default": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "A": [],
+            "B": []
+        },
+        {
+            "C": [],
+            "D": []
+        }
+    ],
+    "securityDefinitions": {
+        "A": {
+            "type": "basic"
+        },
+        "B": {
+            "type": "basic"
+        },
+        "C": {
+            "type": "basic"
+        },
+        "D": {
+            "type": "basic"
+        }
+    }
+}

@@ -1,4 +1,4 @@
-package com.github.phiz71.vertx.swagger.router;
+package com.github.phiz71.vertx.swagger.router.auth;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.phiz71.vertx.swagger.router.auth.TestUser;
+import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
@@ -57,15 +57,14 @@ public class BasicAuthTest {
 				String username = authInfo.getString("username");
 				String password = authInfo.getString("password");
 				if("foo".equals(username) && "bar".equals(password)) {
-					System.out.println("login success");
+					System.out.println("login success for basic_all");
 					handler.handle(Future.succeededFuture(new TestUser(username)));
 				} else {
-					System.out.println("login fails");
+					System.out.println("login fails for basic_all");
 					handler.handle(Future.failedFuture("Incorrect username/password"));
 				}
 			}
 		};
-		
 		AuthProvider basicDummyAuthProvider = new AuthProvider() {
 			
 			@Override
@@ -73,10 +72,10 @@ public class BasicAuthTest {
 				String username = authInfo.getString("username");
 				String password = authInfo.getString("password");
 				if("dummy".equals(username) && "dummy".equals(password)) {
-					System.out.println("login success");
+					System.out.println("login success for dummy");
 					handler.handle(Future.succeededFuture(new TestUser(username)));
 				} else {
-					System.out.println("login fails");
+					System.out.println("login fails for dummy");
 					handler.handle(Future.failedFuture("Incorrect username/password"));
 				}
 			}
