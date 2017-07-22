@@ -34,26 +34,32 @@ public class SwaggerAuthHandlerFactory {
 
     public synchronized SwaggerAuthHandlerFactory addAuthProvider(String name, AuthProvider authProvider) {
         SecuritySchemeDefinition securityScheme = this.securitySchemes.get(name);
-        AuthHandler authHandler = null;
-        switch (securityScheme.getType()) {
-            case "apiKey":
-                ApiKeyAuthDefinition apiKeyAuthDefinition = (ApiKeyAuthDefinition) securityScheme;
-                Location apiKeyLocation = Location.valueOf(apiKeyAuthDefinition.getIn().name());
-                authHandler = ApiKeyAuthHandler.create(authProvider, apiKeyLocation, apiKeyAuthDefinition.getName());
-                break;
-            case "basic":
-                authHandler = BasicAuthHandler.create(authProvider);
-                break;
-            case "oauth2":
-                vertxLogger.warn("OAuth2 authentication has not been implemented yet!");
-                break;
+        if(securityScheme != null) {
+	        AuthHandler authHandler = null;
+	        switch (securityScheme.getType()) {
+	            case "apiKey":
+	                ApiKeyAuthDefinition apiKeyAuthDefinition = (ApiKeyAuthDefinition) securityScheme;
+	                Location apiKeyLocation = Location.valueOf(apiKeyAuthDefinition.getIn().name());
+	                authHandler = ApiKeyAuthHandler.create(authProvider, apiKeyLocation, apiKeyAuthDefinition.getName());
+	                break;
+	            case "basic":
+	                authHandler = BasicAuthHandler.create(authProvider);
+	                break;
+	            case "oauth2":
+	                vertxLogger.warn("OAuth2 authentication has not been implemented yet!");
+	                break;
+	        }
+	
+	        if (authHandler != null) {
+	            this.authHandlers.put(name, authHandler);
+	        }
+        } else {
+            vertxLogger.warn("No securityScheme definition in swagger file for authprovider : "+name);
         }
-
-        if (authHandler != null) {
-            this.authHandlers.put(name, authHandler);
-        }
-
+        
         return this;
+        
+        
     }
 
     public AuthHandler createAuthHandler(final List<Map<String, List<String>>> security) {
