@@ -193,6 +193,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
                 
                 for(CodegenParameter param:operation.allParams) {
                     if("UUID".equals(param.dataType)) {
+                        param.vendorExtensions.put("X-isUUID", true);
                     }
                 }
             }
