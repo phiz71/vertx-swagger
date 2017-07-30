@@ -1,6 +1,8 @@
 package io.swagger.server.api.verticle;
 
+import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.MainApiException;
+import java.util.UUID;
 import io.swagger.server.api.model.User;
 
 import io.vertx.core.AsyncResult;
@@ -33,5 +35,8 @@ public interface UserApi  {
     
     //updateUser
     void updateUser(String username, User body, Handler<AsyncResult<Void>> handler);
+    
+    //uuid
+    void uuid(UUID uuidParam, Handler<AsyncResult<InlineResponseDefault>> handler);
     
 }

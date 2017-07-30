@@ -1,0 +1,40 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "test MainApiVerticle option"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/uuid/{uuidParam}": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "test generator options",
+                "operationId": "dummy",
+                "parameters": [
+                    {
+                        "name": "uuidParam",
+                        "in": "path",
+                        "type": "string",
+                        "format": "uuid",
+                        "required": true,
+                        "x-istoto": false
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "schema":{
+                            "type":"string"
+                        },
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
+}
