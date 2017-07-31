@@ -154,7 +154,8 @@ public class SwaggerRouter {
 
                 // callback to configure message e.g. provide message header values
                 DeliveryOptions deliveryOptions = configureMessage != null ? configureMessage.apply(context) : new DeliveryOptions();
-                deliveryOptions.setHeaders(context.request().headers());
+                context.request().headers().forEach(entry -> deliveryOptions.addHeader(entry.getKey(), entry.getValue()));
+
                 
                 eventBus.<String> send(serviceId, message, deliveryOptions, operationResponse -> {
                     if (operationResponse.succeeded()) {

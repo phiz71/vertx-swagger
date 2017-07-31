@@ -1,13 +1,12 @@
 package com.github.phiz71.vertx.swagger.codegen;
 
+import io.swagger.codegen.SwaggerCodegen;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-
-import io.swagger.codegen.SwaggerCodegen;
 
 public class SampleVertXGeneratorTest {
 
@@ -105,4 +104,24 @@ public class SampleVertXGeneratorTest {
         FileUtils.deleteDirectory(new File("temp"));
     }
 
+    @Test
+    public void testBodyWithList() throws IOException {
+        String[] args = new String[7];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testListInBody.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+                "temp/test-server/src/main/java/io/swagger/server/api/verticle/TestApiVerticle.java");
+
+        Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains(
+                "List<String> updateModel = Json.mapper.readValue(message.body().getJsonArray(\"updateModel\").encode(), new TypeReference<List<String>>(){});"));
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
 }
