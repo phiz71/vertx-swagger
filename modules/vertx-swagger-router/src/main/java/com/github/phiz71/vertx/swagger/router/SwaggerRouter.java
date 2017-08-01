@@ -1,7 +1,6 @@
 package com.github.phiz71.vertx.swagger.router;
 
 import com.github.phiz71.vertx.swagger.router.auth.SwaggerAuthHandlerFactory;
-import com.github.phiz71.vertx.swagger.router.auth.user.ApiUser;
 import com.github.phiz71.vertx.swagger.router.extractors.*;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.swagger.models.HttpMethod;
@@ -42,6 +41,7 @@ public class SwaggerRouter {
     public static final String CUSTOM_STATUS_CODE_HEADER_KEY="CUSTOM_STATUS_CODE";
     public static final String CUSTOM_STATUS_MESSAGE_HEADER_KEY="CUSTOM_STATUS_MESSAGE";
     public static final String AUTH_USER_HEADER_KEY = "AUTH_USER";
+    public static final String AUTH_PROVIDER_NAME_HEADER_KEY = "AUTH_PROVIDER_NAME";
 
     private static final Pattern PATH_PARAMETER_NAME = Pattern.compile("\\{([A-Za-z][A-Za-z0-9_]*)\\}");
     private static final Pattern PATH_PARAMETERS = Pattern.compile("\\{(.*?)\\}");
@@ -179,6 +179,10 @@ public class SwaggerRouter {
         Buffer buffer = Buffer.buffer();
         new UserHolder(context).writeToBuffer(buffer);
         deliveryOptions.addHeader(AUTH_USER_HEADER_KEY, buffer.toString());
+        String authProviderName = context.get(AUTH_PROVIDER_NAME_HEADER_KEY);
+        if (authProviderName != null) {
+            deliveryOptions.addHeader(AUTH_PROVIDER_NAME_HEADER_KEY, authProviderName);
+        }
     }
 
     public static User extractAuthUserFromMessage(Message<?> message) {
@@ -189,9 +193,11 @@ public class SwaggerRouter {
             UserHolder userHolder = new UserHolder();
             userHolder.readFromBuffer(0, buffer);
             user = userHolder.user;
-            if (user instanceof ApiUser) {
-                String authProviderName = ((ApiUser) user).getAuthProviderName();
-                user.setAuthProvider(getAuthProviderFactory().getAuthProviderByName(authProviderName));
+            if (user != null) {
+                String authProviderName = message.headers().get(SwaggerRouter.AUTH_PROVIDER_NAME_HEADER_KEY);
+                if (authProviderName != null) {
+                    user.setAuthProvider(getAuthProviderFactory().getAuthProviderByName(authProviderName));
+                }
             }
         }
         return user;

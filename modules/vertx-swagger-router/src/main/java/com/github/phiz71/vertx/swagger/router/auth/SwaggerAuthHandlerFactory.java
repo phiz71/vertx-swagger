@@ -1,5 +1,6 @@
 package com.github.phiz71.vertx.swagger.router.auth;
 
+import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 import com.github.phiz71.vertx.swagger.router.auth.ApiKeyAuthHandler.Location;
 import io.swagger.models.auth.ApiKeyAuthDefinition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
@@ -104,6 +105,7 @@ public class SwaggerAuthHandlerFactory {
                     String securityIdentifier = andSecurityIdentifiers.get(andLevelIndex);
                     AuthHandler handler = SwaggerAuthHandlerFactory.this.getAuthHandler(securityIdentifier);
                     if (handler != null) {
+                        context.put(SwaggerRouter.AUTH_PROVIDER_NAME_HEADER_KEY, securityIdentifier);
                         handler.addAuthorities(this.authorities).handle(context);
                     } else {
                         context.fail(401);
