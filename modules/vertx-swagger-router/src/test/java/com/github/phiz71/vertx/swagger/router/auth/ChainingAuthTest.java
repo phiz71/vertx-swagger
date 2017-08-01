@@ -114,17 +114,17 @@ public class ChainingAuthTest {
 				}
 			}
 		};
-        authProviders.put("A", A_AuthProvider);
-        authProviders.put("B", B_AuthProvider);
-        authProviders.put("C", C_AuthProvider);
-        authProviders.put("D", D_AuthProvider);
+        AuthProviderRegistry.register("A", A_AuthProvider);
+        AuthProviderRegistry.register("B", B_AuthProvider);
+        AuthProviderRegistry.register("C", C_AuthProvider);
+        AuthProviderRegistry.register("D", D_AuthProvider);
         
         // init Router
         FileSystem vertxFileSystem = vertx.fileSystem();
         vertxFileSystem.readFile("auth/chainAuth.json", readFile -> {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
-                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus, authProviders);
+                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus);
                 httpServer = vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
                     if (listen.succeeded()) {
                         before.complete();

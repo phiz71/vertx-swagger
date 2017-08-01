@@ -11,12 +11,15 @@ import io.vertx.ext.web.handler.AuthHandler;
 import io.vertx.ext.web.handler.BasicAuthHandler;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.github.phiz71.vertx.swagger.router.auth.AuthProviderRegistry.getAuthProviderFactory;
 
 public class SwaggerAuthHandlerFactory {
 
     private static Logger vertxLogger = LoggerFactory.getLogger(SwaggerAuthHandlerFactory.class);
 
-    private final Map<String, AuthHandler> authHandlers = new HashMap<>();
+    private final Map<String, AuthHandler> authHandlers = new ConcurrentHashMap<>();
     private final Map<String, SecuritySchemeDefinition> securitySchemes;
 
     public static SwaggerAuthHandlerFactory create(Map<String, SecuritySchemeDefinition> securitySchemes) {
@@ -27,15 +30,19 @@ public class SwaggerAuthHandlerFactory {
         this.securitySchemes = securitySchemes;
     }
 
-    public SwaggerAuthHandlerFactory addAuthProviders(Map<String, AuthProvider> authProviders) {
-        authProviders.forEach(this::addAuthProvider);
-        return this;
-    }
+    private AuthHandler getAuthHandler(String name) {
+        AuthHandler authHandler = this.authHandlers.get(name);
+        if (authHandler != null) {
+            return authHandler;
+        }
 
-    public synchronized SwaggerAuthHandlerFactory addAuthProvider(String name, AuthProvider authProvider) {
+        AuthProvider authProvider = getAuthProviderFactory().getAuthProviderByName(name);
+        if (authProvider == null) {
+            return null;
+        }
+
         SecuritySchemeDefinition securityScheme = this.securitySchemes.get(name);
         if(securityScheme != null) {
-	        AuthHandler authHandler = null;
 	        switch (securityScheme.getType()) {
 	            case "apiKey":
 	                ApiKeyAuthDefinition apiKeyAuthDefinition = (ApiKeyAuthDefinition) securityScheme;
@@ -54,12 +61,10 @@ public class SwaggerAuthHandlerFactory {
 	            this.authHandlers.put(name, authHandler);
 	        }
         } else {
-            vertxLogger.warn("No securityScheme definition in swagger file for authprovider : "+name);
+            vertxLogger.warn("No securityScheme definition in swagger file for auth provider: " + name);
         }
-        
-        return this;
-        
-        
+
+        return authHandler;
     }
 
     public AuthHandler createAuthHandler(final List<Map<String, List<String>>> security) {
@@ -97,7 +102,7 @@ public class SwaggerAuthHandlerFactory {
                 if (!orSecurityIdentifiers.isEmpty()) {
                     List<String> andSecurityIdentifiers = new ArrayList<>(orSecurityIdentifiers.keySet());
                     String securityIdentifier = andSecurityIdentifiers.get(andLevelIndex);
-                    AuthHandler handler = SwaggerAuthHandlerFactory.this.authHandlers.get(securityIdentifier);
+                    AuthHandler handler = SwaggerAuthHandlerFactory.this.getAuthHandler(securityIdentifier);
                     if (handler != null) {
                         handler.addAuthorities(this.authorities).handle(context);
                     } else {

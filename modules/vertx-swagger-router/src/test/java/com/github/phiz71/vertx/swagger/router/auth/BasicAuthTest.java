@@ -1,8 +1,6 @@
 package com.github.phiz71.vertx.swagger.router.auth;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -49,7 +47,6 @@ public class BasicAuthTest {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
 
-        Map<String, AuthProvider> authProviders = new HashMap<>();
         AuthProvider basicAllAuthProvider = new AuthProvider() {
 			
 			@Override
@@ -80,15 +77,15 @@ public class BasicAuthTest {
 				}
 			}
 		};
-        authProviders.put("basic_all", basicAllAuthProvider);
-        authProviders.put("basic_dummy", basicDummyAuthProvider);
+        AuthProviderRegistry.register("basic_all", basicAllAuthProvider);
+        AuthProviderRegistry.register("basic_dummy", basicDummyAuthProvider);
         
         // init Router
         FileSystem vertxFileSystem = vertx.fileSystem();
         vertxFileSystem.readFile("auth/basicAuth.json", readFile -> {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
-                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus, authProviders);
+                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus);
                 httpServer = vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
                     if (listen.succeeded()) {
                         before.complete();

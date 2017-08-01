@@ -49,7 +49,6 @@ public class ApiKeyAuthTest {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
 
-        Map<String, AuthProvider> authProviders = new HashMap<>();
         AuthProvider apiKeyAllAuthProvider = new AuthProvider() {
 			
 			@Override
@@ -80,15 +79,15 @@ public class ApiKeyAuthTest {
 				}
 			}
 		};
-        authProviders.put("apikey_all", apiKeyAllAuthProvider);
-        authProviders.put("apikey_dummy", apiKeyDummyAuthProvider);
+        AuthProviderRegistry.register("apikey_all", apiKeyAllAuthProvider);
+        AuthProviderRegistry.register("apikey_dummy", apiKeyDummyAuthProvider);
         
         // init Router
         FileSystem vertxFileSystem = vertx.fileSystem();
         vertxFileSystem.readFile("auth/apiKeyAuth.json", readFile -> {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
-                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus, authProviders);
+                Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, eventBus);
                 httpServer = vertx.createHttpServer().requestHandler(swaggerRouter::accept).listen(TEST_PORT, TEST_HOST, listen -> {
                     if (listen.succeeded()) {
                         before.complete();
