@@ -1,4 +1,4 @@
-                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}{{#hasAuthMethods}}{{#hasParams}}, {{/hasParams}}user{{/hasAuthMethods}}).subscribe(
+                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}{{#hasAuthMethods}}{{#hasParams}}, {{/hasParams}}io.vertx.rxjava.ext.auth.User.newInstance(user){{/hasAuthMethods}}).subscribe(
                 {{#returnType}}
                     result -> {
                     {{#isListContainer}}
