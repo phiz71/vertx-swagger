@@ -124,4 +124,25 @@ public class SampleVertXGeneratorTest {
 
         FileUtils.deleteDirectory(new File("temp"));
     }
+    
+    @Test
+    public void testUUID() throws IOException {
+        String[] args = new String[7];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testUUID.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+                "temp/test-server/src/main/java/io/swagger/server/api/verticle/TestApiVerticle.java");
+
+        Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains(
+                "UUID uuidParam = UUID.fromString(message.body().getString(\"uuidParam\"));"));
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
 }

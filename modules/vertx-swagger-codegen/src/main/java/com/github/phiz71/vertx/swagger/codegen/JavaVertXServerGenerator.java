@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import io.swagger.codegen.CliOption;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
+import io.swagger.codegen.CodegenParameter;
 import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.CodegenType;
 import io.swagger.codegen.SupportingFile;
@@ -190,6 +191,11 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
                     operation.path = camelizePath(operation.path);
                 }
                 
+                for(CodegenParameter param:operation.allParams) {
+                    if("UUID".equals(param.dataType)) {
+                        param.vendorExtensions.put("X-isUUID", true);
+                    }
+                }
             }
         }
         return newObjs;

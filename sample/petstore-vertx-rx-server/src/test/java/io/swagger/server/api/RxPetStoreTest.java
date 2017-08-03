@@ -153,4 +153,15 @@ public class RxPetStoreTest {
             });
         });
     }
+    
+    @Test(timeout = 2000)
+    public void testUUID(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/uuid/5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals("5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", body.toJsonObject().getString("uuid"));
+                async.complete();
+            });
+        });
+    }
 }

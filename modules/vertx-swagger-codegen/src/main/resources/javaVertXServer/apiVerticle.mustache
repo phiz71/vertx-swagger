@@ -37,7 +37,17 @@ public class {{classname}}Verticle extends AbstractVerticle {
                         {{^isListContainer}}
                             {{#isPrimitiveType}}
                                 {{#isString}}
+                                    {{#vendorExtensions}}
+                                        {{#X-isUUID}}
+                {{{dataType}}} {{paramName}} = {{{dataType}}}.fromString(message.body().getString("{{baseName}}"));
+                                        {{/X-isUUID}}
+                                        {{^X-isUUID}}
                 {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
+                                        {{/X-isUUID}}
+                                    {{/vendorExtensions}}
+                                    {{^vendorExtensions}}
+                {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
+                                    {{/vendorExtensions}}
                                 {{/isString}}
                                 {{^isString}}
                 {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);

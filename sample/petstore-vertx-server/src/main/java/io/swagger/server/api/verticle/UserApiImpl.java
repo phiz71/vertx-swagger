@@ -1,9 +1,12 @@
 package io.swagger.server.api.verticle;
 
 import java.util.List;
+import java.util.UUID;
 
+import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.model.User;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
 public class UserApiImpl implements UserApi {
@@ -46,6 +49,12 @@ public class UserApiImpl implements UserApi {
     @Override
     public void updateUser(String username, User body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void uuid(UUID uuidParam, Handler<AsyncResult<InlineResponseDefault>> handler) {
+        InlineResponseDefault response = new InlineResponseDefault(uuidParam);
+        handler.handle(Future.succeededFuture(response));
     }
 
 }

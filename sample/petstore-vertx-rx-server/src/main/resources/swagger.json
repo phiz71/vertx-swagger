@@ -35,6 +35,36 @@
   } ],
   "schemes" : [ "http" ],
   "paths" : {
+    "/uuid/{uuidParam}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "test uuid",
+        "operationId" : "uuid",
+        "parameters" : [ {
+          "name" : "uuidParam",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "uuid" : {
+                  "type" : "string",
+                  "format" : "uuid"
+                }
+              }
+            }
+          }
+        },
+        "x-contentType" : "application/json",
+        "x-accepts" : "application/json"
+      }
+    },
     "/pet" : {
       "post" : {
         "tags" : [ "pet" ],

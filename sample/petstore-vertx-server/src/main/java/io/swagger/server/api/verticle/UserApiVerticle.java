@@ -9,7 +9,9 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.MainApiException;
+import java.util.UUID;
 import io.swagger.server.api.model.User;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class UserApiVerticle extends AbstractVerticle {
     final static String LOGINUSER_SERVICE_ID = "loginUser";
     final static String LOGOUTUSER_SERVICE_ID = "logoutUser";
     final static String UPDATEUSER_SERVICE_ID = "updateUser";
+    final static String UUID_SERVICE_ID = "uuid";
     
     //TODO : create Implementation
     UserApi service = new UserApiImpl();
@@ -167,6 +170,23 @@ public class UserApiVerticle extends AbstractVerticle {
                 });
             } catch (Exception e) {
                 manageError(message, e, "updateUser");
+            }
+        });
+        
+        //Consumer for uuid
+        vertx.eventBus().<JsonObject> consumer(UUID_SERVICE_ID).handler(message -> {
+            try {
+                UUID uuidParam = UUID.fromString(message.body().getString("uuidParam"));
+                service.uuid(uuidParam, result -> {
+                    if (result.succeeded())
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                    else {
+                        Throwable cause = result.cause();
+                        manageError(message, cause, "uuid");
+                    }
+                });
+            } catch (Exception e) {
+                manageError(message, e, "uuid");
             }
         });
         

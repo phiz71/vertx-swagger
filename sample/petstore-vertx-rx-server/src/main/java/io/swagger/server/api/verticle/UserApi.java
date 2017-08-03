@@ -1,6 +1,8 @@
 package io.swagger.server.api.verticle;
 
+import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.MainApiException;
+import java.util.UUID;
 import io.swagger.server.api.model.User;
 
 import rx.Completable;
@@ -33,5 +35,8 @@ public interface UserApi  {
     
     //updateUser
     public Completable updateUser(String username,User body);
+    
+    //uuid
+    public Single<InlineResponseDefault> uuid(UUID uuidParam);
     
 }
