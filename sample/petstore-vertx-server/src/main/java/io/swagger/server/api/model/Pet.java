@@ -57,8 +57,9 @@ public class Pet   {
   public Long getId() {
     return id;
   }
-  public void setId(Long id) {
+  public Pet setId(Long id) {
     this.id = id;
+    return this;
   }
 
     
@@ -66,8 +67,9 @@ public class Pet   {
   public Category getCategory() {
     return category;
   }
-  public void setCategory(Category category) {
+  public Pet setCategory(Category category) {
     this.category = category;
+    return this;
   }
 
     
@@ -75,8 +77,9 @@ public class Pet   {
   public String getName() {
     return name;
   }
-  public void setName(String name) {
+  public Pet setName(String name) {
     this.name = name;
+    return this;
   }
 
     
@@ -84,8 +87,9 @@ public class Pet   {
   public List<String> getPhotoUrls() {
     return photoUrls;
   }
-  public void setPhotoUrls(List<String> photoUrls) {
+  public Pet setPhotoUrls(List<String> photoUrls) {
     this.photoUrls = photoUrls;
+    return this;
   }
 
     
@@ -93,8 +97,9 @@ public class Pet   {
   public List<Tag> getTags() {
     return tags;
   }
-  public void setTags(List<Tag> tags) {
+  public Pet setTags(List<Tag> tags) {
     this.tags = tags;
+    return this;
   }
 
     
@@ -102,8 +107,9 @@ public class Pet   {
   public StatusEnum getStatus() {
     return status;
   }
-  public void setStatus(StatusEnum status) {
+  public Pet setStatus(StatusEnum status) {
     this.status = status;
+    return this;
   }
 
 

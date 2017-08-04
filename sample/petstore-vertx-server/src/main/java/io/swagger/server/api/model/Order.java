@@ -54,8 +54,9 @@ public class Order   {
   public Long getId() {
     return id;
   }
-  public void setId(Long id) {
+  public Order setId(Long id) {
     this.id = id;
+    return this;
   }
 
     
@@ -63,8 +64,9 @@ public class Order   {
   public Long getPetId() {
     return petId;
   }
-  public void setPetId(Long petId) {
+  public Order setPetId(Long petId) {
     this.petId = petId;
+    return this;
   }
 
     
@@ -72,8 +74,9 @@ public class Order   {
   public Integer getQuantity() {
     return quantity;
   }
-  public void setQuantity(Integer quantity) {
+  public Order setQuantity(Integer quantity) {
     this.quantity = quantity;
+    return this;
   }
 
     
@@ -81,8 +84,9 @@ public class Order   {
   public OffsetDateTime getShipDate() {
     return shipDate;
   }
-  public void setShipDate(OffsetDateTime shipDate) {
+  public Order setShipDate(OffsetDateTime shipDate) {
     this.shipDate = shipDate;
+    return this;
   }
 
     
@@ -90,8 +94,9 @@ public class Order   {
   public StatusEnum getStatus() {
     return status;
   }
-  public void setStatus(StatusEnum status) {
+  public Order setStatus(StatusEnum status) {
     this.status = status;
+    return this;
   }
 
     
@@ -99,8 +104,9 @@ public class Order   {
   public Boolean getComplete() {
     return complete;
   }
-  public void setComplete(Boolean complete) {
+  public Order setComplete(Boolean complete) {
     this.complete = complete;
+    return this;
   }
 
 
