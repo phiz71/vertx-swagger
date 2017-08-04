@@ -1,0 +1,82 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"description": "For apiKey security testing",
+		"version": "1.0.0",
+		"title": "Swagger Api Key Sec"
+	},
+	"host": "localhost",
+	"schemes": [
+		"http"
+	],
+	"paths": {
+		"/test": {
+			"get": {
+				"tags": [
+					"Test"
+				],
+				"summary": "test api key auth 'all'",
+				"operationId": "testApiKeyAll",
+				"responses": {
+					"default": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/dummy": {
+			"get": {
+				"tags": [
+					"Test"
+				],
+				"summary": "test api key auth 'dummy'",
+				"operationId": "testApiKeyDumme",
+				"responses": {
+					"default": {
+						"description": "OK"
+					}
+				},
+				"security": [
+					{
+						"apikey_dummy": [
+						]
+					}
+				]
+			}
+		},
+		"/unsecured": {
+			"get": {
+				"tags": [
+					"Test"
+				],
+				"summary": "test no api key auth",
+				"operationId": "testNoApiKey",
+				"responses": {
+					"default": {
+						"description": "OK"
+					}
+				},
+				"security": [
+				]
+			}
+		}
+	},
+	"securityDefinitions": {
+		"apikey_all": {
+			"type": "apiKey",
+			"in": "header",
+			"name": "apikey-all"
+		},
+		"apikey_dummy": {
+			"type": "apiKey",
+			"in": "header",
+			"name": "apikey-dummy"
+		}
+	},
+	"security": [
+		{
+			"apikey_all": [
+			]
+		}
+	]
+}

@@ -8,6 +8,8 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.auth.User;
+import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 {{#imports}}import {{import}};
 {{/imports}}
@@ -20,8 +22,8 @@ public class {{classname}}Verticle extends AbstractVerticle {
     
     {{#operations}}{{#operation}}{{#vendorExtensions}}final static String {{x-serviceId-varName}} = "{{x-serviceId}}";
     {{/vendorExtensions}}{{/operation}}{{/operations}}
-    //TODO : create Implementation
-    {{classname}} service = new {{classname}}Impl();
+
+    protected {{classname}} service = createServiceImplementation();
 
     @Override
     public void start() throws Exception {
@@ -29,6 +31,8 @@ public class {{classname}}Verticle extends AbstractVerticle {
         //Consumer for {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
         vertx.eventBus().<JsonObject> consumer({{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}).handler(message -> {
             try {
+                {{#hasAuthMethods}}User user = SwaggerRouter.extractAuthUserFromMessage(message);
+                {{/hasAuthMethods}}
                 {{#hasParams}}
                     {{#allParams}}
                         {{#isListContainer}}
@@ -87,5 +91,9 @@ public class {{classname}}Verticle extends AbstractVerticle {
     
     private void logUnexpectedError(String serviceName, Throwable cause) {
         LOGGER.error("Unexpected error in "+ serviceName, cause);
+    }
+
+    protected {{classname}} createServiceImplementation() {
+        return new {{classname}}Impl();
     }
 }

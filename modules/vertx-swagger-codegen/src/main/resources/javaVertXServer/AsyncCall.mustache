@@ -1,4 +1,4 @@
-                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{^hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}result -> {
+                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}result -> {
                     if (result.succeeded())
                 {{#returnType}}
                     {{#isListContainer}}
