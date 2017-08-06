@@ -178,27 +178,26 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         Map<String, Object> newObjs = super.postProcessOperations(objs);
         Map<String, Object> operations = (Map<String, Object>) newObjs.get("operations");
-        if (operations != null) {
-            List<CodegenOperation> ops = (List<CodegenOperation>) operations.get("operation");
-            for (CodegenOperation operation : ops) {
-                operation.httpMethod = operation.httpMethod.toLowerCase();
+        assert operations != null;
+        List<CodegenOperation> ops = (List<CodegenOperation>) operations.get("operation");
+        for (CodegenOperation operation : ops) {
+            operation.httpMethod = operation.httpMethod.toLowerCase();
 
-                if ("Void".equalsIgnoreCase(operation.returnType)) {
-                    operation.returnType = null;
-                }
+            if ("Void".equalsIgnoreCase(operation.returnType)) {
+                operation.returnType = null;
+            }
 
-                if (operation.getHasPathParams()) {
-                    operation.path = camelizePath(operation.path);
-                }
-                
-                for(CodegenParameter param:operation.allParams) {
-                    if("UUID".equals(param.dataType)) {
-                        param.vendorExtensions.put("X-isUUID", true);
-                    }
+            if (operation.getHasPathParams()) {
+                operation.path = camelizePath(operation.path);
+            }
+            
+            for(CodegenParameter param:operation.allParams) {
+                if("UUID".equals(param.dataType)) {
+                    param.vendorExtensions.put("X-isUUID", true);
                 }
             }
         }
-        return newObjs;
+            return newObjs;
     }
 
     

@@ -21,15 +21,16 @@ public class ApiKeyAuthHandler extends AuthHandlerImpl {
     private final ApiKeyAuthHandler.Location location;
 
     public enum Location {
-        HEADER,
-        QUERY;
+        HEADER, QUERY;
     }
 
-    public static AuthHandler create(AuthProvider authProvider, ApiKeyAuthHandler.Location location, String name) {
+    public static AuthHandler create(AuthProvider authProvider, ApiKeyAuthHandler.Location location,
+            String name) {
         return new ApiKeyAuthHandler(authProvider, location, name);
     }
 
-    private ApiKeyAuthHandler(AuthProvider authProvider, ApiKeyAuthHandler.Location location, String name) {
+    private ApiKeyAuthHandler(AuthProvider authProvider, ApiKeyAuthHandler.Location location,
+            String name) {
         super(authProvider);
         this.location = location;
         this.name = name;
@@ -43,32 +44,34 @@ public class ApiKeyAuthHandler extends AuthHandlerImpl {
             HttpServerRequest request = context.request();
 
             String value = null;
-            if (this.location == QUERY) {
-                value = request.getParam(this.name);
-            } else if (this.location == HEADER) {
-                value = request.headers().get(this.name);
+            switch (this.location) {
+                case QUERY:
+                    value = request.getParam(this.name);
+                    break;
+                case HEADER:
+                    value = request.headers().get(this.name);
+                    break;
+                default:
+                    context.fail(401);
+                    return;
             }
 
-            if (value == null) {
-                context.fail(401);
-            } else {
-                JsonObject authInfo = new JsonObject()
-                        .put(API_KEY_NAME_PARAM, this.name)
-                        .put(API_KEY_VALUE_PARAM, value);
-                this.authProvider.authenticate(authInfo, res -> {
-                    if (res.succeeded()) {
-                        User authenticated = res.result();
-                        context.setUser(authenticated);
-                        Session session = context.session();
-                        if (session != null) {
-                            session.regenerateId();
-                        }
-                        this.authorise(authenticated, context);
-                    } else {
-                        context.fail(401);
+            JsonObject authInfo = new JsonObject().put(API_KEY_NAME_PARAM, this.name)
+                    .put(API_KEY_VALUE_PARAM, value);
+            
+            this.authProvider.authenticate(authInfo, res -> {
+                if (res.succeeded()) {
+                    User authenticated = res.result();
+                    context.setUser(authenticated);
+                    Session session = context.session();
+                    if (session != null) {
+                        session.regenerateId();
                     }
-                });
-            }
+                    this.authorise(authenticated, context);
+                } else {
+                    context.fail(401);
+                }
+            });
         }
 
     }
