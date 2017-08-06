@@ -36,6 +36,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public JavaVertXServerGenerator() {
         super();
 
+        reservedWords.add("user");
+        
         
         // set the output folder here
         outputFolder = "generated-code/javaVertXServer";
