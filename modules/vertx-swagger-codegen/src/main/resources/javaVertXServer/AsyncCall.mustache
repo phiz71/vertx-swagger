@@ -13,6 +13,6 @@
                 {{/returnType}}
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}");
+                        manageError(message, cause, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
                     }
                 });
