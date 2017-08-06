@@ -31,7 +31,8 @@ public class {{classname}}Verticle extends AbstractVerticle {
         //Consumer for {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
         vertx.eventBus().<JsonObject> consumer({{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}).handler(message -> {
             try {
-                {{#hasAuthMethods}}User user = SwaggerRouter.extractAuthUserFromMessage(message);
+                {{#hasAuthMethods}}
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 {{/hasAuthMethods}}
                 {{#hasParams}}
                     {{#allParams}}
@@ -70,7 +71,7 @@ public class {{classname}}Verticle extends AbstractVerticle {
 {{>AsyncCall}}
                 {{/rxInterface}}
             } catch (Exception e) {
-                manageError(message, e, "{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}");
+                manageError(message, e, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
             }
         });
         {{/operation}}{{/operations}}

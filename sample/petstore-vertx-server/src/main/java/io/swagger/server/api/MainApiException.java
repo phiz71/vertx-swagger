@@ -1,6 +1,6 @@
 package io.swagger.server.api;
 
-public class MainApiException extends Exception {
+public class MainApiException extends RuntimeException {
     private int statusCode;
     private String statusMessage;
 

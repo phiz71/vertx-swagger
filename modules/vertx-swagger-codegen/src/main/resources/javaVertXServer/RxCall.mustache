@@ -14,5 +14,5 @@
                 {{/returnType}}
                     },
                     error -> {
-                        manageError(message, error, "{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}");
+                        manageError(message, error, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
                     });

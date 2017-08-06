@@ -56,7 +56,11 @@ public class SwaggerAuthHandlerFactory {
 	            case "oauth2":
 	                vertxLogger.warn("OAuth2 authentication has not been implemented yet!");
 	                break;
+	            default:
+	                vertxLogger.warn("SecurityScheme is not authorized : " + securityScheme.getType());
+	                break;
 	        }
+	        
 	
 	        if (authHandler != null) {
 	            this.authHandlers.put(name, authHandler);
