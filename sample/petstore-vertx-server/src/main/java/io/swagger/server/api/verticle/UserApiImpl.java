@@ -1,28 +1,28 @@
 package io.swagger.server.api.verticle;
 
-import java.util.List;
-import java.util.UUID;
-
 import io.swagger.server.api.model.InlineResponseDefault;
-import io.swagger.server.api.model.User;
+import io.swagger.server.api.model.ModelUser;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
+import java.util.List;
+import java.util.UUID;
+
 public class UserApiImpl implements UserApi {
 
     @Override
-    public void createUser(User body, Handler<AsyncResult<Void>> handler) {
+    public void createUser(ModelUser body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void createUsersWithArrayInput(List<User> body, Handler<AsyncResult<Void>> handler) {
+    public void createUsersWithArrayInput(List<ModelUser> body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void createUsersWithListInput(List<User> body, Handler<AsyncResult<Void>> handler) {
+    public void createUsersWithListInput(List<ModelUser> body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
     }
 
@@ -32,7 +32,7 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
-    public void getUserByName(String username, Handler<AsyncResult<User>> handler) {
+    public void getUserByName(String username, Handler<AsyncResult<ModelUser>> handler) {
         // TODO Auto-generated method stub
     }
 
@@ -47,7 +47,7 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
-    public void updateUser(String username, User body, Handler<AsyncResult<Void>> handler) {
+    public void updateUser(String username, ModelUser body, Handler<AsyncResult<Void>> handler) {
         // TODO Auto-generated method stub
     }
 
