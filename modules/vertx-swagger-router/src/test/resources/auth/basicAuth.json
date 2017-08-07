@@ -1,0 +1,73 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"description": "For basic security testing",
+		"version": "1.0.0",
+		"title": "Swagger Basic Sec"
+	},
+	"host": "localhost",
+	"schemes": [
+		"http"
+	],
+	"paths": {
+		"/test": {
+			"get": {
+				"tags": [
+					"Test"
+				],
+				"summary": "test basic auth 'all'",
+				"operationId": "testBasicAll",
+				"responses": {
+					"default": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/dummy": {
+			"get": {
+				"tags": [
+					"Test"
+				],
+				"summary": "test basic auth 'dummy'",
+				"operationId": "testBasicDummy",
+				"responses": {
+					"default": {
+						"description": "OK"
+					}
+				},
+				"security": [
+					{"basic_dummy": []}
+				]
+			}
+		},
+		"/unsecured": {
+			"get": {
+				"tags": [
+					"Test"
+				],
+				"summary": "test no basic auth",
+				"operationId": "testNoBasic",
+				"responses": {
+					"default": {
+						"description": "OK"
+					}
+				},
+				"security": []
+			}
+		}
+	},
+	"securityDefinitions": {
+		"basic_all": {
+			"type": "basic",
+			"description": "some basic Auth for all the API"
+		},
+		"basic_dummy": {
+			"type": "basic",
+			"description": "some basic Auth only for dummy resource"
+		}
+	},
+	"security": [
+		{"basic_all": []}
+	]
+}

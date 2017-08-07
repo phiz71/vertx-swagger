@@ -5,6 +5,7 @@ import io.swagger.server.api.model.Order;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.ext.auth.User;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public interface StoreApi  {
     void deleteOrder(Long orderId, Handler<AsyncResult<Void>> handler);
     
     //getInventory
-    void getInventory(Handler<AsyncResult<Map<String, Integer>>> handler);
+    void getInventory(User user, Handler<AsyncResult<Map<String, Integer>>> handler);
     
     //getOrderById
     void getOrderById(Long orderId, Handler<AsyncResult<Order>> handler);

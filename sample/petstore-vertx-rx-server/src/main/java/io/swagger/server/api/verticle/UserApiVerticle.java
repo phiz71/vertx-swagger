@@ -8,11 +8,13 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.auth.User;
+import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.ModelUser;
 import java.util.UUID;
-import io.swagger.server.api.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -30,8 +32,8 @@ public class UserApiVerticle extends AbstractVerticle {
     final static String UPDATEUSER_SERVICE_ID = "updateUser";
     final static String UUID_SERVICE_ID = "uuid";
     
-    //TODO : create Implementation
-    UserApi service = new UserApiImpl();
+
+    protected UserApi service = createServiceImplementation();
 
     @Override
     public void start() throws Exception {
@@ -39,48 +41,48 @@ public class UserApiVerticle extends AbstractVerticle {
         //Consumer for createUser
         vertx.eventBus().<JsonObject> consumer(CREATEUSER_SERVICE_ID).handler(message -> {
             try {
-                User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
+                ModelUser body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), ModelUser.class);
                 service.createUser(body).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "createUser");
+                        manageError(message, error, CREATEUSER_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "createUser");
+                manageError(message, e, CREATEUSER_SERVICE_ID);
             }
         });
         
         //Consumer for createUsersWithArrayInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHARRAYINPUT_SERVICE_ID).handler(message -> {
             try {
-                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<User>>(){});
+                List<ModelUser> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<ModelUser>>(){});
                 service.createUsersWithArrayInput(body).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "createUsersWithArrayInput");
+                        manageError(message, error, CREATEUSERSWITHARRAYINPUT_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "createUsersWithArrayInput");
+                manageError(message, e, CREATEUSERSWITHARRAYINPUT_SERVICE_ID);
             }
         });
         
         //Consumer for createUsersWithListInput
         vertx.eventBus().<JsonObject> consumer(CREATEUSERSWITHLISTINPUT_SERVICE_ID).handler(message -> {
             try {
-                List<User> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<User>>(){});
+                List<ModelUser> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<ModelUser>>(){});
                 service.createUsersWithListInput(body).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "createUsersWithListInput");
+                        manageError(message, error, CREATEUSERSWITHLISTINPUT_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "createUsersWithListInput");
+                manageError(message, e, CREATEUSERSWITHLISTINPUT_SERVICE_ID);
             }
         });
         
@@ -93,10 +95,10 @@ public class UserApiVerticle extends AbstractVerticle {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "deleteUser");
+                        manageError(message, error, DELETEUSER_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "deleteUser");
+                manageError(message, e, DELETEUSER_SERVICE_ID);
             }
         });
         
@@ -109,10 +111,10 @@ public class UserApiVerticle extends AbstractVerticle {
                         message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
                     error -> {
-                        manageError(message, error, "getUserByName");
+                        manageError(message, error, GETUSERBYNAME_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "getUserByName");
+                manageError(message, e, GETUSERBYNAME_SERVICE_ID);
             }
         });
         
@@ -126,10 +128,10 @@ public class UserApiVerticle extends AbstractVerticle {
                         message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
                     error -> {
-                        manageError(message, error, "loginUser");
+                        manageError(message, error, LOGINUSER_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "loginUser");
+                manageError(message, e, LOGINUSER_SERVICE_ID);
             }
         });
         
@@ -141,10 +143,10 @@ public class UserApiVerticle extends AbstractVerticle {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "logoutUser");
+                        manageError(message, error, LOGOUTUSER_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "logoutUser");
+                manageError(message, e, LOGOUTUSER_SERVICE_ID);
             }
         });
         
@@ -152,16 +154,16 @@ public class UserApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(UPDATEUSER_SERVICE_ID).handler(message -> {
             try {
                 String username = message.body().getString("username");
-                User body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), User.class);
+                ModelUser body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), ModelUser.class);
                 service.updateUser(username, body).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "updateUser");
+                        manageError(message, error, UPDATEUSER_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "updateUser");
+                manageError(message, e, UPDATEUSER_SERVICE_ID);
             }
         });
         
@@ -174,10 +176,10 @@ public class UserApiVerticle extends AbstractVerticle {
                         message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
                     error -> {
-                        manageError(message, error, "uuid");
+                        manageError(message, error, UUID_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "uuid");
+                manageError(message, e, UUID_SERVICE_ID);
             }
         });
         
@@ -198,5 +200,9 @@ public class UserApiVerticle extends AbstractVerticle {
     
     private void logUnexpectedError(String serviceName, Throwable cause) {
         LOGGER.error("Unexpected error in "+ serviceName, cause);
+    }
+
+    protected UserApi createServiceImplementation() {
+        return new UserApiImpl();
     }
 }

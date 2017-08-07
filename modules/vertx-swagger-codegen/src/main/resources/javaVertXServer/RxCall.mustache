@@ -1,4 +1,4 @@
-                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}).subscribe(
+                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}{{#hasAuthMethods}}{{#hasParams}}, {{/hasParams}}io.vertx.rxjava.ext.auth.User.newInstance(user){{/hasAuthMethods}}).subscribe(
                 {{#returnType}}
                     result -> {
                     {{#isListContainer}}
@@ -14,5 +14,5 @@
                 {{/returnType}}
                     },
                     error -> {
-                        manageError(message, error, "{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}");
+                        manageError(message, error, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
                     });

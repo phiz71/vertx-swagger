@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Order.StatusEnum;
+import io.vertx.rxjava.ext.auth.User;
 import rx.Completable;
 import rx.Single;
 
@@ -18,7 +19,7 @@ public class StoreApiImpl implements StoreApi {
     }
 
     @Override
-    public Single<Map<String, Integer>> getInventory() {
+    public Single<Map<String, Integer>> getInventory(User user) {
         return Single.just(new HashMap<>());
     }
 

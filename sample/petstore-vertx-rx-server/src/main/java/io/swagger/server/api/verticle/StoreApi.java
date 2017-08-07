@@ -5,6 +5,7 @@ import io.swagger.server.api.model.Order;
 
 import rx.Completable;
 import rx.Single;
+import io.vertx.rxjava.ext.auth.User;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public interface StoreApi  {
     public Completable deleteOrder(Long orderId);
     
     //getInventory
-    public Single<Map<String, Integer>> getInventory();
+    public Single<Map<String, Integer>> getInventory(User user);
     
     //getOrderById
     public Single<Order> getOrderById(Long orderId);

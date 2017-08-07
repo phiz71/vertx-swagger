@@ -9,6 +9,7 @@ import io.swagger.server.api.model.Order.StatusEnum;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.ext.auth.User;
 
 public class StoreApiImpl implements StoreApi {
 
@@ -19,7 +20,7 @@ public class StoreApiImpl implements StoreApi {
     }
 
     @Override
-    public void getInventory(Handler<AsyncResult<Map<String, Integer>>> handler) {
+    public void getInventory(User user, Handler<AsyncResult<Map<String, Integer>>> handler) {
         // TODO Auto-generated method stub
         handler.handle(Future.succeededFuture(null));
     }

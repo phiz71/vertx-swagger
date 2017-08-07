@@ -8,6 +8,8 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.auth.User;
+import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import java.io.File;
 import io.swagger.server.api.MainApiException;
@@ -29,8 +31,8 @@ public class PetApiVerticle extends AbstractVerticle {
     final static String UPDATEPETWITHFORM_SERVICE_ID = "updatePetWithForm";
     final static String UPLOADFILE_SERVICE_ID = "uploadFile";
     
-    //TODO : create Implementation
-    PetApi service = new PetApiImpl();
+
+    protected PetApi service = createServiceImplementation();
 
     @Override
     public void start() throws Exception {
@@ -38,133 +40,141 @@ public class PetApiVerticle extends AbstractVerticle {
         //Consumer for addPet
         vertx.eventBus().<JsonObject> consumer(ADDPET_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
-                service.addPet(body).subscribe(
+                service.addPet(body, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "addPet");
+                        manageError(message, error, ADDPET_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "addPet");
+                manageError(message, e, ADDPET_SERVICE_ID);
             }
         });
         
         //Consumer for deletePet
         vertx.eventBus().<JsonObject> consumer(DELETEPET_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 String apiKey = message.body().getString("api_key");
-                service.deletePet(petId, apiKey).subscribe(
+                service.deletePet(petId, apiKey, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "deletePet");
+                        manageError(message, error, DELETEPET_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "deletePet");
+                manageError(message, e, DELETEPET_SERVICE_ID);
             }
         });
         
         //Consumer for findPetsByStatus
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYSTATUS_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
-                service.findPetsByStatus(status).subscribe(
+                service.findPetsByStatus(status, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
                         message.reply(new JsonArray(Json.encode(result)).encodePrettily());
                     },
                     error -> {
-                        manageError(message, error, "findPetsByStatus");
+                        manageError(message, error, FINDPETSBYSTATUS_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "findPetsByStatus");
+                manageError(message, e, FINDPETSBYSTATUS_SERVICE_ID);
             }
         });
         
         //Consumer for findPetsByTags
         vertx.eventBus().<JsonObject> consumer(FINDPETSBYTAGS_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
-                service.findPetsByTags(tags).subscribe(
+                service.findPetsByTags(tags, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
                         message.reply(new JsonArray(Json.encode(result)).encodePrettily());
                     },
                     error -> {
-                        manageError(message, error, "findPetsByTags");
+                        manageError(message, error, FINDPETSBYTAGS_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "findPetsByTags");
+                manageError(message, e, FINDPETSBYTAGS_SERVICE_ID);
             }
         });
         
         //Consumer for getPetById
         vertx.eventBus().<JsonObject> consumer(GETPETBYID_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
-                service.getPetById(petId).subscribe(
+                service.getPetById(petId, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
                         message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
                     error -> {
-                        manageError(message, error, "getPetById");
+                        manageError(message, error, GETPETBYID_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "getPetById");
+                manageError(message, e, GETPETBYID_SERVICE_ID);
             }
         });
         
         //Consumer for updatePet
         vertx.eventBus().<JsonObject> consumer(UPDATEPET_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
-                service.updatePet(body).subscribe(
+                service.updatePet(body, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "updatePet");
+                        manageError(message, error, UPDATEPET_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "updatePet");
+                manageError(message, e, UPDATEPET_SERVICE_ID);
             }
         });
         
         //Consumer for updatePetWithForm
         vertx.eventBus().<JsonObject> consumer(UPDATEPETWITHFORM_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 String name = message.body().getString("name");
                 String status = message.body().getString("status");
-                service.updatePetWithForm(petId, name, status).subscribe(
+                service.updatePetWithForm(petId, name, status, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     () -> {
                         message.reply(null);
                     },
                     error -> {
-                        manageError(message, error, "updatePetWithForm");
+                        manageError(message, error, UPDATEPETWITHFORM_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "updatePetWithForm");
+                manageError(message, e, UPDATEPETWITHFORM_SERVICE_ID);
             }
         });
         
         //Consumer for uploadFile
         vertx.eventBus().<JsonObject> consumer(UPLOADFILE_SERVICE_ID).handler(message -> {
             try {
+                User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 String additionalMetadata = message.body().getString("additionalMetadata");
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
-                service.uploadFile(petId, additionalMetadata, file).subscribe(
+                service.uploadFile(petId, additionalMetadata, file, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
                         message.reply(new JsonObject(Json.encode(result)).encodePrettily());
                     },
                     error -> {
-                        manageError(message, error, "uploadFile");
+                        manageError(message, error, UPLOADFILE_SERVICE_ID);
                     });
             } catch (Exception e) {
-                manageError(message, e, "uploadFile");
+                manageError(message, e, UPLOADFILE_SERVICE_ID);
             }
         });
         
@@ -185,5 +195,9 @@ public class PetApiVerticle extends AbstractVerticle {
     
     private void logUnexpectedError(String serviceName, Throwable cause) {
         LOGGER.error("Unexpected error in "+ serviceName, cause);
+    }
+
+    protected PetApi createServiceImplementation() {
+        return new PetApiImpl();
     }
 }

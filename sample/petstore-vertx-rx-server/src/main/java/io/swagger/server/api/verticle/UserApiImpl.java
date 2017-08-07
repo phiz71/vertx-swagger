@@ -4,24 +4,24 @@ import java.util.List;
 import java.util.UUID;
 
 import io.swagger.server.api.model.InlineResponseDefault;
-import io.swagger.server.api.model.User;
+import io.swagger.server.api.model.ModelUser;
 import rx.Completable;
 import rx.Single;
 
 public class UserApiImpl implements UserApi {
 
     @Override
-    public Completable createUser(User body) {
+    public Completable createUser(ModelUser body) {
         return Completable.complete();
     }
 
     @Override
-    public Completable createUsersWithArrayInput(List<User> body) {
+    public Completable createUsersWithArrayInput(List<ModelUser> body) {
         return Completable.complete();
     }
 
     @Override
-    public Completable createUsersWithListInput(List<User> body) {
+    public Completable createUsersWithListInput(List<ModelUser> body) {
         return Completable.complete();
     }
 
@@ -31,8 +31,8 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
-    public Single<User> getUserByName(String username) {
-        return Single.just(new User());
+    public Single<ModelUser> getUserByName(String username) {
+        return Single.just(new ModelUser());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
-    public Completable updateUser(String username, User body) {
+    public Completable updateUser(String username, ModelUser body) {
         return Completable.complete();
     }
 

@@ -6,10 +6,12 @@ package {{package}};
 {{#rxInterface}}
 import rx.Completable;
 import rx.Single;
+import io.vertx.rxjava.ext.auth.User;
 {{/rxInterface}}
 {{^rxInterface}}
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.ext.auth.User;
 {{/rxInterface}}
 
 import java.util.List;
