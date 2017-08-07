@@ -51,7 +51,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "addPet");
+                manageError(message, e, ADDPET_SERVICE_ID);
             }
         });
         
@@ -70,7 +70,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "deletePet");
+                manageError(message, e, DELETEPET_SERVICE_ID);
             }
         });
         
@@ -88,7 +88,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "findPetsByStatus");
+                manageError(message, e, FINDPETSBYSTATUS_SERVICE_ID);
             }
         });
         
@@ -106,7 +106,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "findPetsByTags");
+                manageError(message, e, FINDPETSBYTAGS_SERVICE_ID);
             }
         });
         
@@ -124,7 +124,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "getPetById");
+                manageError(message, e, GETPETBYID_SERVICE_ID);
             }
         });
         
@@ -142,7 +142,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "updatePet");
+                manageError(message, e, UPDATEPET_SERVICE_ID);
             }
         });
         
@@ -162,7 +162,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "updatePetWithForm");
+                manageError(message, e, UPDATEPETWITHFORM_SERVICE_ID);
             }
         });
         
@@ -182,7 +182,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "uploadFile");
+                manageError(message, e, UPLOADFILE_SERVICE_ID);
             }
         });
         

@@ -23,8 +23,9 @@ public class InlineResponseDefault   {
   public UUID getUuid() {
     return uuid;
   }
-  public void setUuid(UUID uuid) {
+  public InlineResponseDefault setUuid(UUID uuid) {
     this.uuid = uuid;
+    return this;
   }
 
 

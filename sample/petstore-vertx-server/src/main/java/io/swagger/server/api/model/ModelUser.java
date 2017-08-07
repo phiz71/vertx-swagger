@@ -36,8 +36,9 @@ public class ModelUser   {
   public Long getId() {
     return id;
   }
-  public void setId(Long id) {
+  public ModelUser setId(Long id) {
     this.id = id;
+    return this;
   }
 
     
@@ -45,8 +46,9 @@ public class ModelUser   {
   public String getUsername() {
     return username;
   }
-  public void setUsername(String username) {
+  public ModelUser setUsername(String username) {
     this.username = username;
+    return this;
   }
 
     
@@ -54,8 +56,9 @@ public class ModelUser   {
   public String getFirstName() {
     return firstName;
   }
-  public void setFirstName(String firstName) {
+  public ModelUser setFirstName(String firstName) {
     this.firstName = firstName;
+    return this;
   }
 
     
@@ -63,8 +66,9 @@ public class ModelUser   {
   public String getLastName() {
     return lastName;
   }
-  public void setLastName(String lastName) {
+  public ModelUser setLastName(String lastName) {
     this.lastName = lastName;
+    return this;
   }
 
     
@@ -72,8 +76,9 @@ public class ModelUser   {
   public String getEmail() {
     return email;
   }
-  public void setEmail(String email) {
+  public ModelUser setEmail(String email) {
     this.email = email;
+    return this;
   }
 
     
@@ -81,8 +86,9 @@ public class ModelUser   {
   public String getPassword() {
     return password;
   }
-  public void setPassword(String password) {
+  public ModelUser setPassword(String password) {
     this.password = password;
+    return this;
   }
 
     
@@ -90,8 +96,9 @@ public class ModelUser   {
   public String getPhone() {
     return phone;
   }
-  public void setPhone(String phone) {
+  public ModelUser setPhone(String phone) {
     this.phone = phone;
+    return this;
   }
 
     
@@ -99,8 +106,9 @@ public class ModelUser   {
   public Integer getUserStatus() {
     return userStatus;
   }
-  public void setUserStatus(Integer userStatus) {
+  public ModelUser setUserStatus(Integer userStatus) {
     this.userStatus = userStatus;
+    return this;
   }
 
 

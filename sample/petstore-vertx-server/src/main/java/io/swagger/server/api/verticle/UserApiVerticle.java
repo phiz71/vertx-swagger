@@ -51,7 +51,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "createUser");
+                manageError(message, e, CREATEUSER_SERVICE_ID);
             }
         });
         
@@ -68,7 +68,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "createUsersWithArrayInput");
+                manageError(message, e, CREATEUSERSWITHARRAYINPUT_SERVICE_ID);
             }
         });
         
@@ -85,7 +85,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "createUsersWithListInput");
+                manageError(message, e, CREATEUSERSWITHLISTINPUT_SERVICE_ID);
             }
         });
         
@@ -102,7 +102,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "deleteUser");
+                manageError(message, e, DELETEUSER_SERVICE_ID);
             }
         });
         
@@ -119,7 +119,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "getUserByName");
+                manageError(message, e, GETUSERBYNAME_SERVICE_ID);
             }
         });
         
@@ -137,7 +137,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "loginUser");
+                manageError(message, e, LOGINUSER_SERVICE_ID);
             }
         });
         
@@ -153,7 +153,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "logoutUser");
+                manageError(message, e, LOGOUTUSER_SERVICE_ID);
             }
         });
         
@@ -171,7 +171,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "updateUser");
+                manageError(message, e, UPDATEUSER_SERVICE_ID);
             }
         });
         
@@ -188,7 +188,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "uuid");
+                manageError(message, e, UUID_SERVICE_ID);
             }
         });
         

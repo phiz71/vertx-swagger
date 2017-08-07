@@ -44,7 +44,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "deleteOrder");
+                manageError(message, e, DELETEORDER_SERVICE_ID);
             }
         });
         
@@ -61,7 +61,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "getInventory");
+                manageError(message, e, GETINVENTORY_SERVICE_ID);
             }
         });
         
@@ -78,7 +78,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "getOrderById");
+                manageError(message, e, GETORDERBYID_SERVICE_ID);
             }
         });
         
@@ -95,7 +95,7 @@ public class StoreApiVerticle extends AbstractVerticle {
                     }
                 });
             } catch (Exception e) {
-                manageError(message, e, "placeOrder");
+                manageError(message, e, PLACEORDER_SERVICE_ID);
             }
         });
         
