@@ -1,11 +1,12 @@
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}result -> {
                     if (result.succeeded())
                 {{#returnType}}
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
                     {{#isListContainer}}
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily());
+                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
                     {{^isListContainer}}
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
                 {{/returnType}}
                 {{^returnType}}

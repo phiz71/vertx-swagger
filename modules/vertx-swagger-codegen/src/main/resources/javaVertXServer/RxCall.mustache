@@ -1,11 +1,12 @@
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}{{#hasAuthMethods}}{{#hasParams}}, {{/hasParams}}io.vertx.rxjava.ext.auth.User.newInstance(user){{/hasAuthMethods}}).subscribe(
                 {{#returnType}}
                     result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
                     {{#isListContainer}}
-                        message.reply(new JsonArray(Json.encode(result)).encodePrettily());
+                        message.reply(new JsonArray(Json.encode(result)).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
                     {{^isListContainer}}
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
                 {{/returnType}}
                 {{^returnType}}
