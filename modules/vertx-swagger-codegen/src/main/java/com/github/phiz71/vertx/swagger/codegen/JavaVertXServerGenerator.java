@@ -60,7 +60,11 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
          */
         apiTemplateFiles.clear();
         apiTemplateFiles.put("api.mustache", // the template to use
-                ".java"); // the extension for each file to write
+                 ".java"); // the extension for each file to write
+
+        apiTemplateFiles.put("apiImpl.mustache", // the template to use
+                "Impl.java"); // the extension for each file to write
+
         apiTemplateFiles.put("apiVerticle.mustache", // the template to use
                 "Verticle.java"); // the extension for each file to write
         apiTemplateFiles.put("apiException.mustache", // the template to use
@@ -160,6 +164,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         writeOptional(outputFolder, new SupportingFile("vertx-default-jul-logging.mustache", resourceFolder, "vertx-default-jul-logging.properties"));
         writeOptional(outputFolder, new SupportingFile("pom.mustache", "", "pom.xml"));
         writeOptional(outputFolder, new SupportingFile("README.mustache", "", "README.md"));
+        writeOptional(outputFolder, new SupportingFile("executer-batch.mustache", "", "run-with-config.sh"));
+        writeOptional(outputFolder, new SupportingFile("vertx-application-config.mustache", "", "config.json"));
     }
 
     @Override
