@@ -166,6 +166,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         writeOptional(outputFolder, new SupportingFile("README.mustache", "", "README.md"));
         writeOptional(outputFolder, new SupportingFile("executer-batch.mustache", "", "run-with-config.sh"));
         writeOptional(outputFolder, new SupportingFile("vertx-application-config.mustache", "", "config.json"));
+        writeOptional(outputFolder, new SupportingFile("swagger-codegen-ignore.mustache", "", ".swagger-codegen-ignore"));
     }
 
     @Override
