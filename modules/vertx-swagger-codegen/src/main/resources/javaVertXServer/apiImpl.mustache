@@ -1,0 +1,33 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+{{#rxInterface}}
+import rx.Completable;
+import rx.Single;
+import io.vertx.rxjava.ext.auth.User;
+{{/rxInterface}}
+{{^rxInterface}}
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.ext.auth.User;
+{{/rxInterface}}
+
+import java.util.List;
+import java.util.Map;
+
+public class {{classname}}Impl implements {{classname}} {
+{{#operations}}
+{{#operation}}
+    //{{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
+    {{#rxInterface}}
+{{>RxMethodImpl}}
+    {{/rxInterface}}
+    {{^rxInterface}}
+{{>AsyncMethodImpl}}
+    {{/rxInterface}}
+    
+{{/operation}}
+{{/operations}}
+}
