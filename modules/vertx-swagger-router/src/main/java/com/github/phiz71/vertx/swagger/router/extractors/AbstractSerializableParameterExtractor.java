@@ -47,7 +47,7 @@ public abstract class AbstractSerializableParameterExtractor {
     private List<String> splitArrayParam(SerializableParameter param, String paramAsString) {
         String regex = getArrayRegex(param);
         try {
-            return Arrays.asList(URLDecoder.decode(paramAsString, "UTF_8").split(regex));
+            return Arrays.asList(URLDecoder.decode(paramAsString, "UTF-8").split(regex));
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError("UTF-8 not supported");
         }
