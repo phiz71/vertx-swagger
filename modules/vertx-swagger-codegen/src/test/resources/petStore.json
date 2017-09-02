@@ -1063,6 +1063,15 @@
                     "type": "string"
                 }
             }
+        },
+        "ErrorCode": {
+            "type": "string",
+            "enum": [
+                "REQUIRED_RESOURCE_ID_NOT_SET",
+                "REQUIRED_RESOURCE_NOT_FOUND",
+                "ALREADY_EXISTS",
+                "SOMETHING_ELSE"
+            ]
         }
     },
     "externalDocs": {
