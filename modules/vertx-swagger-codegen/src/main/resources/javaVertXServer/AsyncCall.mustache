@@ -1,5 +1,5 @@
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()){
                 {{#returnType}}
                         DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
                     {{#isListContainer}}
@@ -12,7 +12,7 @@
                 {{^returnType}}
                         message.reply(null);
                 {{/returnType}}
-                    else {
+                    }else {
                         Throwable cause = result.cause();
                         manageError(message, cause, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
                     }
