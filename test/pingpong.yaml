@@ -1,0 +1,50 @@
+swagger: "2.0"
+
+info:
+  version: 1.0.0
+  title: Ping Pong API
+  description: Profile API definition
+
+schemes:
+  - http
+
+host: www.sample.com
+
+basePath: /api
+
+tags:
+  - name: pingpong
+
+paths:
+  /ping:
+    get:
+      tags:
+        - pingpong
+      summary: Sample Ping Pong
+      description: Sample Ping Pong
+      operationId: ping
+      produces:
+        - application/json
+      parameters:
+        - name: msg
+          in: query
+          required: true
+          type: string
+          maximum: 255
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/ApiResponse'
+          description: Pong
+
+definitions:
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
