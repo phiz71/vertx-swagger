@@ -31,10 +31,10 @@ public class MainApiVerticle extends AbstractVerticle {
                 Router swaggerRouter = SwaggerRouter.swaggerRouter(Router.router(vertx), swagger, vertx.eventBus(), new OperationIdServiceIdResolver());
             
                 deployVerticles(startFuture);
-                
+
                 vertx.createHttpServer() 
                     .requestHandler(swaggerRouter::accept) 
-                    .listen(8080);
+                    .listen(config().getInteger("http.port", 8080));
                 startFuture.complete();
             } else {
             	startFuture.fail(readFile.cause());

@@ -14,27 +14,27 @@ import java.util.Map;
 
 public interface PetApi  {
     //addPet
-    public Completable addPet(Pet body, User user);
+    Completable addPet(Pet body, User user);
     
     //deletePet
-    public Completable deletePet(Long petId, String apiKey, User user);
+    Completable deletePet(Long petId, String apiKey, User user);
     
     //findPetsByStatus
-    public Single<List<Pet>> findPetsByStatus(List<String> status, User user);
+    Single<List<Pet>> findPetsByStatus(List<String> status, User user);
     
     //findPetsByTags
-    public Single<List<Pet>> findPetsByTags(List<String> tags, User user);
+    Single<List<Pet>> findPetsByTags(List<String> tags, User user);
     
     //getPetById
-    public Single<Pet> getPetById(Long petId, User user);
+    Single<Pet> getPetById(Long petId, User user);
     
     //updatePet
-    public Completable updatePet(Pet body, User user);
+    Completable updatePet(Pet body, User user);
     
     //updatePetWithForm
-    public Completable updatePetWithForm(Long petId, String name, String status, User user);
+    Completable updatePetWithForm(Long petId, String name, String status, User user);
     
     //uploadFile
-    public Single<ModelApiResponse> uploadFile(Long petId, String additionalMetadata, File file, User user);
+    Single<ModelApiResponse> uploadFile(Long petId, String additionalMetadata, File file, User user);
     
 }
