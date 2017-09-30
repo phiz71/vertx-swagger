@@ -1,5 +1,6 @@
 package com.github.phiz71.vertx.swagger.router.extractors;
 
+import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.SerializableParameter;
 import io.vertx.core.MultiMap;
@@ -13,27 +14,29 @@ import java.util.regex.Pattern;
 
 public abstract class AbstractSerializableParameterExtractor {
     public Object extract(String name, Parameter parameter, MultiMap params) {
-        SerializableParameter serializableParam = (SerializableParameter) parameter;
+        AbstractSerializableParameter abstractSerializableParameter = (AbstractSerializableParameter) parameter;
         if (!params.contains(name)) {
-            if (serializableParam.getRequired()) {
+            if (abstractSerializableParameter.getRequired()) {
                 throw new IllegalArgumentException("Missing required parameter: " + name);
+            } else if (abstractSerializableParameter.getDefaultValue()!=null){
+                return abstractSerializableParameter.getDefaultValue();
             } else {
                 return null;
             }
         }
 
-        if ((serializableParam.getAllowEmptyValue() == null
-                || !serializableParam.getAllowEmptyValue())
+        if ((abstractSerializableParameter.getAllowEmptyValue() == null
+                || !abstractSerializableParameter.getAllowEmptyValue())
                 && StringUtils.isEmpty(params.get(name))) {
             throw new IllegalArgumentException(
                     "Empty value is not authorized for parameter: " + name);
         }
 
-        if ("array".equals(serializableParam.getType())) {
-            if ("multi".equals(serializableParam.getCollectionFormat())) {
+        if ("array".equals(abstractSerializableParameter.getType())) {
+            if ("multi".equals(abstractSerializableParameter.getCollectionFormat())) {
                 return params.getAll(name);
             } else {
-                List<String> resultParams = this.splitArrayParam(serializableParam,
+                List<String> resultParams = this.splitArrayParam(abstractSerializableParameter,
                         params.get(name));
                 if (resultParams != null) {
                     return resultParams;
