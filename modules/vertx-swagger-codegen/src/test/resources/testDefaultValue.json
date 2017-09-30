@@ -1,0 +1,40 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "test default value of parameters"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/defaultValue": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "test default value",
+                "operationId": "getDefaultValue",
+                "parameters": [
+                    {
+                        "name": "customValue",
+                        "in": "query",
+                        "type": "number",
+                        "format": "int32",
+                        "required": false,
+                        "default": 0
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "schema":{
+                            "type":"string"
+                        },
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
+}
