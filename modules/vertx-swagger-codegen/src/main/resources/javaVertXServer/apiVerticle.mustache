@@ -45,7 +45,15 @@ public class {{classname}}Verticle extends AbstractVerticle {
                                 {{#isString}}
                                     {{#vendorExtensions}}
                                         {{#X-isUUID}}
+                                            {{#required}}
                 {{{dataType}}} {{paramName}} = {{{dataType}}}.fromString(message.body().getString("{{baseName}}"));
+                                            {{/required}}
+                                            {{^required}}
+                {{{dataType}}} {{paramName}} = null;
+                if(message.body().getString("{{baseName}}") != null) {
+                    {{paramName}} = {{{dataType}}}.fromString(message.body().getString("{{baseName}}"));
+                }
+                                            {{/required}}
                                         {{/X-isUUID}}
                                         {{^X-isUUID}}
                 {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
@@ -56,7 +64,15 @@ public class {{classname}}Verticle extends AbstractVerticle {
                                     {{/vendorExtensions}}
                                 {{/isString}}
                                 {{^isString}}
+                                    {{#required}}
                 {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
+                                    {{/required}}
+                                    {{^required}}
+                {{{dataType}}} {{paramName}} = null;
+                if(message.body().getString("{{baseName}}") != null) {
+                    {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
+                }
+                                    {{/required}}
                                 {{/isString}}
                             {{/isPrimitiveType}}
                             {{^isPrimitiveType}}

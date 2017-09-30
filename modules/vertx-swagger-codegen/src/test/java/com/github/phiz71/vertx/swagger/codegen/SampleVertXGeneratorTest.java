@@ -145,4 +145,26 @@ public class SampleVertXGeneratorTest {
 
         FileUtils.deleteDirectory(new File("temp"));
     }
+
+    @Test
+    public void testDefaultValue() throws IOException {
+        String[] args = new String[7];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testDefaultValue.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+            "temp/test-server/src/main/java/io/swagger/server/api/verticle/TestApiVerticle.java");
+
+        Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains("BigDecimal customValue = null;"));
+        Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains("if(message.body().getString(\"customValue\") != null) {"));
+        Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains("customValue = Json.mapper.readValue(message.body().getString(\"customValue\"), BigDecimal.class);"));
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
 }
