@@ -1,7 +1,9 @@
 package io.swagger.server.api.verticle;
 
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.Order;
+import io.swagger.server.api.util.ResourceResponse;
 
 public final class StoreApiException extends MainApiException {
     public StoreApiException(int statusCode, String statusMessage) {

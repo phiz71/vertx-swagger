@@ -13,8 +13,10 @@ import io.vertx.ext.auth.User;
 import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.server.api.model.InlineResponseDefault;
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
+import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
 
 import java.util.List;
@@ -113,8 +115,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 service.getUserByName(username, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, GETUSERBYNAME_SERVICE_ID);
@@ -132,8 +135,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 String password = message.body().getString("password");
                 service.loginUser(username, password, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(result.result().getResponse(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, LOGINUSER_SERVICE_ID);
@@ -184,8 +188,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 UUID uuidParam = UUID.fromString(message.body().getString("uuidParam"));
                 service.uuid(uuidParam, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UUID_SERVICE_ID);

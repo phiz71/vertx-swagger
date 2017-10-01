@@ -13,9 +13,11 @@ import io.vertx.ext.auth.User;
 import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import java.io.File;
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
+import io.swagger.server.api.util.ResourceResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -44,8 +46,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 service.addPet(body, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, ADDPET_SERVICE_ID);
@@ -62,8 +66,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 String apiKey = message.body().getString("api_key");
                 service.deletePet(petId, apiKey, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, DELETEPET_SERVICE_ID);
@@ -80,8 +86,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByStatus(status, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonArray(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonArray(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, FINDPETSBYSTATUS_SERVICE_ID);
@@ -98,8 +105,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByTags(tags, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonArray(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonArray(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, FINDPETSBYTAGS_SERVICE_ID);
@@ -116,8 +124,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 service.getPetById(petId, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETPETBYID_SERVICE_ID);
@@ -133,8 +142,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 service.updatePet(body, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPDATEPET_SERVICE_ID);
@@ -152,8 +163,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 String name = message.body().getString("name");
                 String status = message.body().getString("status");
                 service.updatePetWithForm(petId, name, status, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPDATEPETWITHFORM_SERVICE_ID);
@@ -172,8 +185,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 service.uploadFile(petId, additionalMetadata, file, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPLOADFILE_SERVICE_ID);

@@ -1,8 +1,10 @@
 package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.InlineResponseDefault;
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
+import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
 
 public final class UserApiException extends MainApiException {

@@ -13,6 +13,7 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
+import io.swagger.server.api.util.MainApiException;
 import io.swagger.server.api.verticle.PetApiException;
 import io.vertx.core.Vertx;
 import io.vertx.core.file.FileSystem;
@@ -150,6 +151,28 @@ public class PetStoreTest {
             response.exceptionHandler(err -> {
                 context.fail(err);
             });
+        });
+    }
+
+    @Test(timeout = 2000)
+    public void testLoginOK(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/login?username=foo&password=bar", response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(200,response.statusCode());
+                context.assertEquals("1",response.getHeader("X-Rate-Limit"));
+                context.assertEquals("OK", body.toString());
+                async.complete();
+            });
+        });
+    }
+    
+    @Test(timeout = 2000)
+    public void testLoginKO(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/login?username=bar&password=foo", response -> {
+            context.assertEquals(400,response.statusCode());
+            async.complete();
         });
     }
     

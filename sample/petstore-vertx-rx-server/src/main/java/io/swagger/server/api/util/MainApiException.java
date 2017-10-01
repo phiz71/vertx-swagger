@@ -1,4 +1,4 @@
-package io.swagger.server.api;
+package io.swagger.server.api.util;
 
 public class MainApiException extends RuntimeException {
     private int statusCode;

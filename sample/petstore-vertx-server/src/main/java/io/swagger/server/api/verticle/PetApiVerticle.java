@@ -13,9 +13,11 @@ import io.vertx.ext.auth.User;
 import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import java.io.File;
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
+import io.swagger.server.api.util.ResourceResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -82,8 +84,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByStatus(status, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonArray(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, FINDPETSBYSTATUS_SERVICE_ID);
@@ -101,8 +104,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByTags(tags, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonArray(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, FINDPETSBYTAGS_SERVICE_ID);
@@ -120,8 +124,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 service.getPetById(petId, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, GETPETBYID_SERVICE_ID);
@@ -179,8 +184,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 service.uploadFile(petId, additionalMetadata, file, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPLOADFILE_SERVICE_ID);
