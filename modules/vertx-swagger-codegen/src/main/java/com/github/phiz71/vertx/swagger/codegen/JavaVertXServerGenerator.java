@@ -69,6 +69,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
                 "Verticle.java"); // the extension for each file to write
         apiTemplateFiles.put("apiException.mustache", // the template to use
                 "Exception.java"); // the extension for each file to write
+        apiTemplateFiles.put("apiHeader.mustache", // the template to use
+            "Header.java"); // the extension for each file to write
 
         /*
          * Template Location. This is the location which templates will be read
@@ -148,7 +150,9 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
-        importMapping.put("MainApiException", invokerPackage+".MainApiException");
+        importMapping.put("MainApiException", invokerPackage+".util.MainApiException");
+        importMapping.put("MainApiHeader", invokerPackage+".util.MainApiHeader");
+        importMapping.put("ResourceResponse", invokerPackage+".util.ResourceResponse");
 
         modelDocTemplateFiles.clear();
         apiDocTemplateFiles.clear();
@@ -159,7 +163,9 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         if(Boolean.parseBoolean(additionalProperties.getOrDefault(MAIN_API_VERTICAL_GENERATION_OPTION, "true").toString())) {
             supportingFiles.add(new SupportingFile("MainApiVerticle.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiVerticle.java"));
         }
-        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiException.java"));
+        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiException.java"));
+        supportingFiles.add(new SupportingFile("MainApiHeader.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiHeader.java"));
+        supportingFiles.add(new SupportingFile("ResourceResponse.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "ResourceResponse.java"));
 
         writeOptional(outputFolder, new SupportingFile("vertx-default-jul-logging.mustache", resourceFolder, "vertx-default-jul-logging.properties"));
         writeOptional(outputFolder, new SupportingFile("pom.mustache", "", "pom.xml"));
@@ -215,6 +221,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
         CodegenOperation codegenOperation =  super.fromOperation(path, httpMethod, operation, definitions, swagger);
         codegenOperation.imports.add("MainApiException");
+        codegenOperation.imports.add("MainApiHeader");
+        codegenOperation.imports.add("ResourceResponse");
         return codegenOperation;
     }
     
