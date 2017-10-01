@@ -6,7 +6,12 @@
                         message.reply(new JsonArray(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
                     {{^isListContainer}}
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        {{#returnTypeIsPrimitive}}
+                        message.reply(result.getResponse(), deliveryOptions);
+                        {{/returnTypeIsPrimitive}}
+                        {{^returnTypeIsPrimitive}}
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        {{/returnTypeIsPrimitive}}
                     {{/isListContainer}}
                     },
                     error -> {

@@ -7,7 +7,12 @@
                         message.reply(new JsonArray(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
                     {{^isListContainer}}
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        {{#returnTypeIsPrimitive}}
+                        message.reply(result.result().getResponse(), deliveryOptions);
+                        {{/returnTypeIsPrimitive}}
+                        {{^returnTypeIsPrimitive}}
+                        message.reply(new JsonObject(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
+                        {{/returnTypeIsPrimitive}}
                     {{/isListContainer}}
                 {{/returnType}}
                 {{^returnType}}
