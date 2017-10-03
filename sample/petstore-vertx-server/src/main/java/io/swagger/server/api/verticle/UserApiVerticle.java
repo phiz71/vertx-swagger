@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -43,9 +44,9 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 ModelUser body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), ModelUser.class);
                 service.createUser(body, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, CREATEUSER_SERVICE_ID);
                     }
@@ -60,9 +61,9 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 List<ModelUser> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<ModelUser>>(){});
                 service.createUsersWithArrayInput(body, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, CREATEUSERSWITHARRAYINPUT_SERVICE_ID);
                     }
@@ -77,9 +78,9 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 List<ModelUser> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<ModelUser>>(){});
                 service.createUsersWithListInput(body, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, CREATEUSERSWITHLISTINPUT_SERVICE_ID);
                     }
@@ -94,9 +95,9 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 String username = message.body().getString("username");
                 service.deleteUser(username, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, DELETEUSER_SERVICE_ID);
                     }
@@ -111,9 +112,10 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 String username = message.body().getString("username");
                 service.getUserByName(username, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
-                    else {
+                    if (result.succeeded()) {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, GETUSERBYNAME_SERVICE_ID);
                     }
@@ -129,9 +131,10 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 String password = message.body().getString("password");
                 service.loginUser(username, password, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
-                    else {
+                    if (result.succeeded()) {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, LOGINUSER_SERVICE_ID);
                     }
@@ -145,9 +148,9 @@ public class UserApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(LOGOUTUSER_SERVICE_ID).handler(message -> {
             try {
                 service.logoutUser(result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, LOGOUTUSER_SERVICE_ID);
                     }
@@ -163,9 +166,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 ModelUser body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), ModelUser.class);
                 service.updateUser(username, body, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPDATEUSER_SERVICE_ID);
                     }
@@ -180,9 +183,10 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 UUID uuidParam = UUID.fromString(message.body().getString("uuidParam"));
                 service.uuid(uuidParam, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
-                    else {
+                    if (result.succeeded()) {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UUID_SERVICE_ID);
                     }

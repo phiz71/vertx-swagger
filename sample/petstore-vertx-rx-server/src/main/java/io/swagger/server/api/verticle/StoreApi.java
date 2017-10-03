@@ -12,15 +12,15 @@ import java.util.Map;
 
 public interface StoreApi  {
     //deleteOrder
-    public Completable deleteOrder(Long orderId);
+    Completable deleteOrder(Long orderId);
     
     //getInventory
-    public Single<Map<String, Integer>> getInventory(User user);
+    Single<Map<String, Integer>> getInventory(User user);
     
     //getOrderById
-    public Single<Order> getOrderById(Long orderId);
+    Single<Order> getOrderById(Long orderId);
     
     //placeOrder
-    public Single<Order> placeOrder(Order body);
+    Single<Order> placeOrder(Order body);
     
 }
