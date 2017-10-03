@@ -31,8 +31,15 @@ fi
 
 if [ "DOCKER" == "$RUN_WITH" ]; then
     echo "docker"
-    docker build -t vertx-sample/{{artifactId}} .
-    docker run  --name {{artifactId}} -t -i -p 8080:8080 vertx-sample/{{artifactId}}
+    //remove container
+    docker rm -f {{artifactId}}
+
+    //remove images
+    docker rmi vertx-sample-{{artifactId}}
+
+    docker build -t vertx-sample-{{artifactId}} .
+
+    docker run  --name {{artifactId}} -t -i -p 8080:8080 vertx-sample-{{artifactId}}
 else
     echo "default"
     java -jar target/{{artifactId}}-{{artifactVersion}}-fat.jar -conf config.json
