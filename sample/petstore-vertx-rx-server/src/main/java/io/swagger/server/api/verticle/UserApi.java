@@ -14,30 +14,30 @@ import java.util.Map;
 
 public interface UserApi  {
     //createUser
-    public Completable createUser(ModelUser body);
+    Completable createUser(ModelUser body);
     
     //createUsersWithArrayInput
-    public Completable createUsersWithArrayInput(List<ModelUser> body);
+    Completable createUsersWithArrayInput(List<ModelUser> body);
     
     //createUsersWithListInput
-    public Completable createUsersWithListInput(List<ModelUser> body);
+    Completable createUsersWithListInput(List<ModelUser> body);
     
     //deleteUser
-    public Completable deleteUser(String username);
+    Completable deleteUser(String username);
     
     //getUserByName
-    public Single<ModelUser> getUserByName(String username);
+    Single<ModelUser> getUserByName(String username);
     
     //loginUser
-    public Single<String> loginUser(String username, String password);
+    Single<String> loginUser(String username, String password);
     
     //logoutUser
-    public Completable logoutUser();
+    Completable logoutUser();
     
     //updateUser
-    public Completable updateUser(String username, ModelUser body);
+    Completable updateUser(String username, ModelUser body);
     
     //uuid
-    public Single<InlineResponseDefault> uuid(UUID uuidParam);
+    Single<InlineResponseDefault> uuid(UUID uuidParam);
     
 }

@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -43,9 +44,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 service.addPet(body, user, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, ADDPET_SERVICE_ID);
                     }
@@ -62,9 +63,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 String apiKey = message.body().getString("api_key");
                 service.deletePet(petId, apiKey, user, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, DELETEPET_SERVICE_ID);
                     }
@@ -80,9 +81,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByStatus(status, user, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily());
-                    else {
+                    if (result.succeeded()) {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, FINDPETSBYSTATUS_SERVICE_ID);
                     }
@@ -98,9 +100,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByTags(tags, user, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily());
-                    else {
+                    if (result.succeeded()) {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, FINDPETSBYTAGS_SERVICE_ID);
                     }
@@ -116,9 +119,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 service.getPetById(petId, user, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
-                    else {
+                    if (result.succeeded()) {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, GETPETBYID_SERVICE_ID);
                     }
@@ -134,9 +138,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 service.updatePet(body, user, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPDATEPET_SERVICE_ID);
                     }
@@ -154,9 +158,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 String name = message.body().getString("name");
                 String status = message.body().getString("status");
                 service.updatePetWithForm(petId, name, status, user, result -> {
-                    if (result.succeeded())
+                    if (result.succeeded()) {
                         message.reply(null);
-                    else {
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPDATEPETWITHFORM_SERVICE_ID);
                     }
@@ -174,9 +178,10 @@ public class PetApiVerticle extends AbstractVerticle {
                 String additionalMetadata = message.body().getString("additionalMetadata");
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 service.uploadFile(petId, additionalMetadata, file, user, result -> {
-                    if (result.succeeded())
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
-                    else {
+                    if (result.succeeded()) {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                    } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPLOADFILE_SERVICE_ID);
                     }

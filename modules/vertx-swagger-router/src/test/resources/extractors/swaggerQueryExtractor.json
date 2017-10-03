@@ -202,6 +202,26 @@
           }
         }
       }
+    },
+    "/query/simple/not/required/withdefault": {
+      "get": {
+        "description": "service where query param is not a required string but has a default value",
+        "parameters": [
+          {
+            "name": "queryNotRequired",
+            "in": "query",
+            "required": false,
+            "default": "defaultValue",
+            "description": "not a required param but with a default value",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   }
 }

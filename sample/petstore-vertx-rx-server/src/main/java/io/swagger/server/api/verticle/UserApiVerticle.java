@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -108,7 +109,8 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 service.getUserByName(username).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETUSERBYNAME_SERVICE_ID);
@@ -125,7 +127,8 @@ public class UserApiVerticle extends AbstractVerticle {
                 String password = message.body().getString("password");
                 service.loginUser(username, password).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, LOGINUSER_SERVICE_ID);
@@ -173,7 +176,8 @@ public class UserApiVerticle extends AbstractVerticle {
                 UUID uuidParam = UUID.fromString(message.body().getString("uuidParam"));
                 service.uuid(uuidParam).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UUID_SERVICE_ID);

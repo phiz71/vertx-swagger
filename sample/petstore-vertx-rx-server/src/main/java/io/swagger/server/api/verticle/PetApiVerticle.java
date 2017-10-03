@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -79,7 +80,8 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByStatus(status, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        message.reply(new JsonArray(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonArray(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, FINDPETSBYSTATUS_SERVICE_ID);
@@ -96,7 +98,8 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByTags(tags, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        message.reply(new JsonArray(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonArray(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, FINDPETSBYTAGS_SERVICE_ID);
@@ -113,7 +116,8 @@ public class PetApiVerticle extends AbstractVerticle {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 service.getPetById(petId, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETPETBYID_SERVICE_ID);
@@ -168,7 +172,8 @@ public class PetApiVerticle extends AbstractVerticle {
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 service.uploadFile(petId, additionalMetadata, file, io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPLOADFILE_SERVICE_ID);

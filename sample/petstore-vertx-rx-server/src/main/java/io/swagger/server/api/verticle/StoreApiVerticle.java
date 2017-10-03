@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -53,7 +54,8 @@ public class StoreApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 service.getInventory(io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETINVENTORY_SERVICE_ID);
@@ -69,7 +71,8 @@ public class StoreApiVerticle extends AbstractVerticle {
                 Long orderId = Json.mapper.readValue(message.body().getString("OrderId"), Long.class);
                 service.getOrderById(orderId).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETORDERBYID_SERVICE_ID);
@@ -85,7 +88,8 @@ public class StoreApiVerticle extends AbstractVerticle {
                 Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
                 service.placeOrder(body).subscribe(
                     result -> {
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily());
+                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
+                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, PLACEORDER_SERVICE_ID);

@@ -88,6 +88,9 @@ public class QueryParameterExtractorTest {
         eventBus.<JsonObject> consumer("GET_query_simple_not_required").handler(message -> {
             message.reply(message.body().getString("queryNotRequired"));
         });
+        eventBus.<JsonObject> consumer("GET_query_simple_not_required_withdefault").handler(message -> {
+            message.reply(message.body().getString("queryNotRequired"));
+        });
         // init http client
         httpClient = Vertx.vertx().createHttpClient();
 
@@ -246,7 +249,32 @@ public class QueryParameterExtractorTest {
             });
         }).end();
     }
-    
+
+    @Test()
+    public void testOkQuerySimpleNotRequiredWithDefaultWithParam(TestContext context) {
+        Async async = context.async();
+        HttpClientRequest req = httpClient.get(TEST_PORT, TEST_HOST, "/query/simple/not/required/withdefault?queryNotRequired=foo");
+        req.handler(response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(response.statusCode(), 200);
+                context.assertEquals("foo", body.toString());
+                async.complete();
+            });
+        }).end();
+    }
+
+    @Test()
+    public void testOkQuerySimpleNotRequiredWithDefaultWithoutParam(TestContext context) {
+        Async async = context.async();
+        HttpClientRequest req = httpClient.get(TEST_PORT, TEST_HOST, "/query/simple/not/required/withdefault");
+        req.handler(response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(response.statusCode(), 200);
+                context.assertEquals("defaultValue", body.toString());
+                async.complete();
+            });
+        }).end();
+    }
 
     @AfterClass
     public static void afterClass(TestContext context) {
