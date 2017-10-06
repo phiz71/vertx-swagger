@@ -32,6 +32,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public static final String VERTX_SWAGGER_ROUTER_VERSION = "vertxSwaggerRouterVersion";
     public static final String RX_INTERFACE_OPTION = "rxInterface";
     public static final String MAIN_API_VERTICAL_GENERATION_OPTION = "mainVerticleGeneration";
+    public static final String API_IMPL_GENERATION_OPTION = "apiImplGeneration";
 
     public JavaVertXServerGenerator() {
         super();
@@ -61,9 +62,6 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         apiTemplateFiles.clear();
         apiTemplateFiles.put("api.mustache", // the template to use
                  ".java"); // the extension for each file to write
-
-        apiTemplateFiles.put("apiImpl.mustache", // the template to use
-                "Impl.java"); // the extension for each file to write
 
         apiTemplateFiles.put("apiVerticle.mustache", // the template to use
                 "Verticle.java"); // the extension for each file to write
@@ -107,6 +105,9 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
         cliOptions.add(CliOption.newBoolean(MAIN_API_VERTICAL_GENERATION_OPTION,
                 "When specified, MainApiVerticle.java will not be generated"));
+
+        cliOptions.add(CliOption.newBoolean(API_IMPL_GENERATION_OPTION,
+            "When specified, xxxApiImpl.java will be generated"));
     }
 
     /**
@@ -139,6 +140,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         return "Generates a java-Vert.X Server library.";
     }
 
+
+
     @Override
     public void processOpts() {
         super.processOpts();
@@ -160,9 +163,16 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         supportingFiles.clear();
         supportingFiles.add(new SupportingFile("swagger.mustache", resourceFolder, "swagger.json"));
 
-        if(Boolean.parseBoolean(additionalProperties.getOrDefault(MAIN_API_VERTICAL_GENERATION_OPTION, "true").toString())) {
+        Object mainApiVerticleGenerationOption = additionalProperties.get(MAIN_API_VERTICAL_GENERATION_OPTION);
+        if(Boolean.parseBoolean(mainApiVerticleGenerationOption==null?"true":mainApiVerticleGenerationOption.toString())) {
             supportingFiles.add(new SupportingFile("MainApiVerticle.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiVerticle.java"));
         }
+        Object apiImplGenerationOption = additionalProperties.get(API_IMPL_GENERATION_OPTION);
+        if(Boolean.parseBoolean(apiImplGenerationOption==null?"false":apiImplGenerationOption.toString())) {
+            apiTemplateFiles.put("apiImpl.mustache", // the template to use
+                "Impl.java"); // the extension for each file to write
+        }
+
         supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiException.java"));
         supportingFiles.add(new SupportingFile("MainApiHeader.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiHeader.java"));
         supportingFiles.add(new SupportingFile("ResourceResponse.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "ResourceResponse.java"));
