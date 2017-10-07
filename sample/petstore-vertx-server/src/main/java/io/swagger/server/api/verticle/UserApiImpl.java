@@ -2,6 +2,7 @@ package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.model.ModelUser;
+import io.swagger.server.api.util.MainApiException;
 import io.swagger.server.api.util.ResourceResponse;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -49,15 +50,16 @@ public class UserApiImpl implements UserApi {
           response.addHeader(UserApiHeader.UserApi_loginUser_200_createXRateLimit(1));
           handler.handle(Future.succeededFuture(response));
       } else {
-          handler.handle(Future.failedFuture(UserApiException.User_loginUser_400_Exception));
+          MainApiException e = UserApiException.UserApi_loginUser_400_createException();
+          e.addHeader(UserApiHeader.UserApi_loginUser_400_createWwWAuthenticate("Basic"));
+          handler.handle(Future.failedFuture(e));
       }
-      
-      
   }
 
   @Override
   public void logoutUser(Handler<AsyncResult<ResourceResponse<Void>>> handler) {
-    // TODO Auto-generated method stub
+      ResourceResponse<Void> response = new ResourceResponse<>();
+      handler.handle(Future.succeededFuture(response));
   }
 
   @Override

@@ -116,8 +116,8 @@ public class RxPetStoreTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/3", response -> {
             response.bodyHandler(body -> {
-                context.assertEquals(response.statusCode(), PetApiException.Pet_getPetById_404_Exception.getStatusCode());
-                context.assertEquals(response.statusMessage(), PetApiException.Pet_getPetById_404_Exception.getStatusMessage());
+                context.assertEquals(response.statusCode(), PetApiException.PetApi_getPetById_404_createException().getStatusCode());
+                context.assertEquals(response.statusMessage(), PetApiException.PetApi_getPetById_404_createException().getStatusMessage());
                 async.complete();
             });
         });
@@ -154,7 +154,30 @@ public class RxPetStoreTest {
             });
         });
     }
-    
+
+    @Test(timeout = 2000)
+    public void testLoginOK(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/login?username=foo&password=bar", response -> {
+            response.bodyHandler(body -> {
+                context.assertEquals(200,response.statusCode());
+                context.assertEquals("1",response.getHeader("X-Rate-Limit"));
+                context.assertEquals("OK", body.toString());
+                async.complete();
+            });
+        });
+    }
+
+    @Test(timeout = 2000)
+    public void testLoginKO(TestContext context) {
+        Async async = context.async();
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/login?username=bar&password=foo", response -> {
+            context.assertEquals(400,response.statusCode());
+            context.assertEquals("Basic",response.getHeader("WWW_Authenticate"));
+            async.complete();
+        });
+    }
+
     @Test(timeout = 2000)
     public void testUUID(TestContext context) {
         Async async = context.async();
@@ -163,6 +186,23 @@ public class RxPetStoreTest {
                 context.assertEquals("5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", body.toJsonObject().getString("uuid"));
                 async.complete();
             });
+        });
+    }
+
+    @Test(timeout = 2000)
+    public void testLogout(TestContext context) {
+        Async async = context.async(2);
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/logout", response -> {
+            response.handler(buffer->{
+                context.fail("Must not have a body in the response");
+                async.complete();
+            });
+            context.assertEquals(response.statusCode(), 200);
+            async.countDown();
+
+        });
+        vertx.setTimer(1500, id -> {
+            async.complete();
         });
     }
 }

@@ -62,7 +62,7 @@ public class PetApiImpl implements PetApi {
                 else if (id.equals(2L))
                     return Single.error(new NullPointerException("simulation"));
                 else
-                    return Single.error(PetApiException.Pet_getPetById_404_Exception);
+                    return Single.error(PetApiException.PetApi_getPetById_404_createException());
             }
         });
 

@@ -5,8 +5,10 @@ import java.util.UUID;
 
 import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.model.ModelUser;
+import io.swagger.server.api.util.MainApiException;
 import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.util.ResourceResponse;
+import io.vertx.core.Future;
 import rx.Completable;
 import rx.Single;
 
@@ -50,10 +52,19 @@ public class UserApiImpl implements UserApi {
 
     @Override
     public Single<ResourceResponse<String>> loginUser(String username, String password) {
-        ResourceResponse<String> response = new ResourceResponse<>();
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
-        response.setResponse("");
-        return Single.just(response);
+
+        if( "foo".equalsIgnoreCase(username) && "bar".equalsIgnoreCase(password)) {
+            ResourceResponse<String> response = new ResourceResponse<>();
+            response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
+            response.setResponse("OK");
+            response.addHeader(UserApiHeader.UserApi_loginUser_200_createXRateLimit(1));
+            return Single.just(response);
+        } else {
+            MainApiException e = UserApiException.UserApi_loginUser_400_createException();
+            e.addHeader(UserApiHeader.UserApi_loginUser_400_createWwWAuthenticate("Basic"));
+            return Single.error(e);
+        }
+
     }
 
     @Override

@@ -58,7 +58,7 @@ public class PetApiImpl implements PetApi {
         else if (petId.equals(2L))
              handler.handle(Future.failedFuture(new NullPointerException("simulation")));
 
-        handler.handle(Future.failedFuture(PetApiException.Pet_getPetById_404_Exception));
+        handler.handle(Future.failedFuture(PetApiException.PetApi_getPetById_404_createException()));
         
     }
 

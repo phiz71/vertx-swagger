@@ -115,8 +115,8 @@ public class PetStoreTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/3", response -> {
             response.bodyHandler(body -> {
-                context.assertEquals(response.statusCode(), PetApiException.Pet_getPetById_404_Exception.getStatusCode());
-                context.assertEquals(response.statusMessage(), PetApiException.Pet_getPetById_404_Exception.getStatusMessage());
+                context.assertEquals(response.statusCode(), PetApiException.PetApi_getPetById_404_createException().getStatusCode());
+                context.assertEquals(response.statusMessage(), PetApiException.PetApi_getPetById_404_createException().getStatusMessage());
                 async.complete();
             });
         });
@@ -172,6 +172,7 @@ public class PetStoreTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/login?username=bar&password=foo", response -> {
             context.assertEquals(400,response.statusCode());
+            context.assertEquals("Basic",response.getHeader("WWW_Authenticate"));
             async.complete();
         });
     }
@@ -184,6 +185,23 @@ public class PetStoreTest {
                 context.assertEquals("5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", body.toJsonObject().getString("uuid"));
                 async.complete();
             });
+        });
+    }
+
+    @Test(timeout = 2000)
+    public void testLogout(TestContext context) {
+        Async async = context.async(2);
+        httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/user/logout", response -> {
+            response.handler(buffer->{
+                context.fail("Must not have a body in the response");
+                async.complete();
+            });
+            context.assertEquals(response.statusCode(), 200);
+            async.countDown();
+
+        });
+        vertx.setTimer(1500, id -> {
+            async.complete();
         });
     }
 }
