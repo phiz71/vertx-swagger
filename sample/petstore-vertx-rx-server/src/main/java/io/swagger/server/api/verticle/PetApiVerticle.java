@@ -49,7 +49,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, ADDPET_SERVICE_ID);
@@ -69,7 +69,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, DELETEPET_SERVICE_ID);
@@ -145,7 +145,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPDATEPET_SERVICE_ID);
@@ -166,7 +166,7 @@ public class PetApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPDATEPETWITHFORM_SERVICE_ID);
@@ -202,14 +202,18 @@ public class PetApiVerticle extends AbstractVerticle {
     private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
         if (cause instanceof MainApiException) {
             code = ((MainApiException)cause).getStatusCode();
             statusMessage = ((MainApiException)cause).getStatusMessage();
+            deliveryOptions.setHeaders(((MainApiException)cause).getHeaders());
         } else {
             logUnexpectedError(serviceName, cause); 
         }
-            
-        message.fail(code, statusMessage);
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, String.valueOf(code));
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, statusMessage);
+
+        message.reply(null, deliveryOptions);
     }
     
     private void logUnexpectedError(String serviceName, Throwable cause) {

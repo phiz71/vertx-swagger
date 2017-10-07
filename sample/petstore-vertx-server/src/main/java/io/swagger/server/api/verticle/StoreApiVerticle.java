@@ -40,7 +40,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                 Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
                 service.deleteOrder(orderId, result -> {
                     if (result.succeeded()) {
-                        message.reply(null);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(null, deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, DELETEORDER_SERVICE_ID);
@@ -113,14 +115,18 @@ public class StoreApiVerticle extends AbstractVerticle {
     private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
         if (cause instanceof MainApiException) {
             code = ((MainApiException)cause).getStatusCode();
             statusMessage = ((MainApiException)cause).getStatusMessage();
+            deliveryOptions.setHeaders(((MainApiException)cause).getHeaders());
         } else {
             logUnexpectedError(serviceName, cause); 
         }
-            
-        message.fail(code, statusMessage);
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, String.valueOf(code));
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, statusMessage);
+
+        message.reply(null, deliveryOptions);
     }
     
     private void logUnexpectedError(String serviceName, Throwable cause) {

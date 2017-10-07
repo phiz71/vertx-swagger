@@ -16,6 +16,7 @@ import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.util.MainApiException;
 import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
+import java.time.OffsetDateTime;
 import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, CREATEUSER_SERVICE_ID);
@@ -67,7 +68,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, CREATEUSERSWITHARRAYINPUT_SERVICE_ID);
@@ -85,7 +86,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, CREATEUSERSWITHLISTINPUT_SERVICE_ID);
@@ -103,7 +104,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, DELETEUSER_SERVICE_ID);
@@ -157,7 +158,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, LOGOUTUSER_SERVICE_ID);
@@ -176,7 +177,7 @@ public class UserApiVerticle extends AbstractVerticle {
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPDATEUSER_SERVICE_ID);
@@ -209,14 +210,18 @@ public class UserApiVerticle extends AbstractVerticle {
     private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
         if (cause instanceof MainApiException) {
             code = ((MainApiException)cause).getStatusCode();
             statusMessage = ((MainApiException)cause).getStatusMessage();
+            deliveryOptions.setHeaders(((MainApiException)cause).getHeaders());
         } else {
             logUnexpectedError(serviceName, cause); 
         }
-            
-        message.fail(code, statusMessage);
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, String.valueOf(code));
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, statusMessage);
+
+        message.reply(null, deliveryOptions);
     }
     
     private void logUnexpectedError(String serviceName, Throwable cause) {

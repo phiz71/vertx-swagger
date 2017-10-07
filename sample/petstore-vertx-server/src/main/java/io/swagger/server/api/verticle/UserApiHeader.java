@@ -4,9 +4,8 @@ import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.util.MainApiException;
 import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
-import io.swagger.server.api.util.ResourceResponse;
-
 import java.time.OffsetDateTime;
+import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
 
 public final class UserApiHeader extends MainApiHeader {
@@ -24,6 +23,10 @@ public final class UserApiHeader extends MainApiHeader {
     
     public static UserApiHeader UserApi_loginUser_200_createXExpiresAfter(OffsetDateTime xExpiresAfter) {
         return new UserApiHeader("X-Expires-After", xExpiresAfter.toString());
+    }
+    
+    public static UserApiHeader UserApi_loginUser_400_createWwWAuthenticate(String wwWAuthenticate) {
+        return new UserApiHeader("WWW_Authenticate", wwWAuthenticate.toString());
     }
     
     

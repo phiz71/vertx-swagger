@@ -10,11 +10,21 @@ public final class StoreApiException extends MainApiException {
         super(statusCode, statusMessage);
     }
     
-    public static final StoreApiException Store_deleteOrder_400_Exception = new StoreApiException(400, "Invalid ID supplied");
-    public static final StoreApiException Store_deleteOrder_404_Exception = new StoreApiException(404, "Order not found");
-    public static final StoreApiException Store_getOrderById_400_Exception = new StoreApiException(400, "Invalid ID supplied");
-    public static final StoreApiException Store_getOrderById_404_Exception = new StoreApiException(404, "Order not found");
-    public static final StoreApiException Store_placeOrder_400_Exception = new StoreApiException(400, "Invalid Order");
+    public static StoreApiException StoreApi_deleteOrder_400_createException() {
+        return new StoreApiException(400, "Invalid ID supplied");
+    }
+    public static StoreApiException StoreApi_deleteOrder_404_createException() {
+        return new StoreApiException(404, "Order not found");
+    }
+    public static StoreApiException StoreApi_getOrderById_400_createException() {
+        return new StoreApiException(400, "Invalid ID supplied");
+    }
+    public static StoreApiException StoreApi_getOrderById_404_createException() {
+        return new StoreApiException(404, "Order not found");
+    }
+    public static StoreApiException StoreApi_placeOrder_400_createException() {
+        return new StoreApiException(400, "Invalid Order");
+    }
     
 
 }
