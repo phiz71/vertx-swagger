@@ -2,6 +2,7 @@
                     result -> {
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.getHeaders());
+                {{#returnType}}
                     {{#isListContainer}}
                         message.reply(new JsonArray(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
@@ -13,6 +14,10 @@
                         message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                         {{/returnTypeIsPrimitive}}
                     {{/isListContainer}}
+                {{/returnType}}
+                {{^returnType}}
+                        message.reply(null, deliveryOptions);
+                {{/returnType}}
                     },
                     error -> {
                         manageError(message, error, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});

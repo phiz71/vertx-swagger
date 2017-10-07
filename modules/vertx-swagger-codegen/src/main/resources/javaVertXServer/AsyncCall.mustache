@@ -1,8 +1,8 @@
                 service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}result -> {
                     if (result.succeeded()) {
-                {{#returnType}}
                         DeliveryOptions deliveryOptions = new DeliveryOptions();
                         deliveryOptions.setHeaders(result.result().getHeaders());
+                {{#returnType}}
                     {{#isListContainer}}
                         message.reply(new JsonArray(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     {{/isListContainer}}
@@ -16,7 +16,7 @@
                     {{/isListContainer}}
                 {{/returnType}}
                 {{^returnType}}
-                        message.reply(null);
+                        message.reply(null, deliveryOptions);
                 {{/returnType}}
                     } else {
                         Throwable cause = result.cause();
