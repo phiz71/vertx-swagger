@@ -13,6 +13,7 @@ import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenParameter;
 import io.swagger.codegen.CodegenProperty;
+import io.swagger.codegen.CodegenResponse;
 import io.swagger.codegen.CodegenType;
 import io.swagger.codegen.SupportingFile;
 import io.swagger.codegen.languages.AbstractJavaCodegen;
@@ -20,7 +21,9 @@ import io.swagger.models.HttpMethod;
 import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.properties.Property;
 import io.swagger.util.Json;
 
 public class JavaVertXServerGenerator extends AbstractJavaCodegen {
@@ -233,6 +236,20 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         codegenOperation.imports.add("MainApiException");
         codegenOperation.imports.add("MainApiHeader");
         codegenOperation.imports.add("ResourceResponse");
+
+        for (Map.Entry<String, Response> entry : operation.getResponses().entrySet()) {
+            Response response = entry.getValue();
+            CodegenResponse r = fromResponse(entry.getKey(), response);
+
+            for(CodegenProperty header : r.headers){
+                if (header.baseType != null &&
+                        !defaultIncludes.contains(header.baseType) &&
+                        !languageSpecificPrimitives.contains(header.baseType)) {
+                    codegenOperation.imports.add(header.complexType);
+                }
+            }
+        }
+
         return codegenOperation;
     }
     
