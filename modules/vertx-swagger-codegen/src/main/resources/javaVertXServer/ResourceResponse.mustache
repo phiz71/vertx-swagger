@@ -1,0 +1,45 @@
+package {{invokerPackage}}.util;
+
+import io.vertx.core.MultiMap;
+
+public class ResourceResponse<T> {
+    MultiMap headers;
+    T response;
+
+    public ResourceResponse() {
+        super();
+        this.headers = MultiMap.caseInsensitiveMultiMap();
+    }
+
+    public ResourceResponse<T> addHeader(MainApiHeader header) {
+        if (header.getValue() != null)
+            this.headers.add(header.getName(), header.getValue());
+        else
+            this.headers.add(header.getName(), header.getValues());
+        return this;
+    }
+
+    public ResourceResponse<T> addHeader(String name, String value) {
+        this.headers.add(name, value);
+        return this;
+    }
+
+    public ResourceResponse<T> addHeaders(String name, Iterable<String> values) {
+        this.headers.add(name, values);
+        return this;
+    }
+
+    public ResourceResponse<T> setResponse(T response) {
+        this.response = response;
+        return this;
+    }
+
+    public MultiMap getHeaders() {
+        return headers;
+    }
+
+    public T getResponse() {
+        return response;
+    }
+
+}

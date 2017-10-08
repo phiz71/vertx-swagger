@@ -13,6 +13,7 @@ import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenParameter;
 import io.swagger.codegen.CodegenProperty;
+import io.swagger.codegen.CodegenResponse;
 import io.swagger.codegen.CodegenType;
 import io.swagger.codegen.SupportingFile;
 import io.swagger.codegen.languages.AbstractJavaCodegen;
@@ -20,7 +21,9 @@ import io.swagger.models.HttpMethod;
 import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.properties.Property;
 import io.swagger.util.Json;
 
 public class JavaVertXServerGenerator extends AbstractJavaCodegen {
@@ -32,6 +35,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public static final String VERTX_SWAGGER_ROUTER_VERSION = "vertxSwaggerRouterVersion";
     public static final String RX_INTERFACE_OPTION = "rxInterface";
     public static final String MAIN_API_VERTICAL_GENERATION_OPTION = "mainVerticleGeneration";
+    public static final String API_IMPL_GENERATION_OPTION = "apiImplGeneration";
 
     public JavaVertXServerGenerator() {
         super();
@@ -62,13 +66,12 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         apiTemplateFiles.put("api.mustache", // the template to use
                  ".java"); // the extension for each file to write
 
-        apiTemplateFiles.put("apiImpl.mustache", // the template to use
-                "Impl.java"); // the extension for each file to write
-
         apiTemplateFiles.put("apiVerticle.mustache", // the template to use
                 "Verticle.java"); // the extension for each file to write
         apiTemplateFiles.put("apiException.mustache", // the template to use
                 "Exception.java"); // the extension for each file to write
+        apiTemplateFiles.put("apiHeader.mustache", // the template to use
+            "Header.java"); // the extension for each file to write
 
         /*
          * Template Location. This is the location which templates will be read
@@ -105,6 +108,9 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
         cliOptions.add(CliOption.newBoolean(MAIN_API_VERTICAL_GENERATION_OPTION,
                 "When specified, MainApiVerticle.java will not be generated"));
+
+        cliOptions.add(CliOption.newBoolean(API_IMPL_GENERATION_OPTION,
+            "When specified, xxxApiImpl.java will be generated"));
     }
 
     /**
@@ -137,6 +143,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         return "Generates a java-Vert.X Server library.";
     }
 
+
+
     @Override
     public void processOpts() {
         super.processOpts();
@@ -148,7 +156,9 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
-        importMapping.put("MainApiException", invokerPackage+".MainApiException");
+        importMapping.put("MainApiException", invokerPackage+".util.MainApiException");
+        importMapping.put("MainApiHeader", invokerPackage+".util.MainApiHeader");
+        importMapping.put("ResourceResponse", invokerPackage+".util.ResourceResponse");
 
         modelDocTemplateFiles.clear();
         apiDocTemplateFiles.clear();
@@ -156,10 +166,19 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         supportingFiles.clear();
         supportingFiles.add(new SupportingFile("swagger.mustache", resourceFolder, "swagger.json"));
 
-        if(Boolean.parseBoolean(additionalProperties.getOrDefault(MAIN_API_VERTICAL_GENERATION_OPTION, "true").toString())) {
+        Object mainApiVerticleGenerationOption = additionalProperties.get(MAIN_API_VERTICAL_GENERATION_OPTION);
+        if(Boolean.parseBoolean(mainApiVerticleGenerationOption==null?"true":mainApiVerticleGenerationOption.toString())) {
             supportingFiles.add(new SupportingFile("MainApiVerticle.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiVerticle.java"));
         }
-        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiException.java"));
+        Object apiImplGenerationOption = additionalProperties.get(API_IMPL_GENERATION_OPTION);
+        if(Boolean.parseBoolean(apiImplGenerationOption==null?"false":apiImplGenerationOption.toString())) {
+            apiTemplateFiles.put("apiImpl.mustache", // the template to use
+                "Impl.java"); // the extension for each file to write
+        }
+
+        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiException.java"));
+        supportingFiles.add(new SupportingFile("MainApiHeader.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiHeader.java"));
+        supportingFiles.add(new SupportingFile("ResourceResponse.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "ResourceResponse.java"));
 
         writeOptional(outputFolder, new SupportingFile("vertx-default-jul-logging.mustache", resourceFolder, "vertx-default-jul-logging.properties"));
         writeOptional(outputFolder, new SupportingFile("pom.mustache", "", "pom.xml"));
@@ -215,6 +234,22 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
         CodegenOperation codegenOperation =  super.fromOperation(path, httpMethod, operation, definitions, swagger);
         codegenOperation.imports.add("MainApiException");
+        codegenOperation.imports.add("MainApiHeader");
+        codegenOperation.imports.add("ResourceResponse");
+
+        for (Map.Entry<String, Response> entry : operation.getResponses().entrySet()) {
+            Response response = entry.getValue();
+            CodegenResponse r = fromResponse(entry.getKey(), response);
+
+            for(CodegenProperty header : r.headers){
+                if (header.baseType != null &&
+                        !defaultIncludes.contains(header.baseType) &&
+                        !languageSpecificPrimitives.contains(header.baseType)) {
+                    codegenOperation.imports.add(header.complexType);
+                }
+            }
+        }
+
         return codegenOperation;
     }
     

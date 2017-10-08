@@ -147,6 +147,68 @@ public class SampleVertXGeneratorTest {
     }
 
     @Test
+    public void testImplGenWithoutImplDefault() throws IOException {
+        String[] args = new String[7];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testUUID.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+            "temp/test-server/src/main/java/io/swagger/server/api/verticle/TestApiImpl.java");
+
+        Assert.assertTrue(!testApiVerticleFile.exists());
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
+
+    @Test
+    public void testImplGenWithoutImplWithOptionFalse() throws IOException {
+        String[] args = new String[8];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testUUID.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        args[7] = "-DapiImplGeneration=false";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+            "temp/test-server/src/main/java/io/swagger/server/api/verticle/TestApiImpl.java");
+
+        Assert.assertTrue(!testApiVerticleFile.exists());
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
+
+    @Test
+    public void testImplGenWithoutImplWithOptionTrue() throws IOException {
+        String[] args = new String[8];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testUUID.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        args[7] = "-DapiImplGeneration=true";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+            "temp/test-server/src/main/java/io/swagger/server/api/verticle/TestApiImpl.java");
+
+        Assert.assertTrue(testApiVerticleFile.exists());
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
+
+    @Test
     public void testDefaultValue() throws IOException {
         String[] args = new String[7];
         args[0] = "generate";

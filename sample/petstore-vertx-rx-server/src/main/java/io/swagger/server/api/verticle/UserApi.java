@@ -1,8 +1,11 @@
 package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.InlineResponseDefault;
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
+import java.time.OffsetDateTime;
+import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
 
 import rx.Completable;
@@ -14,30 +17,30 @@ import java.util.Map;
 
 public interface UserApi  {
     //createUser
-    Completable createUser(ModelUser body);
+    Single<ResourceResponse<Void>> createUser(ModelUser body);
     
     //createUsersWithArrayInput
-    Completable createUsersWithArrayInput(List<ModelUser> body);
+    Single<ResourceResponse<Void>> createUsersWithArrayInput(List<ModelUser> body);
     
     //createUsersWithListInput
-    Completable createUsersWithListInput(List<ModelUser> body);
+    Single<ResourceResponse<Void>> createUsersWithListInput(List<ModelUser> body);
     
     //deleteUser
-    Completable deleteUser(String username);
+    Single<ResourceResponse<Void>> deleteUser(String username);
     
     //getUserByName
-    Single<ModelUser> getUserByName(String username);
+    Single<ResourceResponse<ModelUser>> getUserByName(String username);
     
     //loginUser
-    Single<String> loginUser(String username, String password);
+    Single<ResourceResponse<String>> loginUser(String username, String password);
     
     //logoutUser
-    Completable logoutUser();
+    Single<ResourceResponse<Void>> logoutUser();
     
     //updateUser
-    Completable updateUser(String username, ModelUser body);
+    Single<ResourceResponse<Void>> updateUser(String username, ModelUser body);
     
     //uuid
-    Single<InlineResponseDefault> uuid(UUID uuidParam);
+    Single<ResourceResponse<InlineResponseDefault>> uuid(UUID uuidParam);
     
 }
