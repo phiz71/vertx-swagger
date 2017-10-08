@@ -746,7 +746,12 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid username/password supplied"
+                        "description": "Invalid username/password supplied",
+                        "headers": {
+                            "WWW_Authenticate": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }

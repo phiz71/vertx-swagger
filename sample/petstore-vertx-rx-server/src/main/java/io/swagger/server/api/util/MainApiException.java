@@ -1,4 +1,4 @@
-package {{invokerPackage}}.util;
+package io.swagger.server.api.util;
 
 import io.vertx.core.MultiMap;
 

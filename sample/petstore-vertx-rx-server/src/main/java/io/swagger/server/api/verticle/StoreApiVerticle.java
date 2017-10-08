@@ -12,8 +12,10 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.auth.User;
 import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.Order;
+import io.swagger.server.api.util.ResourceResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -37,8 +39,10 @@ public class StoreApiVerticle extends AbstractVerticle {
             try {
                 Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
                 service.deleteOrder(orderId).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, DELETEORDER_SERVICE_ID);
@@ -54,8 +58,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                 User user = SwaggerRouter.extractAuthUserFromMessage(message);
                 service.getInventory(io.vertx.rxjava.ext.auth.User.newInstance(user)).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETINVENTORY_SERVICE_ID);
@@ -71,8 +76,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                 Long orderId = Json.mapper.readValue(message.body().getString("OrderId"), Long.class);
                 service.getOrderById(orderId).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETORDERBYID_SERVICE_ID);
@@ -88,8 +94,9 @@ public class StoreApiVerticle extends AbstractVerticle {
                 Order body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Order.class);
                 service.placeOrder(body).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, PLACEORDER_SERVICE_ID);
@@ -104,14 +111,18 @@ public class StoreApiVerticle extends AbstractVerticle {
     private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
         if (cause instanceof MainApiException) {
             code = ((MainApiException)cause).getStatusCode();
             statusMessage = ((MainApiException)cause).getStatusMessage();
+            deliveryOptions.setHeaders(((MainApiException)cause).getHeaders());
         } else {
             logUnexpectedError(serviceName, cause); 
         }
-            
-        message.fail(code, statusMessage);
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, String.valueOf(code));
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, statusMessage);
+
+        message.reply(null, deliveryOptions);
     }
     
     private void logUnexpectedError(String serviceName, Throwable cause) {

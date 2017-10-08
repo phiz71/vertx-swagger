@@ -13,9 +13,11 @@ import io.vertx.ext.auth.User;
 import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import java.io.File;
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
+import io.swagger.server.api.util.ResourceResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +47,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 service.addPet(body, user, result -> {
                     if (result.succeeded()) {
-                        message.reply(null);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(null, deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, ADDPET_SERVICE_ID);
@@ -64,7 +68,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 String apiKey = message.body().getString("api_key");
                 service.deletePet(petId, apiKey, user, result -> {
                     if (result.succeeded()) {
-                        message.reply(null);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(null, deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, DELETEPET_SERVICE_ID);
@@ -82,8 +88,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByStatus(status, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonArray(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, FINDPETSBYSTATUS_SERVICE_ID);
@@ -101,8 +108,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
                 service.findPetsByTags(tags, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonArray(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, FINDPETSBYTAGS_SERVICE_ID);
@@ -120,8 +128,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
                 service.getPetById(petId, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, GETPETBYID_SERVICE_ID);
@@ -139,7 +148,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
                 service.updatePet(body, user, result -> {
                     if (result.succeeded()) {
-                        message.reply(null);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(null, deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPDATEPET_SERVICE_ID);
@@ -159,7 +170,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 String status = message.body().getString("status");
                 service.updatePetWithForm(petId, name, status, user, result -> {
                     if (result.succeeded()) {
-                        message.reply(null);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(null, deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPDATEPETWITHFORM_SERVICE_ID);
@@ -179,8 +192,9 @@ public class PetApiVerticle extends AbstractVerticle {
                 File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
                 service.uploadFile(petId, additionalMetadata, file, user, result -> {
                     if (result.succeeded()) {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.result().getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.result().getResponse())).encodePrettily(), deliveryOptions);
                     } else {
                         Throwable cause = result.cause();
                         manageError(message, cause, UPLOADFILE_SERVICE_ID);
@@ -196,14 +210,18 @@ public class PetApiVerticle extends AbstractVerticle {
     private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
         if (cause instanceof MainApiException) {
             code = ((MainApiException)cause).getStatusCode();
             statusMessage = ((MainApiException)cause).getStatusMessage();
+            deliveryOptions.setHeaders(((MainApiException)cause).getHeaders());
         } else {
             logUnexpectedError(serviceName, cause); 
         }
-            
-        message.fail(code, statusMessage);
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, String.valueOf(code));
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, statusMessage);
+
+        message.reply(null, deliveryOptions);
     }
     
     private void logUnexpectedError(String serviceName, Throwable cause) {

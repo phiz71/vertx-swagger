@@ -13,8 +13,11 @@ import io.vertx.ext.auth.User;
 import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.server.api.model.InlineResponseDefault;
-import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.util.MainApiException;
+import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
+import java.time.OffsetDateTime;
+import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
 
 import java.util.List;
@@ -44,8 +47,10 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 ModelUser body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), ModelUser.class);
                 service.createUser(body).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, CREATEUSER_SERVICE_ID);
@@ -60,8 +65,10 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 List<ModelUser> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<ModelUser>>(){});
                 service.createUsersWithArrayInput(body).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, CREATEUSERSWITHARRAYINPUT_SERVICE_ID);
@@ -76,8 +83,10 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 List<ModelUser> body = Json.mapper.readValue(message.body().getJsonArray("body").encode(), new TypeReference<List<ModelUser>>(){});
                 service.createUsersWithListInput(body).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, CREATEUSERSWITHLISTINPUT_SERVICE_ID);
@@ -92,8 +101,10 @@ public class UserApiVerticle extends AbstractVerticle {
             try {
                 String username = message.body().getString("username");
                 service.deleteUser(username).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, DELETEUSER_SERVICE_ID);
@@ -109,8 +120,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 service.getUserByName(username).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, GETUSERBYNAME_SERVICE_ID);
@@ -127,8 +139,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 String password = message.body().getString("password");
                 service.loginUser(username, password).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(result.getResponse(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, LOGINUSER_SERVICE_ID);
@@ -142,8 +155,10 @@ public class UserApiVerticle extends AbstractVerticle {
         vertx.eventBus().<JsonObject> consumer(LOGOUTUSER_SERVICE_ID).handler(message -> {
             try {
                 service.logoutUser().subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, LOGOUTUSER_SERVICE_ID);
@@ -159,8 +174,10 @@ public class UserApiVerticle extends AbstractVerticle {
                 String username = message.body().getString("username");
                 ModelUser body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), ModelUser.class);
                 service.updateUser(username, body).subscribe(
-                    () -> {
-                        message.reply(null);
+                    result -> {
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(null, deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UPDATEUSER_SERVICE_ID);
@@ -176,8 +193,9 @@ public class UserApiVerticle extends AbstractVerticle {
                 UUID uuidParam = UUID.fromString(message.body().getString("uuidParam"));
                 service.uuid(uuidParam).subscribe(
                     result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                        message.reply(new JsonObject(Json.encode(result)).encodePrettily(), deliveryOptions);
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.setHeaders(result.getHeaders());
+                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
                     },
                     error -> {
                         manageError(message, error, UUID_SERVICE_ID);
@@ -192,14 +210,18 @@ public class UserApiVerticle extends AbstractVerticle {
     private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
         if (cause instanceof MainApiException) {
             code = ((MainApiException)cause).getStatusCode();
             statusMessage = ((MainApiException)cause).getStatusMessage();
+            deliveryOptions.setHeaders(((MainApiException)cause).getHeaders());
         } else {
             logUnexpectedError(serviceName, cause); 
         }
-            
-        message.fail(code, statusMessage);
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_CODE_HEADER_KEY, String.valueOf(code));
+        deliveryOptions.addHeader(SwaggerRouter.CUSTOM_STATUS_MESSAGE_HEADER_KEY, statusMessage);
+
+        message.reply(null, deliveryOptions);
     }
     
     private void logUnexpectedError(String serviceName, Throwable cause) {
