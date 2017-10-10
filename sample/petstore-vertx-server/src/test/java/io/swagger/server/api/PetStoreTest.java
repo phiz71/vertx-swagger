@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
+import io.swagger.server.api.util.SwaggerManager;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -204,4 +205,14 @@ public class PetStoreTest {
             async.complete();
         });
     }
+
+    @Test(timeout = 2000)
+    public void testSwaggerManager(TestContext context) {
+        Async async = context.async(2);
+        SwaggerManager instance = SwaggerManager.getInstance();
+        context.assertNotNull(instance.getSwagger());
+        context.assertEquals("Swagger Petstore", instance.getSwagger().getInfo().getTitle());
+        async.complete();
+    }
+
 }
