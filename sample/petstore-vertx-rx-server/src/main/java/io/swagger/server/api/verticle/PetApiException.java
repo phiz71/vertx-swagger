@@ -1,8 +1,8 @@
 package io.swagger.server.api.verticle;
 
 import java.io.File;
-import io.swagger.server.api.util.MainApiException;
-import io.swagger.server.api.util.MainApiHeader;
+import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.util.ResourceResponse;

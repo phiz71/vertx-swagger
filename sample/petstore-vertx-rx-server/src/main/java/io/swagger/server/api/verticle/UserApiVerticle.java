@@ -13,8 +13,8 @@ import io.vertx.ext.auth.User;
 import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.server.api.model.InlineResponseDefault;
-import io.swagger.server.api.util.MainApiException;
-import io.swagger.server.api.util.MainApiHeader;
+import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
 import java.time.OffsetDateTime;
 import io.swagger.server.api.util.ResourceResponse;

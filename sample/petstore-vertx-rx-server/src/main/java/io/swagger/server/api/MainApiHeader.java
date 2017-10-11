@@ -1,4 +1,4 @@
-package io.swagger.server.api.util;
+package io.swagger.server.api;
 
 public class MainApiHeader {
     private String name;
