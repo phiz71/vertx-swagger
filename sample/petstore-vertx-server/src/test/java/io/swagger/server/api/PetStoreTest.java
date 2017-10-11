@@ -14,7 +14,6 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
-import io.swagger.server.api.util.MainApiException;
 import io.swagger.server.api.verticle.PetApiException;
 import io.vertx.core.Vertx;
 import io.vertx.core.file.FileSystem;

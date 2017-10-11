@@ -1,5 +1,6 @@
 package io.swagger.server.api.util;
 
+import io.swagger.server.api.MainApiHeader;
 import io.vertx.core.MultiMap;
 
 public class ResourceResponse<T> {
