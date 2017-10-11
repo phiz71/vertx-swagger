@@ -8,10 +8,8 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
-import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.util.ResourceResponse;
 import io.vertx.rxjava.ext.auth.User;
-import rx.Completable;
 import rx.Single;
 import rx.functions.Func1;
 
@@ -20,14 +18,14 @@ public class PetApiImpl implements PetApi {
     @Override
     public Single<ResourceResponse<Void>> addPet(Pet body, User user) {
         ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
         return Single.just(response);
     }
 
     @Override
     public Single<ResourceResponse<Void>> deletePet(Long petId, String apiKey, User user) {
         ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
         return Single.just(response);
     }
 
@@ -38,7 +36,7 @@ public class PetApiImpl implements PetApi {
 
         ResourceResponse<List<Pet>> response = new ResourceResponse<>();
         response.setResponse(pets);
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
         
         return Single.just(response);
     }
@@ -56,7 +54,7 @@ public class PetApiImpl implements PetApi {
                 if (id.equals(1L)) {
                     ResourceResponse<Pet> response = new ResourceResponse<>();
                     response.setResponse(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE));
-                    response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+                    response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
                     return Single.just(response);
                 }
                 else if (id.equals(2L))
@@ -71,21 +69,21 @@ public class PetApiImpl implements PetApi {
     @Override
     public Single<ResourceResponse<Void>> updatePet(Pet body, User user) {
         ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
         return Single.just(response);
     }
 
     @Override
     public Single<ResourceResponse<Void>> updatePetWithForm(Long petId, String name, String status, User user) {
         ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
         return Single.just(response);
     }
 
     @Override
     public Single<ResourceResponse<ModelApiResponse>> uploadFile(Long petId, String additionalMetadata, File file, User user) {
         ResourceResponse<ModelApiResponse> response = new ResourceResponse<>();
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
         response.setResponse(new ModelApiResponse());
         return Single.just(response);
     }

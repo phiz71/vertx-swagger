@@ -8,7 +8,6 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.model.Pet.StatusEnum;
-import io.swagger.server.api.util.MainApiHeader;
 import io.swagger.server.api.util.ResourceResponse;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -36,7 +35,7 @@ public class PetApiImpl implements PetApi {
         
         ResourceResponse<List<Pet>> response = new ResourceResponse<>();
         response.setResponse(pets);
-        response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
         handler.handle(Future.succeededFuture(response));
     }
 
@@ -51,7 +50,7 @@ public class PetApiImpl implements PetApi {
         if(petId.equals(1L)) {
             ResourceResponse<Pet> response = new ResourceResponse<>();
             response.setResponse(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(),new ArrayList<>(), StatusEnum.AVAILABLE));
-            response.addHeader(MainApiHeader.CONTENT_TYPE_JSON);
+            response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
             handler.handle(Future.succeededFuture(response));
             return;
         }
