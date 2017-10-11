@@ -156,8 +156,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         importMapping.put("JsonInclude", "com.fasterxml.jackson.annotation.JsonInclude");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
-        importMapping.put("MainApiException", invokerPackage+".util.MainApiException");
-        importMapping.put("MainApiHeader", invokerPackage+".util.MainApiHeader");
+        importMapping.put("MainApiException", invokerPackage+".MainApiException");
+        importMapping.put("MainApiHeader", invokerPackage+".MainApiHeader");
         importMapping.put("ResourceResponse", invokerPackage+".util.ResourceResponse");
 
         modelDocTemplateFiles.clear();
@@ -176,8 +176,8 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
                 "Impl.java"); // the extension for each file to write
         }
 
-        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiException.java"));
-        supportingFiles.add(new SupportingFile("MainApiHeader.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "MainApiHeader.java"));
+        supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiException.java"));
+        supportingFiles.add(new SupportingFile("MainApiHeader.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiHeader.java"));
         supportingFiles.add(new SupportingFile("ResourceResponse.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "ResourceResponse.java"));
 
         writeOptional(outputFolder, new SupportingFile("SwaggerManager.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator)+ File.separator + "util", "SwaggerManager.java"));
