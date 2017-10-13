@@ -9,4 +9,4 @@ import java.util.Objects;
  * {{description}}
  **/
 {{/description}}{{^description}}
-{{/description}}{{#isEnum}}{{>enumOuterClass}}{{/isEnum}}{{^isEnum}}{{>pojo}}{{/isEnum}}{{/model}}{{/models}}
+{{/description}}{{#isEnum}}{{>enumOuterClass}}{{/isEnum}}{{^isEnum}}{{#generateJsonModel}}{{>pojoJson}}{{/generateJsonModel}}{{^generateJsonModel}}{{>pojo}}{{/generateJsonModel}}{{/isEnum}}{{/model}}{{/models}}

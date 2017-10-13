@@ -23,7 +23,6 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
-import io.swagger.models.properties.Property;
 import io.swagger.util.Json;
 
 public class JavaVertXServerGenerator extends AbstractJavaCodegen {
@@ -200,6 +199,14 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
             }
         }
 
+        property.vendorExtensions.put("X-UPPER_SNAKE_CASE", cmaleCaseToUpperSnakeCase(property.nameInCamelCase));
+
+    }
+
+    private String cmaleCaseToUpperSnakeCase(String camelCaseString) {
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
+        return (camelCaseString.replaceAll(regex, replacement).toUpperCase());
     }
 
     @SuppressWarnings("unchecked")
