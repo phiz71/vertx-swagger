@@ -14,7 +14,7 @@ Here is a [blog post](http://vertx.io/blog/presentation-of-the-vert-x-swagger-pr
 <dependency>
   <groupId>com.github.phiz71</groupId>
   <artifactId>vertx-swagger-parent</artifactId>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -24,7 +24,7 @@ Here is a [blog post](http://vertx.io/blog/presentation-of-the-vert-x-swagger-pr
 <dependency>
   <groupId>com.github.phiz71</groupId>
   <artifactId>vertx-swagger-router</artifactId>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
 </dependency>
 ```
 
@@ -33,6 +33,6 @@ Here is a [blog post](http://vertx.io/blog/presentation-of-the-vert-x-swagger-pr
 <dependency>
   <groupId>com.github.phiz71</groupId>
   <artifactId>vertx-swagger-codegen</artifactId>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
 </dependency>
 ```
