@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class SampleVertXGeneratorTest {
 
-/*    @Test
+    @Test
     public void generateSampleServer() {
         String[] args = new String[11];
         args[0] = "generate";
@@ -61,7 +61,7 @@ public class SampleVertXGeneratorTest {
         args[10] = "petstore-vertx-rx-server";
         args[11] = "-DrxInterface=true";
         SwaggerCodegen.main(args);
-    }*/
+    }
 
     @Test
     public void generateSampleServerWithRXWithJson() {
@@ -81,7 +81,7 @@ public class SampleVertXGeneratorTest {
         SwaggerCodegen.main(args);
     }
 
-/*   @Test
+   @Test
     public void testOptionalMainApiVerticleTrue() throws IOException {
         String[] args = new String[8];
         args[0] = "generate";
@@ -264,5 +264,5 @@ public class SampleVertXGeneratorTest {
         Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains("customValue = Json.mapper.readValue(message.body().getString(\"customValue\"), BigDecimal.class);"));
 
         FileUtils.deleteDirectory(new File("temp"));
-    }*/
+    }
 }
