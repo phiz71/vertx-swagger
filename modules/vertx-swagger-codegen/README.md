@@ -14,7 +14,7 @@ In the `sample` directory, you may find 2 generated servers based on [Swagger Pe
 They are both generated during the test phase of maven build.
 The first one, using this command:
 ```
-java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1.2.0.jar io.swagger.codegen.SwaggerCodegen generate \
+java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1.5.0.jar io.swagger.codegen.SwaggerCodegen generate \
   -l java-vertx \
   -o path/to/destination/folder \
   -i path/to/swagger/definition \
@@ -24,7 +24,7 @@ java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1
 
 The Rx version is generated like before but with a new option "rxInterface":
 ```bash
-java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1.2.0.jar io.swagger.codegen.SwaggerCodegen generate \
+java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1.5.0.jar io.swagger.codegen.SwaggerCodegen generate \
   -l java-vertx \
   -o path/to/destination/folder \
   -i path/to/swagger/definition \
@@ -36,16 +36,17 @@ java -cp /path/to/swagger-codegen-cli-2.2.2.jar:/path/to/vertx-swagger-codegen-1
 ## Servers style
 When `-DrxInterface=false` or if `rxInterface` option is not set, the generated API interfaces use Handler<>.
 ```java
-void addPet(Pet body, Handler<AsyncResult<Void>> handler);
+void addPet(Pet body, Handler<AsyncResult<ResourceResponse<Void>>> handler);
 
-void getPetById(Long petId, Handler<AsyncResult<Pet>> handler);
+void getPetById(Long petId, Handler<AsyncResult<ResourceResponse<Pet>>> handler);
 ```
 
 When `-DrxInterface=true`, the generated API interfaces use Single<> and Completable.
 ```java
-public Completable addPet(Pet body);
+public Single<ResourceResponse<Void>> addPet(Pet body);
 
-public Single<Pet> getPetById(Long petId);
+public Single<ResourceResponse<Pet>> getPetById(Long petId);
 ```
 
-
+## Generate first implementation
+You can use the `-DapiImplGeneration=true` option to create your `XXXApiImpl`. **Be careful since it will override all existing implementation**
