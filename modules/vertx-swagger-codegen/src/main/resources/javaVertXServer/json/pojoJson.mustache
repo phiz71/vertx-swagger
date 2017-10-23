@@ -1,0 +1,42 @@
+@JsonInclude(JsonInclude.Include.NON_NULL) 
+public class {{classname}} extends JsonObject {
+  {{#vars}}
+  private static final String {{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY = "{{baseName}}";
+  {{/vars}}
+
+  {{#vars}}{{#isEnum}}{{>json/enumJson}}{{/isEnum}}{{#items.isEnum}}{{#items}}{{>json/enumJson}}{{/items}}{{/items.isEnum}}{{/vars}}
+
+  public {{classname}} () {
+  }
+
+  public {{classname}} (JsonObject json) {
+{{#vars}}
+    this.put({{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY, json.{{vendorExtensions.X-JSONGetter}}({{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY));
+{{/vars}}
+  }
+
+  public {{classname}} ({{#vars}}{{{datatype}}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}}) {
+{{#vars}}{{#vendorExtensions.X-isJsonifiable}}
+    this.put({{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY, {{name}});
+{{/vendorExtensions.X-isJsonifiable}}{{^vendorExtensions.X-isJsonifiable}}
+    this.put({{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY, {{name}}.toString());
+{{/vendorExtensions.X-isJsonifiable}}{{/vars}}
+  }
+
+  {{#vars}}
+  @JsonProperty("{{baseName}}")
+  public {{#isString}}String{{/isString}}{{^isString}}{{{datatype}}}{{/isString}} {{getter}}(){
+    return {{#vendorExtensions.X-needCast}}({{{datatype}}}) {{/vendorExtensions.X-needCast}}this.{{vendorExtensions.X-JSONGetter}}({{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY);
+  }
+
+  public {{classname}} {{setter}}({{{datatype}}} {{name}}){
+  {{#vendorExtensions.X-isJsonifiable}}
+    this.put({{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY, {{name}});
+  {{/vendorExtensions.X-isJsonifiable}}{{^vendorExtensions.X-isJsonifiable}}
+    this.put({{vendorExtensions.X-UPPER_SNAKE_CASE}}_KEY, {{name}}.toString());
+  {{/vendorExtensions.X-isJsonifiable}}
+  return this;
+  }
+
+  {{/vars}}
+}
