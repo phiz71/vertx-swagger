@@ -6,6 +6,7 @@ import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
 import io.swagger.server.api.util.ResourceResponse;
+import io.swagger.server.api.util.VerticleHelper;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;

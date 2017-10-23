@@ -4,6 +4,7 @@ import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.util.ResourceResponse;
+import io.swagger.server.api.util.VerticleHelper;
 
 import rx.Completable;
 import rx.Single;

@@ -12,30 +12,22 @@ public class UserApiImpl implements UserApi {
 
     @Override
     public Single<ResourceResponse<Void>> createUser(ModelUser body) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
     public Single<ResourceResponse<Void>> createUsersWithArrayInput(List<ModelUser> body) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
     public Single<ResourceResponse<Void>> createUsersWithListInput(List<ModelUser> body) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
     public Single<ResourceResponse<Void>> deleteUser(String username) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
@@ -65,16 +57,12 @@ public class UserApiImpl implements UserApi {
 
     @Override
     public Single<ResourceResponse<Void>> logoutUser() {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
     public Single<ResourceResponse<Void>> updateUser(String username, ModelUser body) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
@@ -86,4 +74,9 @@ public class UserApiImpl implements UserApi {
         return Single.just(response);
     }
 
+    private Single<ResourceResponse<Void>> returnVoid() {
+        ResourceResponse<Void> response = new ResourceResponse<>();
+        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
+        return Single.just(response);
+    }
 }

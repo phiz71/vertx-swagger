@@ -7,6 +7,7 @@ import io.swagger.server.api.model.ModelUser;
 import java.time.OffsetDateTime;
 import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
+import io.swagger.server.api.util.VerticleHelper;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
