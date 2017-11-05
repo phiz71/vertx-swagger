@@ -7,6 +7,7 @@ import io.swagger.server.api.model.ModelUser;
 import java.time.OffsetDateTime;
 import io.swagger.server.api.util.ResourceResponse;
 import java.util.UUID;
+import io.swagger.server.api.util.VerticleHelper;
 
 public final class UserApiHeader extends MainApiHeader {
     private UserApiHeader(String name, String value) {

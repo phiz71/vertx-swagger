@@ -1,0 +1,11 @@
+            {{#returnType}}
+                {{#returnTypeIsPrimitive}}
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}verticleHelper.getAsyncResultHandler(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, false, new TypeReference<{{{returnType}}}>(){}));
+                {{/returnTypeIsPrimitive}}
+                {{^returnTypeIsPrimitive}}
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}verticleHelper.getAsyncResultHandler(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, true, new TypeReference<{{{returnType}}}>(){}));
+                {{/returnTypeIsPrimitive}}
+            {{/returnType}}
+            {{^returnType}}
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}verticleHelper.getAsyncResultHandler(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, false, new TypeReference<Void>(){}));
+            {{/returnType}}

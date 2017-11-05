@@ -1,24 +1,19 @@
-                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}{{#hasAuthMethods}}{{#hasParams}}, {{/hasParams}}io.vertx.rxjava.ext.auth.User.newInstance(user){{/hasAuthMethods}}).subscribe(
-                    result -> {
-                        DeliveryOptions deliveryOptions = new DeliveryOptions();
-                        deliveryOptions.setHeaders(result.getHeaders());
-                {{#returnType}}
-                    {{#isListContainer}}
-                        message.reply(new JsonArray(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
-                    {{/isListContainer}}
-                    {{^isListContainer}}
-                        {{#returnTypeIsPrimitive}}
-                        message.reply(result.getResponse(), deliveryOptions);
-                        {{/returnTypeIsPrimitive}}
-                        {{^returnTypeIsPrimitive}}
-                        message.reply(new JsonObject(Json.encode(result.getResponse())).encodePrettily(), deliveryOptions);
-                        {{/returnTypeIsPrimitive}}
-                    {{/isListContainer}}
-                {{/returnType}}
-                {{^returnType}}
-                        message.reply(null, deliveryOptions);
-                {{/returnType}}
-                    },
-                    error -> {
-                        manageError(message, error, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
-                    });
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}{{/hasParams}}{{#hasAuthMethods}}{{#hasParams}}, {{/hasParams}}io.vertx.rxjava.ext.auth.User.newInstance(user){{/hasAuthMethods}}).subscribe(
+            {{#returnType}}
+                {{#isListContainer}}
+                verticleHelper.getRxResultHandler(message, true, new TypeReference<{{{returnType}}}>(){}),
+                {{/isListContainer}}
+                {{^isListContainer}}
+                    {{#returnTypeIsPrimitive}}
+                verticleHelper.getRxResultHandler(message, false, new TypeReference<{{{returnType}}}>(){}),
+                    {{/returnTypeIsPrimitive}}
+                    {{^returnTypeIsPrimitive}}
+                verticleHelper.getRxResultHandler(message, true, new TypeReference<{{{returnType}}}>(){}),
+                    {{/returnTypeIsPrimitive}}
+                {{/isListContainer}}
+            {{/returnType}}
+            {{^returnType}}
+                verticleHelper.getRxResultHandler(message, false, new TypeReference<Void>(){}),
+            {{/returnType}}
+                verticleHelper.getErrorAction(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}})
+            );

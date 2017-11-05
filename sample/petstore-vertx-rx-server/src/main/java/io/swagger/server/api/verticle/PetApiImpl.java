@@ -17,16 +17,12 @@ public class PetApiImpl implements PetApi {
 
     @Override
     public Single<ResourceResponse<Void>> addPet(Pet body, User user) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
     public Single<ResourceResponse<Void>> deletePet(Long petId, String apiKey, User user) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
@@ -48,36 +44,29 @@ public class PetApiImpl implements PetApi {
 
     @Override
     public Single<ResourceResponse<Pet>> getPetById(Long petId, User user) {
-        return Single.just(petId).flatMap(new Func1<Long, Single<ResourceResponse<Pet>>>() {
-            @Override
-            public Single<ResourceResponse<Pet>> call(Long id) {
-                if (id.equals(1L)) {
-                    ResourceResponse<Pet> response = new ResourceResponse<>();
-                    response.setResponse(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE));
-                    response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
-                    return Single.just(response);
-                }
-                else if (id.equals(2L))
-                    return Single.error(new NullPointerException("simulation"));
-                else
-                    return Single.error(PetApiException.PetApi_getPetById_404_createException());
+        return Single.just(petId).flatMap((Func1<Long, Single<ResourceResponse<Pet>>>) id -> {
+            if (id.equals(1L)) {
+                ResourceResponse<Pet> response = new ResourceResponse<>();
+                response.setResponse(new Pet(1L, new Category(1L, "dog"), "rex", new ArrayList<>(), new ArrayList<>(), StatusEnum.AVAILABLE));
+                response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
+                return Single.just(response);
             }
+            else if (id.equals(2L))
+                return Single.error(new NullPointerException("simulation"));
+            else
+                return Single.error(PetApiException.PetApi_getPetById_404_createException());
         });
 
     }
 
     @Override
     public Single<ResourceResponse<Void>> updatePet(Pet body, User user) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
     public Single<ResourceResponse<Void>> updatePetWithForm(Long petId, String name, String status, User user) {
-        ResourceResponse<Void> response = new ResourceResponse<>();
-        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
-        return Single.just(response);
+        return returnVoid();
     }
 
     @Override
@@ -88,4 +77,9 @@ public class PetApiImpl implements PetApi {
         return Single.just(response);
     }
 
+    private Single<ResourceResponse<Void>> returnVoid() {
+        ResourceResponse<Void> response = new ResourceResponse<>();
+        response.addHeader(PetApiHeader.CONTENT_TYPE_JSON);
+        return Single.just(response);
+    }
 }

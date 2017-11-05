@@ -1,0 +1,100 @@
+package {{package}};
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.ext.auth.User;
+import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+public class {{classname}}Verticle extends AbstractVerticle {
+    private VerticleHelper verticleHelper = new VerticleHelper(this.getClass());
+
+    {{#operations}}{{#operation}}{{#vendorExtensions}}private static final String {{x-serviceId-varName}} = "{{x-serviceId}}";
+    {{/vendorExtensions}}{{/operation}}{{/operations}}
+
+    private {{classname}} service = createServiceImplementation();
+
+    {{#operations}}{{#operation}}//Handler for {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
+    final Handler<Message<JsonObject>> {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}Handler = message -> {
+        try {
+            {{#hasAuthMethods}}
+            User user = SwaggerRouter.extractAuthUserFromMessage(message);
+            {{/hasAuthMethods}}
+            {{#hasParams}}
+                {{#allParams}}
+                    {{#isListContainer}}
+            {{{dataType}}} {{paramName}} = message.body().getJsonArray("{{baseName}}");
+                    {{/isListContainer}}
+                    {{^isListContainer}}
+                        {{#isPrimitiveType}}
+                            {{#isString}}
+                                {{#vendorExtensions}}
+                                    {{#X-isUUID}}
+                                        {{#required}}
+            {{{dataType}}} {{paramName}} = {{{dataType}}}.fromString(message.body().getString("{{baseName}}"));
+                                        {{/required}}
+                                        {{^required}}
+            {{{dataType}}} {{paramName}} = null;
+            if(message.body().getString("{{baseName}}") != null) {
+                {{paramName}} = {{{dataType}}}.fromString(message.body().getString("{{baseName}}"));
+            }
+                                        {{/required}}
+                                    {{/X-isUUID}}
+                                    {{^X-isUUID}}
+            {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
+                                    {{/X-isUUID}}
+                                {{/vendorExtensions}}
+                                {{^vendorExtensions}}
+            {{{dataType}}} {{paramName}} = message.body().getString("{{baseName}}");
+                                {{/vendorExtensions}}
+                            {{/isString}}
+                            {{^isString}}
+                                {{#required}}
+            {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
+                                {{/required}}
+                                {{^required}}
+            {{{dataType}}} {{paramName}} = null;
+            if(message.body().getString("{{baseName}}") != null) {
+                {{paramName}} = Json.mapper.readValue(message.body().getString("{{baseName}}"), {{{dataType}}}.class);
+            }
+                                {{/required}}
+                            {{/isString}}
+                        {{/isPrimitiveType}}
+                        {{^isPrimitiveType}}
+                            {{#isFile}}
+            {{{dataType}}} {{paramName}} = new {{{dataType}}}(message.body().getString("{{baseName}}"));
+                            {{/isFile}}
+                            {{^isFile}}
+            {{{dataType}}} {{paramName}} = new {{{dataType}}}(message.body().getJsonObject("{{baseName}}"));
+                            {{/isFile}}
+                        {{/isPrimitiveType}}
+                    {{/isListContainer}}
+                {{/allParams}}
+            {{/hasParams}}
+            {{#rxInterface}}
+{{>json/RxCallJson}}
+            {{/rxInterface}}
+            {{^rxInterface}}
+{{>json/AsyncCallJson}}
+            {{/rxInterface}}
+        } catch (Exception e) {
+            verticleHelper.manageError(message, e, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
+        }
+    };
+    {{/operation}}{{/operations}}
+
+    @Override
+    public void start() throws Exception {
+    {{#operations}}{{#operation}}vertx.eventBus().<JsonObject> consumer({{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}).handler({{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}Handler);
+    {{/operation}}{{/operations}}
+    }
+
+    protected {{classname}} createServiceImplementation() {
+        return new {{classname}}Impl();
+    }
+}

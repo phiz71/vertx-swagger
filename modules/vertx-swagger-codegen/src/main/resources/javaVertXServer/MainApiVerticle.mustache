@@ -18,9 +18,9 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 
 public class MainApiVerticle extends AbstractVerticle {
-    final static Logger LOGGER = LoggerFactory.getLogger(MainApiVerticle.class); 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainApiVerticle.class);
     
-    final Router router = Router.router(vertx);
+    private final Router router = Router.router(vertx);
     
     @Override
     public void start(Future<Void> startFuture) throws Exception {
