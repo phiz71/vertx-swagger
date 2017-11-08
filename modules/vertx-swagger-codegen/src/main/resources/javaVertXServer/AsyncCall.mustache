@@ -1,19 +1,16 @@
-                service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}result -> {
-                    if (result.succeeded()) {
-                {{#returnType}}
-                        DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("Content-Type", "application/json");
-                    {{#isListContainer}}
-                        message.reply(new JsonArray(Json.encode(result.result())).encodePrettily(), deliveryOptions);
-                    {{/isListContainer}}
-                    {{^isListContainer}}
-                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily(), deliveryOptions);
-                    {{/isListContainer}}
-                {{/returnType}}
-                {{^returnType}}
-                        message.reply(null);
-                {{/returnType}}
-                    } else {
-                        Throwable cause = result.cause();
-                        manageError(message, cause, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}});
-                    }
-                });
+            {{#returnType}}
+                {{#isListContainer}}
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}verticleHelper.getAsyncResultHandler(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, true, new TypeReference<{{{returnType}}}>(){}));
+                {{/isListContainer}}
+                {{^isListContainer}}
+                    {{#returnTypeIsPrimitive}}
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}verticleHelper.getAsyncResultHandler(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, false, new TypeReference<{{{returnType}}}>(){}));
+                    {{/returnTypeIsPrimitive}}
+                    {{^returnTypeIsPrimitive}}
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}verticleHelper.getAsyncResultHandler(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, true, new TypeReference<{{{returnType}}}>(){}));
+                    {{/returnTypeIsPrimitive}}
+                {{/isListContainer}}
+            {{/returnType}}
+            {{^returnType}}
+            service.{{operationId}}({{#hasParams}}{{#allParams}}{{paramName}}, {{/allParams}}{{/hasParams}}{{#hasAuthMethods}}user, {{/hasAuthMethods}}verticleHelper.getAsyncResultHandler(message, {{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}, false, new TypeReference<Void>(){}));
+            {{/returnType}}

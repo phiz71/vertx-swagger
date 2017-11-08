@@ -1,0 +1,35 @@
+package io.swagger.server.api;
+
+public class MainApiHeader {
+    private String name;
+    private String value;
+    private Iterable<String> values;
+
+    protected MainApiHeader(String name, String value) {
+        super();
+        this.name = name;
+        this.value = value;
+        this.values = null;
+    }
+
+    protected MainApiHeader(String name, Iterable<String> values) {
+        super();
+        this.name = name;
+        this.value = null;
+        this.values = values;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public Iterable<String> getValues() {
+        return values;
+    }
+
+    public static final MainApiHeader CONTENT_TYPE_JSON = new MainApiHeader("Content-Type", "application/json");
+}

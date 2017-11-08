@@ -1,0 +1,10 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+{{#models}}{{#model}}{{#description}}
+/**
+ * {{description}}
+ **/
+{{/description}}{{^description}}
+{{/description}}{{#isEnum}}{{>json/enumOuterJson}}{{/isEnum}}{{^isEnum}}{{>json/pojoJson}}{{/isEnum}}{{/model}}{{/models}}
