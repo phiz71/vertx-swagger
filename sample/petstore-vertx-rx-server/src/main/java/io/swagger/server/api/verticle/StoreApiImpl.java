@@ -7,30 +7,41 @@ import java.util.Map;
 
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.model.Order.StatusEnum;
+import io.swagger.server.api.util.ResourceResponse;
 import io.vertx.rxjava.ext.auth.User;
-import rx.Completable;
 import rx.Single;
 
 public class StoreApiImpl implements StoreApi {
 
     @Override
-    public Completable deleteOrder(Long orderId) {
-        return Completable.complete();
+    public Single<ResourceResponse<Void>> deleteOrder(Long orderId) {
+        ResourceResponse<Void> response = new ResourceResponse<>();
+        response.addHeader(StoreApiHeader.CONTENT_TYPE_JSON);
+        return Single.just(response);
     }
 
     @Override
-    public Single<Map<String, Integer>> getInventory(User user) {
-        return Single.just(new HashMap<>());
+    public Single<ResourceResponse<Map<String, Integer>>> getInventory(User user) {
+        ResourceResponse<Map<String, Integer>> response = new ResourceResponse<>();
+        response.addHeader(StoreApiHeader.CONTENT_TYPE_JSON);
+        response.setResponse(new HashMap<>());
+        return Single.just(response);
     }
 
     @Override
-    public Single<Order> getOrderById(Long orderId) {
-        return Single.just(new Order(1L, 1L, 3, OffsetDateTime.of(2017,4,2,11,8,10,0,ZoneOffset.UTC), StatusEnum.APPROVED, Boolean.TRUE));
+    public Single<ResourceResponse<Order>> getOrderById(Long orderId) {
+        ResourceResponse<Order> response = new ResourceResponse<>();
+        response.addHeader(StoreApiHeader.CONTENT_TYPE_JSON);
+        response.setResponse(new Order(1L, 1L, 3, OffsetDateTime.of(2017,4,2,11,8,10,0,ZoneOffset.UTC), StatusEnum.APPROVED, Boolean.TRUE));
+        return Single.just(response);
     }
 
     @Override
-    public Single<Order> placeOrder(Order body) {
-        return Single.just(new Order());
+    public Single<ResourceResponse<Order>> placeOrder(Order body) {
+        ResourceResponse<Order> response = new ResourceResponse<>();
+        response.addHeader(StoreApiHeader.CONTENT_TYPE_JSON);
+        response.setResponse(new Order());
+        return Single.just(response);
     }
 
 }

@@ -5,54 +5,78 @@ import java.util.UUID;
 
 import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.model.ModelUser;
-import rx.Completable;
+import io.swagger.server.api.util.ResourceResponse;
 import rx.Single;
 
 public class UserApiImpl implements UserApi {
 
     @Override
-    public Completable createUser(ModelUser body) {
-        return Completable.complete();
+    public Single<ResourceResponse<Void>> createUser(ModelUser body) {
+        return returnVoid();
     }
 
     @Override
-    public Completable createUsersWithArrayInput(List<ModelUser> body) {
-        return Completable.complete();
+    public Single<ResourceResponse<Void>> createUsersWithArrayInput(List<ModelUser> body) {
+        return returnVoid();
     }
 
     @Override
-    public Completable createUsersWithListInput(List<ModelUser> body) {
-        return Completable.complete();
+    public Single<ResourceResponse<Void>> createUsersWithListInput(List<ModelUser> body) {
+        return returnVoid();
     }
 
     @Override
-    public Completable deleteUser(String username) {
-        return Completable.complete();
+    public Single<ResourceResponse<Void>> deleteUser(String username) {
+        return returnVoid();
     }
 
     @Override
-    public Single<ModelUser> getUserByName(String username) {
-        return Single.just(new ModelUser());
+    public Single<ResourceResponse<ModelUser>> getUserByName(String username) {
+        ResourceResponse<ModelUser> response = new ResourceResponse<>();
+        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
+        response.setResponse(new ModelUser());
+        return Single.just(response);
     }
 
     @Override
-    public Single<String> loginUser(String username, String password) {
-        return Single.just("");
+    public Single<ResourceResponse<String>> loginUser(String username, String password) {
+
+        if( "foo".equalsIgnoreCase(username) && "bar".equalsIgnoreCase(password)) {
+            ResourceResponse<String> response = new ResourceResponse<>();
+            response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
+            response.setResponse("OK");
+            response.addHeader(UserApiHeader.UserApi_loginUser_200_createXRateLimit(1));
+            return Single.just(response);
+        } else {
+            UserApiException e = UserApiException.UserApi_loginUser_400_createException();
+            e.addHeader(UserApiHeader.UserApi_loginUser_400_createWwWAuthenticate("Basic"));
+            return Single.error(e);
+        }
+
     }
 
     @Override
-    public Completable logoutUser() {
-        return Completable.complete();
+    public Single<ResourceResponse<Void>> logoutUser() {
+        return returnVoid();
     }
 
     @Override
-    public Completable updateUser(String username, ModelUser body) {
-        return Completable.complete();
+    public Single<ResourceResponse<Void>> updateUser(String username, ModelUser body) {
+        return returnVoid();
     }
 
     @Override
-    public Single<InlineResponseDefault> uuid(UUID uuidParam) {
-        return Single.just(new InlineResponseDefault(uuidParam));
+    public Single<ResourceResponse<InlineResponseDefault>> uuid(UUID uuidParam) {
+        ResourceResponse<InlineResponseDefault> response = new ResourceResponse<>();
+        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
+        response.setResponse(new InlineResponseDefault(uuidParam));
+        
+        return Single.just(response);
     }
 
+    private Single<ResourceResponse<Void>> returnVoid() {
+        ResourceResponse<Void> response = new ResourceResponse<>();
+        response.addHeader(UserApiHeader.CONTENT_TYPE_JSON);
+        return Single.just(response);
+    }
 }

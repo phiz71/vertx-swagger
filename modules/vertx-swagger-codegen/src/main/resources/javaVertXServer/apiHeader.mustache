@@ -1,0 +1,21 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+public final class {{classname}}Header extends MainApiHeader {
+    private {{classname}}Header(String name, String value) {
+        super(name, value);
+    }
+    
+    private {{classname}}Header(String name, Iterable<String> values) {
+        super(name, values);
+    }
+    
+    {{#operations}}{{#operation}}{{#responses}}{{#headers}}public static {{classname}}Header {{classname}}_{{{operationId}}}_{{code}}_create{{nameInCamelCase}}({{datatype}} {{name}}) {
+        return new {{classname}}Header("{{baseName}}", {{name}}.toString());
+    }
+    
+    {{/headers}}{{/responses}}{{/operation}}{{/operations}}
+
+}

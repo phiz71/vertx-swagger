@@ -1,0 +1,20 @@
+[vert.x-eventloop-thread-0] 2017-10-23T22:21:46.524+02:00 INFO [io.swagger.server.api.MainApiVerticle]  PetApiVerticle : Deployed
+[vert.x-eventloop-thread-0] 2017-10-23T22:21:46.524+02:00 INFO [io.swagger.server.api.MainApiVerticle]  StoreApiVerticle : Deployed
+[vert.x-eventloop-thread-0] 2017-10-23T22:21:46.524+02:00 INFO [io.swagger.server.api.MainApiVerticle]  UserApiVerticle : Deployed
+[vert.x-eventloop-thread-1] 2017-10-23T22:21:46.696+02:00 SEVERE [io.swagger.server.api.verticle.PetApiVerticle]  Unexpected error in getPetById
+java.lang.NullPointerException: simulation
+	at io.swagger.server.api.verticle.PetApiImpl.lambda$getPetById$23(PetApiImpl.java:53)
+	at rx.internal.util.ScalarSynchronousSingle$2.call(ScalarSynchronousSingle.java:128)
+	at rx.internal.util.ScalarSynchronousSingle$2.call(ScalarSynchronousSingle.java:124)
+	at rx.Single.subscribe(Single.java:1967)
+	at rx.Single.subscribe(Single.java:1777)
+	at io.swagger.server.api.verticle.PetApiVerticle.lambda$new$19(PetApiVerticle.java:94)
+	at io.vertx.core.eventbus.impl.HandlerRegistration.deliver(HandlerRegistration.java:212)
+	at io.vertx.core.eventbus.impl.HandlerRegistration.handle(HandlerRegistration.java:191)
+	at io.vertx.core.eventbus.impl.EventBusImpl.lambda$deliverToHandler$3(EventBusImpl.java:505)
+	at io.vertx.core.impl.ContextImpl.lambda$wrapTask$2(ContextImpl.java:337)
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:163)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:403)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:445)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:858)
+	at java.lang.Thread.run(Thread.java:745)

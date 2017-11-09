@@ -1,0 +1,6 @@
+
+  public final class {{classname}} {
+    private {{classname}}(){}
+    {{#allowableValues}}{{#enumVars}}public static final {{dataType}} {{{name}}} = {{{value}}};
+    {{/enumVars}}{{/allowableValues}}
+  }

@@ -1,6 +1,5 @@
 package io.swagger.server.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -8,6 +7,7 @@ import io.swagger.server.api.model.Category;
 import io.swagger.server.api.model.Tag;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class Pet   {

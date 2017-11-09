@@ -1,1 +1,1 @@
-    void {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}, {{/allParams}}{{#hasAuthMethods}}User user, {{/hasAuthMethods}}Handler<AsyncResult<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}>> handler);
+    void {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}, {{/allParams}}{{#hasAuthMethods}}User user, {{/hasAuthMethods}}Handler<AsyncResult<ResourceResponse<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}>>> handler);

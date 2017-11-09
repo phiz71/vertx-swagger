@@ -1,7 +1,10 @@
 package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.Order;
+import io.swagger.server.api.util.ResourceResponse;
+import io.swagger.server.api.util.VerticleHelper;
 
 import rx.Completable;
 import rx.Single;
@@ -12,15 +15,15 @@ import java.util.Map;
 
 public interface StoreApi  {
     //deleteOrder
-    Completable deleteOrder(Long orderId);
+    Single<ResourceResponse<Void>> deleteOrder(Long orderId);
     
     //getInventory
-    Single<Map<String, Integer>> getInventory(User user);
+    Single<ResourceResponse<Map<String, Integer>>> getInventory(User user);
     
     //getOrderById
-    Single<Order> getOrderById(Long orderId);
+    Single<ResourceResponse<Order>> getOrderById(Long orderId);
     
     //placeOrder
-    Single<Order> placeOrder(Order body);
+    Single<ResourceResponse<Order>> placeOrder(Order body);
     
 }
