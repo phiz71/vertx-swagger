@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/phiz71/vertx-swagger.svg?branch=master)](https://travis-ci.org/phiz71/vertx-swagger)
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.github.phiz71:vertx-swagger-parent)](https://sonarcloud.io/api/badges/gate?key=com.github.phiz71:vertx-swagger-parent)
+
 # Vert.X - Swagger
 This project aims to provide a code generator based on Swagger to create web server with Eclipse Vert.X and Vert.X Web.
 It contains 2 modules:
