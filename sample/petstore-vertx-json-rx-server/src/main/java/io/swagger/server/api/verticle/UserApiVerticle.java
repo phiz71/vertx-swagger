@@ -13,6 +13,7 @@ import java.time.Instant;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiFactory;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
 import io.swagger.server.api.util.ResourceResponse;
@@ -32,10 +33,29 @@ public class UserApiVerticle extends AbstractVerticle {
     private static final String UUID_SERVICE_ID = "uuid";
     
 
-    private UserApi service = createServiceImplementation();
-
     //Handler for createUser
-    final Handler<Message<JsonObject>> createUserHandler = message -> {
+    private final Handler<Message<JsonObject>> createUserHandler;
+    //Handler for createUsersWithArrayInput
+    private final Handler<Message<JsonObject>> createUsersWithArrayInputHandler;
+    //Handler for createUsersWithListInput
+    private final Handler<Message<JsonObject>> createUsersWithListInputHandler;
+    //Handler for deleteUser
+    private final Handler<Message<JsonObject>> deleteUserHandler;
+    //Handler for getUserByName
+    private final Handler<Message<JsonObject>> getUserByNameHandler;
+    //Handler for loginUser
+    private final Handler<Message<JsonObject>> loginUserHandler;
+    //Handler for logoutUser
+    private final Handler<Message<JsonObject>> logoutUserHandler;
+    //Handler for updateUser
+    private final Handler<Message<JsonObject>> updateUserHandler;
+    //Handler for uuid
+    private final Handler<Message<JsonObject>> uuidHandler;
+    
+
+    public UserApiVerticle(UserApi service) {
+    
+     createUserHandler = message -> {
         try {
             ModelUser body = new ModelUser(message.body().getJsonObject("body"));
                 service.createUser(body).subscribe(
@@ -46,8 +66,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, CREATEUSER_SERVICE_ID);
         }
     };
-    //Handler for createUsersWithArrayInput
-    final Handler<Message<JsonObject>> createUsersWithArrayInputHandler = message -> {
+    
+     createUsersWithArrayInputHandler = message -> {
         try {
             JsonArray body = message.body().getJsonArray("body");
                 service.createUsersWithArrayInput(body).subscribe(
@@ -58,8 +78,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, CREATEUSERSWITHARRAYINPUT_SERVICE_ID);
         }
     };
-    //Handler for createUsersWithListInput
-    final Handler<Message<JsonObject>> createUsersWithListInputHandler = message -> {
+    
+     createUsersWithListInputHandler = message -> {
         try {
             JsonArray body = message.body().getJsonArray("body");
                 service.createUsersWithListInput(body).subscribe(
@@ -70,8 +90,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, CREATEUSERSWITHLISTINPUT_SERVICE_ID);
         }
     };
-    //Handler for deleteUser
-    final Handler<Message<JsonObject>> deleteUserHandler = message -> {
+    
+     deleteUserHandler = message -> {
         try {
             String username = message.body().getString("username");
                 service.deleteUser(username).subscribe(
@@ -82,8 +102,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, DELETEUSER_SERVICE_ID);
         }
     };
-    //Handler for getUserByName
-    final Handler<Message<JsonObject>> getUserByNameHandler = message -> {
+    
+     getUserByNameHandler = message -> {
         try {
             String username = message.body().getString("username");
                 service.getUserByName(username).subscribe(
@@ -94,8 +114,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, GETUSERBYNAME_SERVICE_ID);
         }
     };
-    //Handler for loginUser
-    final Handler<Message<JsonObject>> loginUserHandler = message -> {
+    
+     loginUserHandler = message -> {
         try {
             String username = message.body().getString("username");
             String password = message.body().getString("password");
@@ -107,8 +127,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, LOGINUSER_SERVICE_ID);
         }
     };
-    //Handler for logoutUser
-    final Handler<Message<JsonObject>> logoutUserHandler = message -> {
+    
+     logoutUserHandler = message -> {
         try {
                 service.logoutUser().subscribe(
                     verticleHelper.getRxResultHandler(message, false, new TypeReference<Void>(){}),
@@ -118,8 +138,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, LOGOUTUSER_SERVICE_ID);
         }
     };
-    //Handler for updateUser
-    final Handler<Message<JsonObject>> updateUserHandler = message -> {
+    
+     updateUserHandler = message -> {
         try {
             String username = message.body().getString("username");
             ModelUser body = new ModelUser(message.body().getJsonObject("body"));
@@ -131,8 +151,8 @@ public class UserApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, UPDATEUSER_SERVICE_ID);
         }
     };
-    //Handler for uuid
-    final Handler<Message<JsonObject>> uuidHandler = message -> {
+    
+     uuidHandler = message -> {
         try {
             String uuidParam = message.body().getString("uuidParam");
                 service.uuid(uuidParam).subscribe(
@@ -144,6 +164,7 @@ public class UserApiVerticle extends AbstractVerticle {
         }
     };
     
+    }
 
     @Override
     public void start() throws Exception {

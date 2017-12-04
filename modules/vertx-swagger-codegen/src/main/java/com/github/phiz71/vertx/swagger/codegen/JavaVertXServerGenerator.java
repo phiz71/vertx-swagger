@@ -163,6 +163,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
         importMapping.put(TYPE_JSON_PROPERTY, "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put(TYPE_JSON_VALUE, "com.fasterxml.jackson.annotation.JsonValue");
         importMapping.put("MainApiException", invokerPackage + ".MainApiException");
+        importMapping.put("MainApiFactory", invokerPackage + ".MainApiFactory");
         importMapping.put("MainApiHeader", invokerPackage + ".MainApiHeader");
         importMapping.put("ResourceResponse", invokerPackage + ".util.ResourceResponse");
         importMapping.put("VerticleHelper", invokerPackage + ".util.VerticleHelper");
@@ -222,6 +223,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
 
 
         supportingFiles.add(new SupportingFile("MainApiException.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiException.java"));
+        supportingFiles.add(new SupportingFile("MainApiFactory.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiFactory.java"));
         supportingFiles.add(new SupportingFile("MainApiHeader.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator), "MainApiHeader.java"));
         supportingFiles.add(new SupportingFile("ResourceResponse.mustache", sourceFolder + File.separator + invokerPackage.replace(".", File.separator) + File.separator + "util", "ResourceResponse.java"));
 
@@ -352,6 +354,7 @@ public class JavaVertXServerGenerator extends AbstractJavaCodegen {
     public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
         CodegenOperation codegenOperation = super.fromOperation(path, httpMethod, operation, definitions, swagger);
         codegenOperation.imports.add("MainApiException");
+        codegenOperation.imports.add("MainApiFactory");
         codegenOperation.imports.add("MainApiHeader");
         codegenOperation.imports.add("ResourceResponse");
         codegenOperation.imports.add("VerticleHelper");

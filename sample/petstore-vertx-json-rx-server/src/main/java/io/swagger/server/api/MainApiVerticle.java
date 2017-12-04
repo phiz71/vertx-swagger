@@ -8,6 +8,10 @@ import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
+import io.swagger.server.api.verticle.PetApiVerticle;
+import io.swagger.server.api.verticle.StoreApiVerticle;
+import io.swagger.server.api.verticle.UserApiVerticle;
+
 import io.swagger.server.api.util.SwaggerManager;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -19,8 +23,12 @@ import io.vertx.ext.web.Router;
 
 public class MainApiVerticle extends AbstractVerticle {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainApiVerticle.class);
-    
-    private final Router router = Router.router(vertx);
+
+    private final MainApiFactory apiFactory;
+
+    public MainApiVerticle(MainApiFactory apiFactory) {
+        this.apiFactory = apiFactory;
+    }
     
     @Override
     public void start(Future<Void> startFuture) throws Exception {
@@ -46,7 +54,7 @@ public class MainApiVerticle extends AbstractVerticle {
       
     public void deployVerticles(Future<Void> startFuture) {
         
-        vertx.deployVerticle("io.swagger.server.api.verticle.PetApiVerticle", res -> {
+        vertx.deployVerticle(new PetApiVerticle(apiFactory.createPetApi()), res -> {
             if (res.succeeded()) {
                 LOGGER.info("PetApiVerticle : Deployed");
             } else {
@@ -55,7 +63,7 @@ public class MainApiVerticle extends AbstractVerticle {
             }
         });
         
-        vertx.deployVerticle("io.swagger.server.api.verticle.StoreApiVerticle", res -> {
+        vertx.deployVerticle(new StoreApiVerticle(apiFactory.createStoreApi()), res -> {
             if (res.succeeded()) {
                 LOGGER.info("StoreApiVerticle : Deployed");
             } else {
@@ -64,7 +72,7 @@ public class MainApiVerticle extends AbstractVerticle {
             }
         });
         
-        vertx.deployVerticle("io.swagger.server.api.verticle.UserApiVerticle", res -> {
+        vertx.deployVerticle(new UserApiVerticle(apiFactory.createUserApi()), res -> {
             if (res.succeeded()) {
                 LOGGER.info("UserApiVerticle : Deployed");
             } else {
@@ -74,4 +82,5 @@ public class MainApiVerticle extends AbstractVerticle {
         });
         
     }
+
 }

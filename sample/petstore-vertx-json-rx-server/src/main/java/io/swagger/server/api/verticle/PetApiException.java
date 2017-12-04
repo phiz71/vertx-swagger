@@ -4,6 +4,7 @@ import java.io.File;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiFactory;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;

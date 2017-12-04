@@ -11,6 +11,7 @@ import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import java.io.File;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiFactory;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelApiResponse;
 import io.swagger.server.api.model.Pet;
@@ -33,10 +34,27 @@ public class PetApiVerticle extends AbstractVerticle {
     private static final String UPLOADFILE_SERVICE_ID = "uploadFile";
     
 
-    private PetApi service = createServiceImplementation();
-
     //Handler for addPet
-    final Handler<Message<JsonObject>> addPetHandler = message -> {
+    private final Handler<Message<JsonObject>> addPetHandler;
+    //Handler for deletePet
+    private final Handler<Message<JsonObject>> deletePetHandler;
+    //Handler for findPetsByStatus
+    private final Handler<Message<JsonObject>> findPetsByStatusHandler;
+    //Handler for findPetsByTags
+    private final Handler<Message<JsonObject>> findPetsByTagsHandler;
+    //Handler for getPetById
+    private final Handler<Message<JsonObject>> getPetByIdHandler;
+    //Handler for updatePet
+    private final Handler<Message<JsonObject>> updatePetHandler;
+    //Handler for updatePetWithForm
+    private final Handler<Message<JsonObject>> updatePetWithFormHandler;
+    //Handler for uploadFile
+    private final Handler<Message<JsonObject>> uploadFileHandler;
+    
+
+    public PetApiVerticle(PetApi service) {
+    
+    addPetHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
@@ -46,9 +64,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, ADDPET_SERVICE_ID);
         }
     };
-
-    //Handler for deletePet
-    final Handler<Message<JsonObject>> deletePetHandler = message -> {
+    
+    deletePetHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
@@ -59,9 +76,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, DELETEPET_SERVICE_ID);
         }
     };
-
-    //Handler for findPetsByStatus
-    final Handler<Message<JsonObject>> findPetsByStatusHandler = message -> {
+    
+    findPetsByStatusHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             List<String> status = Json.mapper.readValue(message.body().getJsonArray("status").encode(), new TypeReference<List<String>>(){});
@@ -71,9 +87,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, FINDPETSBYSTATUS_SERVICE_ID);
         }
     };
-
-    //Handler for findPetsByTags
-    final Handler<Message<JsonObject>> findPetsByTagsHandler = message -> {
+    
+    findPetsByTagsHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             List<String> tags = Json.mapper.readValue(message.body().getJsonArray("tags").encode(), new TypeReference<List<String>>(){});
@@ -83,9 +98,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, FINDPETSBYTAGS_SERVICE_ID);
         }
     };
-
-    //Handler for getPetById
-    final Handler<Message<JsonObject>> getPetByIdHandler = message -> {
+    
+    getPetByIdHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
@@ -95,9 +109,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, GETPETBYID_SERVICE_ID);
         }
     };
-
-    //Handler for updatePet
-    final Handler<Message<JsonObject>> updatePetHandler = message -> {
+    
+    updatePetHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             Pet body = Json.mapper.readValue(message.body().getJsonObject("body").encode(), Pet.class);
@@ -107,9 +120,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, UPDATEPET_SERVICE_ID);
         }
     };
-
-    //Handler for updatePetWithForm
-    final Handler<Message<JsonObject>> updatePetWithFormHandler = message -> {
+    
+    updatePetWithFormHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
@@ -121,9 +133,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, UPDATEPETWITHFORM_SERVICE_ID);
         }
     };
-
-    //Handler for uploadFile
-    final Handler<Message<JsonObject>> uploadFileHandler = message -> {
+    
+    uploadFileHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
@@ -135,8 +146,8 @@ public class PetApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, UPLOADFILE_SERVICE_ID);
         }
     };
-
     
+    }
 
     @Override
     public void start() throws Exception {

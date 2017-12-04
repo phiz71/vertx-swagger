@@ -2,6 +2,7 @@ package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.InlineResponseDefault;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiFactory;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
 import java.time.OffsetDateTime;

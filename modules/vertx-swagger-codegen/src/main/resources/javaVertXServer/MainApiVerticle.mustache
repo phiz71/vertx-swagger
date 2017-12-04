@@ -8,6 +8,8 @@ import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
+{{#apiInfo}}{{#apis}}import {{apiPackage}}.{{classname}}Verticle;
+{{/apis}}{{/apiInfo}}
 import {{invokerPackage}}.util.SwaggerManager;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -19,8 +21,12 @@ import io.vertx.ext.web.Router;
 
 public class MainApiVerticle extends AbstractVerticle {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainApiVerticle.class);
-    
-    private final Router router = Router.router(vertx);
+
+    private final MainApiFactory apiFactory;
+
+    public MainApiVerticle(MainApiFactory apiFactory) {
+        this.apiFactory = apiFactory;
+    }
     
     @Override
     public void start(Future<Void> startFuture) throws Exception {
@@ -46,7 +52,7 @@ public class MainApiVerticle extends AbstractVerticle {
       
     public void deployVerticles(Future<Void> startFuture) {
         {{#apiInfo}}{{#apis}}
-        vertx.deployVerticle("{{apiPackage}}.{{classname}}Verticle", res -> {
+        vertx.deployVerticle(new {{classname}}Verticle(apiFactory.create{{classname}}()), res -> {
             if (res.succeeded()) {
                 LOGGER.info("{{classname}}Verticle : Deployed");
             } else {
@@ -56,4 +62,5 @@ public class MainApiVerticle extends AbstractVerticle {
         });
         {{/apis}}{{/apiInfo}}
     }
+
 }

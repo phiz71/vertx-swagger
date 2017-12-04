@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiFactory;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.util.ResourceResponse;

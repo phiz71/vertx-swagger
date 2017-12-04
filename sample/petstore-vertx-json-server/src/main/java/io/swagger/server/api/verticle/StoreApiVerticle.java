@@ -11,6 +11,7 @@ import com.github.phiz71.vertx.swagger.router.SwaggerRouter;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiFactory;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.Order;
 import io.swagger.server.api.util.ResourceResponse;
@@ -25,10 +26,19 @@ public class StoreApiVerticle extends AbstractVerticle {
     private static final String PLACEORDER_SERVICE_ID = "placeOrder";
     
 
-    private StoreApi service = createServiceImplementation();
-
     //Handler for deleteOrder
-    final Handler<Message<JsonObject>> deleteOrderHandler = message -> {
+    private final Handler<Message<JsonObject>> deleteOrderHandler;
+    //Handler for getInventory
+    private final Handler<Message<JsonObject>> getInventoryHandler;
+    //Handler for getOrderById
+    private final Handler<Message<JsonObject>> getOrderByIdHandler;
+    //Handler for placeOrder
+    private final Handler<Message<JsonObject>> placeOrderHandler;
+    
+
+    public StoreApiVerticle(StoreApi service) {
+    
+     deleteOrderHandler = message -> {
         try {
             Long orderId = Json.mapper.readValue(message.body().getString("orderId"), Long.class);
             service.deleteOrder(orderId, verticleHelper.getAsyncResultHandler(message, DELETEORDER_SERVICE_ID, false, new TypeReference<Void>(){}));
@@ -37,8 +47,8 @@ public class StoreApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, DELETEORDER_SERVICE_ID);
         }
     };
-    //Handler for getInventory
-    final Handler<Message<JsonObject>> getInventoryHandler = message -> {
+    
+     getInventoryHandler = message -> {
         try {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             service.getInventory(user, verticleHelper.getAsyncResultHandler(message, GETINVENTORY_SERVICE_ID, true, new TypeReference<JsonObject>(){}));
@@ -47,8 +57,8 @@ public class StoreApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, GETINVENTORY_SERVICE_ID);
         }
     };
-    //Handler for getOrderById
-    final Handler<Message<JsonObject>> getOrderByIdHandler = message -> {
+    
+     getOrderByIdHandler = message -> {
         try {
             Long orderId = Json.mapper.readValue(message.body().getString("OrderId"), Long.class);
             service.getOrderById(orderId, verticleHelper.getAsyncResultHandler(message, GETORDERBYID_SERVICE_ID, true, new TypeReference<Order>(){}));
@@ -57,8 +67,8 @@ public class StoreApiVerticle extends AbstractVerticle {
             verticleHelper.manageError(message, e, GETORDERBYID_SERVICE_ID);
         }
     };
-    //Handler for placeOrder
-    final Handler<Message<JsonObject>> placeOrderHandler = message -> {
+    
+     placeOrderHandler = message -> {
         try {
             Order body = new Order(message.body().getJsonObject("body"));
             service.placeOrder(body, verticleHelper.getAsyncResultHandler(message, PLACEORDER_SERVICE_ID, true, new TypeReference<Order>(){}));
@@ -68,6 +78,7 @@ public class StoreApiVerticle extends AbstractVerticle {
         }
     };
     
+    }
 
     @Override
     public void start() throws Exception {

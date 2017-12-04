@@ -1,0 +1,9 @@
+package {{invokerPackage}};
+
+{{#apiInfo}}{{#apis}}import {{apiPackage}}.{{classname}};
+{{/apis}}{{/apiInfo}}
+public interface MainApiFactory {
+{{#apiInfo}}{{#apis}}
+    {{classname}} create{{classname}}();
+{{/apis}}{{/apiInfo}}
+}

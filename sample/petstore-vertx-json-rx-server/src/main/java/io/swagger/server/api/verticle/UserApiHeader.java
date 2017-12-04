@@ -5,6 +5,7 @@ import java.time.Instant;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.MainApiFactory;
 import io.swagger.server.api.MainApiHeader;
 import io.swagger.server.api.model.ModelUser;
 import io.swagger.server.api.util.ResourceResponse;

@@ -48,6 +48,21 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>io.vertx</groupId>
+          <artifactId>vertx-core</artifactId>
+          <version>RELEASE</version>
+      </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-codegen-cli</artifactId>
+      <version>RELEASE</version>
+    </dependency>
+      <dependency>
+          <groupId>com.github.phiz71</groupId>
+          <artifactId>vertx-swagger-router</artifactId>
+          <version>1.5.1-SNAPSHOT</version>
+      </dependency>
   </dependencies>
 
   <modules>
@@ -62,8 +77,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>

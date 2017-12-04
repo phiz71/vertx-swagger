@@ -17,10 +17,13 @@ public class {{classname}}Verticle extends AbstractVerticle {
     {{#operations}}{{#operation}}{{#vendorExtensions}}private static final String {{x-serviceId-varName}} = "{{x-serviceId}}";
     {{/vendorExtensions}}{{/operation}}{{/operations}}
 
-    private {{classname}} service = createServiceImplementation();
-
     {{#operations}}{{#operation}}//Handler for {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}
-    final Handler<Message<JsonObject>> {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}Handler = message -> {
+    private final Handler<Message<JsonObject>> {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}Handler;
+    {{/operation}}{{/operations}}
+
+    public {{classname}}Verticle({{classname}} service) {
+    {{#operations}}{{#operation}}
+     {{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}Handler = message -> {
         try {
             {{#hasAuthMethods}}
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
@@ -87,6 +90,7 @@ public class {{classname}}Verticle extends AbstractVerticle {
         }
     };
     {{/operation}}{{/operations}}
+    }
 
     @Override
     public void start() throws Exception {
