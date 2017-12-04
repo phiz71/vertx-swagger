@@ -48,21 +48,6 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>io.vertx</groupId>
-          <artifactId>vertx-core</artifactId>
-          <version>RELEASE</version>
-      </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-codegen-cli</artifactId>
-      <version>RELEASE</version>
-    </dependency>
-      <dependency>
-          <groupId>com.github.phiz71</groupId>
-          <artifactId>vertx-swagger-router</artifactId>
-          <version>1.5.1-SNAPSHOT</version>
-      </dependency>
   </dependencies>
 
   <modules>
