@@ -161,8 +161,4 @@ public class UserApiVerticle extends AbstractVerticle {
     vertx.eventBus().<JsonObject> consumer(UUID_SERVICE_ID).handler(uuidHandler);
     
     }
-
-    protected UserApi createServiceImplementation() {
-        return new UserApiImpl();
-    }
 }

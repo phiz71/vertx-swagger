@@ -88,8 +88,4 @@ public class StoreApiVerticle extends AbstractVerticle {
     vertx.eventBus().<JsonObject> consumer(PLACEORDER_SERVICE_ID).handler(placeOrderHandler);
     
     }
-
-    protected StoreApi createServiceImplementation() {
-        return new StoreApiImpl();
-    }
 }

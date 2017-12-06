@@ -175,8 +175,4 @@ public class PetApiVerticle extends AbstractVerticle {
     vertx.eventBus().<JsonObject> consumer(UPLOADFILE_SERVICE_ID).handler(uploadFileHandler);
     
     }
-
-    protected PetApi createServiceImplementation() {
-        return new PetApiImpl();
-    }
 }

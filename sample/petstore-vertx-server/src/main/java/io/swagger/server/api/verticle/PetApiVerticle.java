@@ -162,7 +162,4 @@ public class PetApiVerticle extends AbstractVerticle {
         
     }
 
-    protected PetApi createServiceImplementation() {
-        return new PetApiImpl();
-    }
 }

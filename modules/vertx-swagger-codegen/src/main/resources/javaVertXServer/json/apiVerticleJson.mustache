@@ -97,8 +97,4 @@ public class {{classname}}Verticle extends AbstractVerticle {
     {{#operations}}{{#operation}}vertx.eventBus().<JsonObject> consumer({{#vendorExtensions}}{{x-serviceId-varName}}{{/vendorExtensions}}).handler({{#vendorExtensions}}{{x-serviceId}}{{/vendorExtensions}}Handler);
     {{/operation}}{{/operations}}
     }
-
-    protected {{classname}} createServiceImplementation() {
-        return new {{classname}}Impl();
-    }
 }

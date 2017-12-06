@@ -183,7 +183,4 @@ public class UserApiVerticle extends AbstractVerticle {
         
     }
 
-    protected UserApi createServiceImplementation() {
-        return new UserApiImpl();
-    }
 }

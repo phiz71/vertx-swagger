@@ -99,7 +99,4 @@ public class StoreApiVerticle extends AbstractVerticle {
         
     }
 
-    protected StoreApi createServiceImplementation() {
-        return new StoreApiImpl();
-    }
 }
