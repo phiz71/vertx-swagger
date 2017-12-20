@@ -33,7 +33,7 @@
 
   <properties>
     <java.version>1.8</java.version>
-    <vertx.version>3.4.2</vertx.version>
+    <vertx.version>3.5.0</vertx.version>
     <swagger-parser.version>1.0.26</swagger-parser.version>
   </properties>
 
