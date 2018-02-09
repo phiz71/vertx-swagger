@@ -183,6 +183,30 @@ public class SampleVertXGeneratorTest {
     }
 
     @Test
+    public void testFile() throws IOException {
+        String[] args = new String[7];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testFile.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+                "temp/test-server/src/main/java/io/swagger/server/api/verticle/TestApiVerticle.java");
+
+        Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains(
+                "File file = new File(message.body().getString(\"file\"));"));
+
+        Assert.assertFalse(FileUtils.readFileToString(testApiVerticleFile).contains(
+                "File file = Json.mapper.readValue(message.body().getJsonObject(\"file\").encode(), File.class);"));
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
+
+    @Test
     public void testImplGenWithoutImplDefault() throws IOException {
         String[] args = new String[7];
         args[0] = "generate";
