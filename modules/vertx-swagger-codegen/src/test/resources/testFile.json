@@ -1,0 +1,45 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "test MainApiVerticle option"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/file/{originalFileName}": {
+            "post": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "test generator options",
+                "operationId": "dummy",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "description": "file to upload",
+                        "required": false,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "schema":{
+                            "type":"string"
+                        },
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
+}

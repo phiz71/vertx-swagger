@@ -128,7 +128,7 @@ public class PetApiVerticle extends AbstractVerticle {
             User user = SwaggerRouter.extractAuthUserFromMessage(message);
             Long petId = Json.mapper.readValue(message.body().getString("petId"), Long.class);
             String additionalMetadata = message.body().getString("additionalMetadata");
-            File file = Json.mapper.readValue(message.body().getJsonObject("file").encode(), File.class);
+            File file = new File(message.body().getString("file"));
             service.uploadFile(petId, additionalMetadata, file, user, verticleHelper.getAsyncResultHandler(message, UPLOADFILE_SERVICE_ID, true, new TypeReference<ModelApiResponse>(){}));
 
         } catch (Exception e) {

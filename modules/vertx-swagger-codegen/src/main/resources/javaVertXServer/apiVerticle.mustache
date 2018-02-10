@@ -70,7 +70,12 @@ public class {{classname}}Verticle extends AbstractVerticle {
                     {{/isString}}
                 {{/isPrimitiveType}}
                 {{^isPrimitiveType}}
+                    {{#isFile}}
+            {{{dataType}}} {{paramName}} = new {{{dataType}}}(message.body().getString("{{baseName}}"));
+                    {{/isFile}}
+                    {{^isFile}}
             {{{dataType}}} {{paramName}} = Json.mapper.readValue(message.body().getJsonObject("{{baseName}}").encode(), {{{dataType}}}.class);
+                    {{/isFile}}
                 {{/isPrimitiveType}}
             {{/isListContainer}}
         {{/allParams}}
