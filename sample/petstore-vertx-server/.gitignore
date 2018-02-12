@@ -1,5 +1,3 @@
-.classpath
-.project
 /target/
-/.settings/
 /.vertx/
+*.log
