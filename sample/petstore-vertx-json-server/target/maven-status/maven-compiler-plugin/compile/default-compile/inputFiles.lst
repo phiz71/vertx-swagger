@@ -6,6 +6,7 @@ C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-s
 C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-server\src\main\java\io\swagger\server\api\verticle\UserApiHeader.java
 C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-server\src\main\java\io\swagger\server\api\model\ModelApiResponse.java
 C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-server\src\main\java\io\swagger\server\api\verticle\UserApiException.java
+C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-server\src\main\java\io\swagger\server\api\util\VerticleHelper.java
 C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-server\src\main\java\io\swagger\server\api\util\ResourceResponse.java
 C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-server\src\main\java\io\swagger\server\api\model\Pet.java
 C:\Users\Florent_DEV\Documents\GitHub\vertx-swagger\sample\petstore-vertx-json-server\src\main\java\io\swagger\server\api\MainApiHeader.java
