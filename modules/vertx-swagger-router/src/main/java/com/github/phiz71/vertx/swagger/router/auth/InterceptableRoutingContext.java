@@ -1,6 +1,7 @@
 package com.github.phiz71.vertx.swagger.router.auth;
 
 import io.vertx.core.Handler;
+import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
@@ -295,5 +296,15 @@ public class InterceptableRoutingContext implements RoutingContext {
     @Override
     public String pathParam(String name) {
         return this.inner.pathParam(name);
+    }
+
+    @Override
+    public MultiMap queryParams() {
+        return this.inner.queryParams();
+    }
+
+    @Override
+    public List<String> queryParam(String s) {
+        return this.inner.queryParam(s);
     }
 }

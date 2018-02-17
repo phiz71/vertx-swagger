@@ -31,6 +31,7 @@ import org.junit.Test;
 import java.util.HashSet;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 
 public class InterceptableRoutingContextImplTest {
@@ -292,6 +293,12 @@ class TestHttpServerRequest implements HttpServerRequest {
     }
 
     @Override
+    public SSLSession sslSession() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public X509Certificate[] peerCertificateChain() throws SSLPeerUnverifiedException {
         // TODO Auto-generated method stub
         return null;
@@ -299,6 +306,12 @@ class TestHttpServerRequest implements HttpServerRequest {
 
     @Override
     public String absoluteURI() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public HttpServerRequest bodyHandler(Handler<Buffer> bodyHandler) {
         // TODO Auto-generated method stub
         return null;
     }
