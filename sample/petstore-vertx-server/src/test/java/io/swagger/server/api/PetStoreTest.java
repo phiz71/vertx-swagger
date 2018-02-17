@@ -3,7 +3,9 @@ package io.swagger.server.api;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.server.api.util.SwaggerManager;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -182,7 +184,7 @@ public class PetStoreTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/uuid/5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", response -> {
             response.bodyHandler(body -> {
-                context.assertEquals("5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", body.toJsonObject().getString("uuid"));
+                context.assertEquals("5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", Json.decodeValue(body.toString(), Map.class).get("uuid"));
                 async.complete();
             });
         });

@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import io.swagger.server.api.util.SwaggerManager;
 import org.junit.AfterClass;
@@ -75,7 +77,7 @@ public class JsonRxPetStoreTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/pet/findByStatus?status=available", response -> {
             response.bodyHandler(body -> {
-                JsonArray jsonArray = body.toJsonArray();
+                JsonArray jsonArray = new JsonArray(Json.decodeValue(body.toString(), List.class));
                 context.assertTrue(jsonArray.size() == 1);
                 try {
                     context.assertEquals(dog.toString(), jsonArray.getJsonObject(0).toString());
@@ -97,7 +99,7 @@ public class JsonRxPetStoreTest {
             response.bodyHandler(body -> {
                 JsonObject jsonObject = new JsonObject(body.toString());
                 try {
-                    context.assertEquals(dog.toString(), body.toJsonObject().toString());
+                    context.assertEquals(dog.toString(), new JsonObject(Json.decodeValue(body.toString(), Map.class)).toString());
                 } catch (Exception e) {
                     context.fail(e);
                 }
@@ -181,7 +183,7 @@ public class JsonRxPetStoreTest {
         Async async = context.async();
         httpClient.getNow(TEST_PORT, TEST_HOST, "/v2/uuid/5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", response -> {
             response.bodyHandler(body -> {
-                context.assertEquals("5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", body.toJsonObject().getString("uuid"));
+                context.assertEquals("5f2f7ba4-3d97-44d7-8e9d-4d7141bab11c", Json.decodeValue(body.toString(), Map.class).get("uuid"));
                 async.complete();
             });
         });
