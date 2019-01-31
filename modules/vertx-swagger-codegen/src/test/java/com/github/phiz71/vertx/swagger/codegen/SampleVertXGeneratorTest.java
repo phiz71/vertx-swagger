@@ -2,6 +2,7 @@ package com.github.phiz71.vertx.swagger.codegen;
 
 import io.swagger.codegen.SwaggerCodegen;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -157,6 +158,31 @@ public class SampleVertXGeneratorTest {
 
         Assert.assertTrue(FileUtils.readFileToString(testApiVerticleFile).contains(
                 "List<String> updateModel = Json.mapper.readValue(message.body().getJsonArray(\"updateModel\").encode(), new TypeReference<List<String>>(){});"));
+
+        FileUtils.deleteDirectory(new File("temp"));
+    }
+
+    @Test
+    public void testStringArray() throws IOException {
+        String[] args = new String[7];
+        args[0] = "generate";
+        args[1] = "-l";
+        args[2] = "java-vertx";
+        args[3] = "-i";
+        args[4] = "testStringArray.json";
+        args[5] = "-o";
+        args[6] = "temp/test-server";
+        SwaggerCodegen.main(args);
+
+        File testApiVerticleFile = new File(
+                "temp/test-server/src/main/java/io/swagger/server/api/model/StringArray.java");
+
+        String generated = FileUtils.readFileToString(testApiVerticleFile);
+        int firstDefaultConstructorIndex = generated.indexOf("public StringArray () {");
+        Assert.assertThat(firstDefaultConstructorIndex, Matchers.greaterThan(0));
+        int secondDefaultConstructorIndex = generated.indexOf("public StringArray () {",
+                firstDefaultConstructorIndex + 1);
+        Assert.assertEquals(-1, secondDefaultConstructorIndex);
 
         FileUtils.deleteDirectory(new File("temp"));
     }

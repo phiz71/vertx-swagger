@@ -10,6 +10,7 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
   public {{classname}} () {
 
   }
+  {{#hasVars}}
 
   public {{classname}} ({{#vars}}{{{datatypeWithEnum}}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}}) {
     {{#vars}}
@@ -17,6 +18,7 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
     {{/vars}}
   }
 
+  {{/hasVars}}
   {{#vars}}
     {{#vendorExtensions.extraAnnotation}}{{vendorExtensions.extraAnnotation}}{{/vendorExtensions.extraAnnotation}}
   @JsonProperty("{{baseName}}")
