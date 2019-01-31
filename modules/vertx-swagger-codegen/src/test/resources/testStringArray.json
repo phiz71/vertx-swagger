@@ -1,0 +1,38 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "test MainApiVerticle option"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/stringArray": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "test string array response",
+                "operationId": "dummy",
+                "responses": {
+                    "default": {
+                        "description" : "OK",
+                        "schema" : {
+                            "$ref" : "#/definitions/StringArray"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "StringArray" : {
+            "type" : "array",
+            "items" : {
+                "type" : "string"
+            }
+        }
+    }
+}

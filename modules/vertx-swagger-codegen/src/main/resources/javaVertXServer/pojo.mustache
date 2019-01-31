@@ -11,11 +11,11 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
 
   }
 
-  public {{classname}} ({{#vars}}{{{datatypeWithEnum}}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}}) {
-    {{#vars}}
+  {{#vars}}
+  public {{classname}} ({{{datatypeWithEnum}}} {{name}}{{#hasMore}}, {{/hasMore}}) {
     this.{{name}} = {{name}};
-    {{/vars}}
   }
+  {{/vars}}
 
   {{#vars}}
     {{#vendorExtensions.extraAnnotation}}{{vendorExtensions.extraAnnotation}}{{/vendorExtensions.extraAnnotation}}
