@@ -1,5 +1,9 @@
-[![Build Status](https://travis-ci.org/phiz71/vertx-swagger.svg?branch=master)](https://travis-ci.org/phiz71/vertx-swagger)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.github.phiz71%3Avertx-swagger-parent&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.phiz71%3Avertx-swagger-parent)
+⚠️ DEPRECATED This repository is no longer active ⚠️ 
+I should have archived this project a long time ago but it was hard to close my first OSS project on github.
+
+If you were looking for an integration between Eclipse Vert.x and Swagger/OpenAPI, please consider using [Vert.x OpenAPI] https://vertx.io/docs/vertx-web-openapi/java/
+
+
 
 # Vert.X - Swagger
 This project aims to provide a code generator based on Swagger to create web server with Eclipse Vert.X and Vert.X Web.
